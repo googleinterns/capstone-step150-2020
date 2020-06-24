@@ -40,13 +40,20 @@ public final class JoinRoomServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    String json = new Gson().toJson();
+    List<PrivateRoom> privateRooms = new ArrayList<>();
+    for (Entity entity : results.asIterable()){
+        long id = entity.getKey().getId();
+        String url = (String) entity.getProperty("youtubePlaylistUrl");
+        long timestamp = (long) entity.getProperty("timestamp");
+
+        PrivateRoom privateRoom = new PrivateRoom(id, url, timestamp);
+        privateRooms.add(privateRoom);
+    }
+
+    String json = new Gson().toJson(privateRooms);
     
     response.setContentType("application/json;");
-
-
-    // TODO: Receive the room URL from Database and print 
-    // it in JSON for User to receive
+    response.getWriter().println(json);
   }
 
   /* Receive Any New Inputed Comments from User */
