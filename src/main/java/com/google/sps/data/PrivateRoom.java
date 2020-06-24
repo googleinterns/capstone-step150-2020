@@ -17,16 +17,14 @@ package com.google.sps.data;
 /** An item on a todo list. */
 public final class PrivateRoom {
 
-  private final long id;
-  private final String youtubePlaylistUrl;
-  private final long roomStartTime;
-  private final ArrayList<String> members; 
+  private long id;
+  private String youtubePlaylistUrl;
+  private long roomStartTime;
 
-  public PrivateRoom(long id, String youtubePlaylistUrl, long roomStartTime, ArrayList<String> members) {
+  public PrivateRoom(long id, String youtubePlaylistUrl, long roomStartTime) {
     this.id = id;
     this.youtubePlaylistUrl = youtubePlaylistUrl;
     this.roomStartTime = roomStartTime;
-    this.members = members;
   }
 
   public long getId(){
@@ -43,9 +41,5 @@ public final class PrivateRoom {
 
   public void setUrl(String url){
     this.youtubePlaylistUrl = url;
-  }
-
-  public ArrayList<String> getMembers(){
-    return members;
   }
 }

@@ -20,7 +20,11 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.gson.Gson;
+import com.google.sps.data.PrivateRoom;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +37,7 @@ public final class JoinRoomServlet extends HttpServlet {
   private String inputtedUserTag = "user-party-link";
   private String joinRoomPageLink = "/join-room";
   private String currentRoomID = "";
+  private PrivateRoom userRoom;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -40,18 +45,16 @@ public final class JoinRoomServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    List<PrivateRoom> privateRooms = new ArrayList<>();
     for (Entity entity : results.asIterable()){
+      // Only created a private room for the user that matches the given id
+      if(currentRoomID.equals(entity.getProperty("id"))){
         long id = entity.getKey().getId();
-        String url = (String) entity.getProperty("youtubePlaylistUrl");
-        long timestamp = (long) entity.getProperty("timestamp");
-
-        PrivateRoom privateRoom = new PrivateRoom(id, url, timestamp);
-        privateRooms.add(privateRoom);
+        String url = (String) entity.getProperty("youtube-playlist-url");
+        long roomStartTime = (long) entity.getProperty("room-start-time");
+        userRoom = new PrivateRoom(id, url, roomStartTime);
+      }
     }
-
-    String json = new Gson().toJson(privateRooms);
-    
+    String json = new Gson().toJson(userRoom);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
