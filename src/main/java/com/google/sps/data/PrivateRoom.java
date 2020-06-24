@@ -19,12 +19,14 @@ public final class PrivateRoom {
 
   private final long id;
   private final String youtubePlaylistUrl;
-  private final long timestamp;
+  private final long roomStartTime;
+  private final ArrayList<String> members; 
 
-  public PrivateRoom(long id, String youtubePlaylistUrl, long timestamp) {
+  public PrivateRoom(long id, String youtubePlaylistUrl, long roomStartTime, ArrayList<String> members) {
     this.id = id;
     this.youtubePlaylistUrl = youtubePlaylistUrl;
-    this.timestamp = timestamp;
+    this.roomStartTime = roomStartTime;
+    this.members = members;
   }
 
   public long getId(){
@@ -41,5 +43,9 @@ public final class PrivateRoom {
 
   public void setUrl(String url){
     this.youtubePlaylistUrl = url;
+  }
+
+  public ArrayList<String> getMembers(){
+    return members;
   }
 }
