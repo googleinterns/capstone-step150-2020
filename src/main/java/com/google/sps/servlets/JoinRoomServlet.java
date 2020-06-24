@@ -14,13 +14,20 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that both sends userComments to the client and receives + stores inputed User Comments*/
+/** Servlet that takes in the user's inputted Room ID and directs them
+    to the associated private room once ensurred that it's an actual room*/
 @WebServlet("/join-room")
 public final class JoinRoomServlet extends HttpServlet {
   private String inputtedUserTag = "user-party-link";
@@ -29,7 +36,15 @@ public final class JoinRoomServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Query query = new Query("PrivateRoom").addSort("ID", SortDirection.DESCENDING);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    String json = new Gson().toJson();
+    
     response.setContentType("application/json;");
+
+
     // TODO: Receive the room URL from Database and print 
     // it in JSON for User to receive
   }
@@ -39,6 +54,8 @@ public final class JoinRoomServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     //Take in the inputted ID
     currentRoomID = request.getParameter(inputtedUserTag);
+    //TODO: Check if currentRoomId is a valid ID
+    // if yes, direct to room page, if no, redirect back to join room page
     response.sendRedirect(joinRoomPageLink);
   }
 }
