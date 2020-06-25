@@ -45,6 +45,7 @@ public final class JoinRoomServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
+    // Loop through Database to create temporary Private Room object
     for (Entity entity : results.asIterable()){
       // Only created a private room for the user that matches the given id
       if(currentRoomID.equals(entity.getProperty("id"))){

@@ -24,6 +24,9 @@ function fetchPrivateRoom() {
   });
 }
 
+/**
+* Take the Room ID and post it in the HTML
+ */
 function postYoutubeUrl(privateRoomJson){
   console.log('Post Youtube Url');
   const videoDisplayElement = document.getElementById('video-display');
