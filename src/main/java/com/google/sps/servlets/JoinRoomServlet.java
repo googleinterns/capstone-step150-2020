@@ -56,7 +56,7 @@ public final class JoinRoomServlet extends HttpServlet {
     }
     String json = new Gson().toJson(userRoom);
     response.setContentType("application/json;");
-    response.getWriter().println(json);
+    response.getWriter().println(currentRoomID);
   }
 
   /* Receive Any Room ID from User */
@@ -64,8 +64,8 @@ public final class JoinRoomServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     //Take in the inputted ID
     currentRoomID = request.getParameter(inputtedUserTag);
-    //TODO: Check if currentRoomId is a valid ID
+    //TODO: Check if currentRoomID is a valid ID
     // if yes, direct to room page, if no, redirect back to join room page
-    response.sendRedirect(joinRoomPageLink);
+    response.sendRedirect("/private-room.html");
   }
 }
