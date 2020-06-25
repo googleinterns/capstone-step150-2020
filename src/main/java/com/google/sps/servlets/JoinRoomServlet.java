@@ -59,7 +59,7 @@ public final class JoinRoomServlet extends HttpServlet {
     response.getWriter().println(json);
   }
 
-  /* Receive Any New Inputed Comments from User */
+  /* Receive Any Room ID from User */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     //Take in the inputted ID
