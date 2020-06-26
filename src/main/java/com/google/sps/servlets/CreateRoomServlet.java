@@ -21,10 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-@Webservlet("/create-room")
+@WebServlet("/create-room")
 public final class CreateRoomServlet extends HttpServlet{
 
-    public doPost(HttpServletRequest req, HttpServletResponse res) {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) {
         JsonObject roomJson = PARSER.fromjson(req.body,JsonObject.class);
         String playlistUrl =  roomJson.get("playlistUrl");
 
@@ -34,6 +34,6 @@ public final class CreateRoomServlet extends HttpServlet{
         
         YTDataCon.setRequestMethod("POST");
         HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
-        Room newRoom = Room(roomJson,);
+        //Room newRoom = Room(roomJson);
     }
 }

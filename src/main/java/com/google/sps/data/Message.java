@@ -1,20 +1,11 @@
-<<<<<<< HEAD
-package com.google.sps.data.servlets;
-=======
 package com.google.sps.data;
->>>>>>> structure
+
 
 public class Message{
     public static String sender;
-    public static String message_body;
+    public static String message;
     public static Long timestamp;
     
-<<<<<<< HEAD
-    public Message(){
-
-    }
-}
-=======
     /**
       * Message constructor
       * @param sender a String of the senders email/email alias
@@ -26,7 +17,5 @@ public class Message{
         this.sender = sender;
         this.message = message;
         this.timestamp = timestamp;
-        return this;
     }
 }
->>>>>>> structure
