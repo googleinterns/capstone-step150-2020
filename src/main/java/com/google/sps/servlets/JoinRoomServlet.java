@@ -41,6 +41,10 @@ public final class JoinRoomServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Take in the current room ID
+    currentRoomID = request.getParameter(inputtedUserTag);
+    
+    // TODO: Check if the Room is Valid
     Query query = new Query("PrivateRoom").addSort("ID", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -57,15 +61,7 @@ public final class JoinRoomServlet extends HttpServlet {
     String json = new Gson().toJson(userRoom);
     response.setContentType("application/json;");
     response.getWriter().println(json);
+    
+    // Direct User to specific room
+    response.sendRedirect("/" + currentRoomID);
   }
-
-  /* Receive Any Room ID from User */
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    //Take in the inputted ID
-    currentRoomID = request.getParameter(inputtedUserTag);
-    //TODO: Check if currentRoomId is a valid ID
-    // if yes, direct to room page, if no, redirect back to join room page
-    response.sendRedirect(joinRoomPageLink);
-  }
-}
