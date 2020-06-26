@@ -4,6 +4,7 @@ com/google/sps/servlets/ServletUtil.class
 com/google/sps/data/RoomState.class
 com/google/sps/servlets/JoinRoomServlet.class
 com/google/sps/data/DataUtil$video_state.class
+com/google/sps/servlet/CreateRoomServlet.class
 com/google/sps/data/PrivateRoom.class
 com/google/sps/data/Message.class
 com/google/sps/servlets/ServletUtil$video_state.class

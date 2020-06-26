@@ -25,15 +25,15 @@ import java.net.URL;
 public final class CreateRoomServlet extends HttpServlet{
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) {
-        JsonObject roomJson = PARSER.fromjson(req.body,JsonObject.class);
-        String playlistUrl =  roomJson.get("playlistUrl");
+        // JsonObject roomJson = PARSER.fromjson(req.body,JsonObject.class);
+        // String playlistUrl =  roomJson.get("playlistUrl");
 
-        //TODO(rossjohnson): implement playlist url to video url list
-        String playlistID = playlistUrl.substring(playlistUrl.indexOf("list=")+5);
-        URL url = new URL("https://www.googleapis.com/youtube/v3/playlistItems?key="+ServletUtil.DATA_API_KEY+"&part=snippet&playlistId="+playlistID);
+        // //TODO(rossjohnson): implement playlist url to video url list
+        // String playlistID = playlistUrl.substring(playlistUrl.indexOf("list=")+5);
+        // URL url = new URL("https://www.googleapis.com/youtube/v3/playlistItems?key="+ServletUtil.DATA_API_KEY+"&part=snippet&playlistId="+playlistID);
         
-        YTDataCon.setRequestMethod("POST");
-        HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
-        //Room newRoom = Room(roomJson);
+        // YTDataCon.setRequestMethod("POST");
+        // HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
+        // //Room newRoom = Room(roomJson);
     }
 }
