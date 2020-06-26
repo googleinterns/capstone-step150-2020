@@ -24,15 +24,15 @@ public class Room {
     public Room(JsonObject obj, ArrayList<String> urls){
         this.messages = new LinkedList<Message>();
         this.state = new RoomState();
-        this.members = DataUtil.PARSER.fromJson(obj.getAsJsonArray("members"),ArrayList<String>.class);
-        this.video_urls = taurls;
+        this.members = DataUtil.PARSER.fromJson(obj.getAsJsonArray("members"),ArrayList.class);
+        this.video_urls = urls;
     }
     
     //Function that transforms a Room to a HashMap
     public HashMap<String, Object> toMap() {
         HashMap<String,Object> ret = new HashMap<String,Object>();
         ret.put("video_state", this.state.currentState);
-        ret.put("video_timestamp", this.state.videoTimestamp);
+        ret.put("video_timestamp", this.state.currentVideoTimestamp);
         ret.put("members", this.members);
         ret.put("video_urls", this.video_urls);
         ret.put("current_video", this.state.currentVideo);
@@ -41,7 +41,7 @@ public class Room {
         return ret;
     }
     //Returns the Room's members
-    public LinkedList<String> getMembers() {
+    public ArrayList<String> getMembers() {
         return this.members;
     }
     //Returns the Room's video url list
@@ -49,7 +49,7 @@ public class Room {
         return this.video_urls;
     }
     //Returns the Room's message list
-    public ArrayList<Message> getMessages(){
+    public LinkedList<Message> getMessages(){
         return this.messages;
     }
 }

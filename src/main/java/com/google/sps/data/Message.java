@@ -2,7 +2,7 @@ package com.google.sps.data;
 
 public class Message{
     public static String sender;
-    public static String message_body;
+    public static String message;
     public static Long timestamp;
     
     /**
