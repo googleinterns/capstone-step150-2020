@@ -16,6 +16,5 @@ public class Message{
         this.sender = sender;
         this.message = message;
         this.timestamp = timestamp;
-        return this;
     }
 }

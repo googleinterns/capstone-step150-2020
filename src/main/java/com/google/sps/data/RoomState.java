@@ -13,7 +13,6 @@ public class RoomState {
         this.currentVideoTimestamp = 0;
         this.currentVideo = 0;
         this.messageCount = 0;
-        return this;
     }
     /**
       * RoomState constructor
@@ -28,6 +27,5 @@ public class RoomState {
         this.currentVideoTimestamp = videoTimeStamp;
         this.currentVideo = currentVideo;
         this.messageCount = messageCount;
-        return this;
     }
 }
