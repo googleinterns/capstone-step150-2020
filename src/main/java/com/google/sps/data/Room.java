@@ -24,8 +24,8 @@ public class Room {
     public Room(JsonObject obj, ArrayList<String> urls){
         this.messages = new LinkedList<Message>();
         this.state = new RoomState();
-        this.members = DATAUTIL.PARSER.fromJson(obj.getAsJsonArray("members"),ArrayList<String>.class);
-        this.video_urls = urls;
+        this.members = DataUtil.PARSER.fromJson(obj.getAsJsonArray("members"),ArrayList<String>.class);
+        this.video_urls = taurls;
     }
     
     //Function that transforms a Room to a HashMap
