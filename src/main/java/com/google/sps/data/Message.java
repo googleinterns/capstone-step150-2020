@@ -4,7 +4,7 @@ public class Message{
     public static String sender;
     public static String message_body;
     public static Long timestamp;
-    
+
     /**
       * Message constructor
       * @param sender a String of the senders email/email alias
@@ -14,8 +14,7 @@ public class Message{
       */
     public Message(String sender, String message, Long timestamp){
         this.sender = sender;
-        this.message = message;
+        this.message_body = message;
         this.timestamp = timestamp;
-        return this;
     }
 }
