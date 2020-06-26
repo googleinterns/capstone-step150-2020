@@ -32,3 +32,15 @@ function postYoutubeUrl(privateRoomJson){
   const videoDisplayElement = document.getElementById('video-display');
   videoDisplayElement.innerText = privateRoomJson;
 }
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    height: '390',
+    width: '640',
+    videoId: 'M7lc1UVf-VE',
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  })
+}
