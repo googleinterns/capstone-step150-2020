@@ -30,10 +30,10 @@ public final class CreateRoomServlet extends HttpServlet{
 
         //TODO(rossjohnson): implement playlist url to video url list
         String playlistID = playlistUrl.substring(playlistUrl.indexOf("list=")+5);
-        URL url = new URL("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId="+playlistID);
-        HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
+        URL url = new URL("https://www.googleapis.com/youtube/v3/playlistItems?key="+ServletUtil.DATA_API_KEY+"&part=snippet&playlistId="+playlistID);
+        
         YTDataCon.setRequestMethod("POST");
+        HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
         Room newRoom = Room(roomJson,);
-
     }
 }
