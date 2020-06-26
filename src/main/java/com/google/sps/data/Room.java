@@ -1,8 +1,8 @@
 package com.google.sps.data;
 
-import Java.util.ArrayList;
-import Java.util.LinkedList;
-import Java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,8 +10,8 @@ import com.google.gson.JsonObject;
 
 public class Room {
 
-    private LinkedList<String> members;
-    private ArrayList<Message> messages;
+    private ArrayList<String> members;
+    private LinkedList<Message> messages;
     private ArrayList<String> video_urls;
     private RoomState state;
 
@@ -24,15 +24,15 @@ public class Room {
     public Room(JsonObject obj, ArrayList<String> urls){
         this.messages = new LinkedList<Message>();
         this.state = new RoomState();
-        this.members = obj.get("members");
-        this.video_urls = urls;
+        this.members = DataUtil.PARSER.fromJson(obj.getAsJsonArray("members"),ArrayList<String>.class);
+        this.video_urls = taurls;
     }
     
     //Function that transforms a Room to a HashMap
     public HashMap<String, Object> toMap() {
-        HashMap<String,Object> ret = new HashMAp<String,Object>();
+        HashMap<String,Object> ret = new HashMap<String,Object>();
         ret.put("video_state", this.state.currentState);
-        ret.put("video_timestamp", this.state.timestamp);
+        ret.put("video_timestamp", this.state.videoTimestamp);
         ret.put("members", this.members);
         ret.put("video_urls", this.video_urls);
         ret.put("current_video", this.state.currentVideo);
