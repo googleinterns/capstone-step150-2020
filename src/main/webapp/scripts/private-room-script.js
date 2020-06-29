@@ -21,6 +21,9 @@ async function fetchPrivateRoom() {
   fetch('/join-room').then(response => response.json()).then((privateRoom) => {
     console.log(privateRoom);
     console.log(privateRoom.currentRoomID);
+    //console.log(privateRoom.valueOf(privateRoom.currentRoomID));
+    window.roomId = privateRoom.currentRoomID;
+    redirectToRoom();
   });
     /*let response = await fetch('/join-room');
     let json = await response.json();
@@ -28,10 +31,9 @@ async function fetchPrivateRoom() {
     console.log(window.roomId);*/
 }
 
-function redirectToRoom(roomId) {
-    window.roomId = roomId;
-    console.log(roomId);
-	window.location.replace("/views/private-room.html");
+function redirectToRoom() {
+    console.log('Now i am in the redirectToRoom function');
+    console.log(window.roomId);
 }
 
 // 2. This code loads the IFrame Player API code asynchronously.
