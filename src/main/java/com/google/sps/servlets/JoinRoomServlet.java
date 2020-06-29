@@ -34,20 +34,36 @@ import javax.servlet.http.HttpServletResponse;
     to the associated private room once ensurred that it's an actual room*/
 @WebServlet("/join-room")
 public final class JoinRoomServlet extends HttpServlet {
-  private String inputtedUserTag = "user-party-link";
+  private String inputtedUserTag = "user_party_link";
   private String privateRoomPageLink = "/views/private-room.html";
+  private String currentRoomID = "";
 
   // Add hardcoded Room ID and Youtube URLs
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String currentRoomID = request.getParameter(inputtedUserTag);
+    
     
     HashMap<String, String> privateRooms = new HashMap<String, String>();
+    
+    privateRooms.put("currentRoomID", currentRoomID);
     privateRooms.put("234532", "https://www.youtube.com/watch?v=a9HIaGcBocc");
     privateRooms.put("4822654", "https://www.youtube.com/watch?v=Bc9Y58TeZk0");
-    String json = new Gson().toJson(privateRooms);
     
-    response.setContentType("application/json;");
+    String json = new Gson().toJson(privateRooms);
+
+    //String privateRoomsVideo = new Gson().toJson(privateRooms.get(currentRoomID));
+    //response.getWriter().println(privateRoomsVideo);
+    response.setContentType("application/json");
     response.getWriter().println(json);
+    //response.getWriter().println(currentRoomJson);
+    
+    
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+   currentRoomID = request.getParameter(inputtedUserTag);
+
+   response.sendRedirect("/views/private-room.html");
   }
 }

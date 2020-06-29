@@ -15,32 +15,28 @@
 /**
  * Fetches prvivate room and prints the room to console
  */
-function fetchPrivateRoom() {
+async function fetchPrivateRoom() {
   console.log('Fetching private room.');
+
   fetch('/join-room').then(response => response.json()).then((privateRoom) => {
     console.log(privateRoom);
-    //postYoutubeUrl(privateRoom);
-    //document.getElementById('quote-container').innerText = privateRoom;
+    console.log(privateRoom.currentRoomID);
   });
+    /*let response = await fetch('/join-room');
+    let json = await response.json();
+	console.log(json);
+    console.log(window.roomId);*/
 }
 
-/**
-* Take the Room ID and post it in the HTML
- */
-function postYoutubeUrl(privateRoomJson){
-  console.log('Post Youtube Url');
-  const videoDisplayElement = document.getElementById('video-display');
-  videoDisplayElement.innerText = privateRoomJson;
+function redirectToRoom(roomId) {
+    window.roomId = roomId;
+    console.log(roomId);
+	window.location.replace("/views/private-room.html");
 }
 
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('player', {
-    height: '390',
-    width: '640',
-    videoId: 'M7lc1UVf-VE',
-    events: {
-      'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange
-    }
-  })
-}
+// 2. This code loads the IFrame Player API code asynchronously.
+  //var tag = document.createElement('script');
+
+  //tag.src = "https://www.youtube.com/iframe_api";
+  //var firstScriptTag = document.getElementsByTagName('script')[0];
+  //firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);

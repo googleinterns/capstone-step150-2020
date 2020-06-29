@@ -9,14 +9,14 @@
           text-align: center;
       }
     </style>
-
+    <script src="/scripts/private-room-script.js"></script> 
   </head>
   <body>
     <div id="join-room-box">
-      <form action="/join-room" method="GET">
+      <form action="/join-room" method="POST">
         <h2>Input your private room link Below!</h2>
-        <input type="text" name="user-party-link">
-        <input type="submit"/>
+        <input type="text" name="user_party_link" id="user-room-id">
+        <input type="submit" value="Submit-Room-ID">
       </form>
     </div>   
   </body>
