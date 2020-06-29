@@ -17,7 +17,14 @@
  */
 function fetchPrivateRoom() {
   console.log('Fetching private room.');
-  // TODO: fetch hard-coded private room
+  fetch('/join-room').then(response => response.json()).then((privateRoom) => {
+    console.log(privateRoom);
+		window.tempMap = privateRoom;
+    console.log(privateRoom.currentRoomID);
+		window.roomId = privateRoom.currentRoomID;
+    console.log(window.tempMap.get(window.roomId));
+    redirectToRoom();
+  });
 }
 
 //2. This code loads the IFrame Player API code asynchronously.
