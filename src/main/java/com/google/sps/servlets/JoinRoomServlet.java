@@ -42,5 +42,6 @@ public final class JoinRoomServlet extends HttpServlet {
 		currentRoomId = request.getParameter(inputtedUserTag);
 		response.getWriter().println(currentRoomId);
 		// TODO: Redirect to private room Page
+		response.sendRedirect("/views/private-room.html");
   }
 }
