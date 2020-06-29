@@ -21,10 +21,10 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
-import com.google.sps.data.PrivateRoom;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,38 +35,19 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/join-room")
 public final class JoinRoomServlet extends HttpServlet {
   private String inputtedUserTag = "user-party-link";
-  private String joinRoomPageLink = "/join-room";
-  private String currentRoomID = "";
-  private PrivateRoom userRoom;
+  private String privateRoomPageLink = "/views/private-room.html";
 
+  // Add hardcoded Room ID and Youtube URLs
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("PrivateRoom").addSort("ID", SortDirection.DESCENDING);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-
-    // Loop through Database to create temporary Private Room object
-    for (Entity entity : results.asIterable()){
-      // Only created a private room for the user that matches the given id
-      if(currentRoomID.equals(entity.getProperty("id"))){
-        long id = entity.getKey().getId();
-        String url = (String) entity.getProperty("youtube-playlist-url");
-        long roomStartTime = (long) entity.getProperty("room-start-time");
-        userRoom = new PrivateRoom(id, url, roomStartTime);
-      }
-    }
-    String json = new Gson().toJson(userRoom);
+    String currentRoomID = request.getParameter(inputtedUserTag);
+    
+    HashMap<String, String> privateRooms = new HashMap<String, String>();
+    privateRooms.put("234532", "https://www.youtube.com/watch?v=a9HIaGcBocc");
+    privateRooms.put("4822654", "https://www.youtube.com/watch?v=Bc9Y58TeZk0");
+    String json = new Gson().toJson(privateRooms);
+    
     response.setContentType("application/json;");
-    response.getWriter().println(currentRoomID);
-  }
-
-  /* Receive Any Room ID from User */
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    //Take in the inputted ID
-    currentRoomID = request.getParameter(inputtedUserTag);
-    //TODO: Check if currentRoomID is a valid ID
-    // if yes, direct to room page, if no, redirect back to join room page
-    response.sendRedirect("/private-room.html");
+    response.getWriter().println(json);
   }
 }

@@ -17,9 +17,9 @@
  */
 function fetchPrivateRoom() {
   console.log('Fetching private room.');
-  fetch('/join-room').then(response => response.text()).then((privateRoom) => {
+  fetch('/join-room').then(response => response.json()).then((privateRoom) => {
     console.log(privateRoom);
-    postYoutubeUrl(privateRoom);
+    //postYoutubeUrl(privateRoom);
     //document.getElementById('quote-container').innerText = privateRoom;
   });
 }
