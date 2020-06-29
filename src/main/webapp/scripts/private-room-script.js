@@ -20,9 +20,10 @@ async function fetchPrivateRoom() {
 
   fetch('/join-room').then(response => response.json()).then((privateRoom) => {
     console.log(privateRoom);
+		window.tempMap = privateRoom;
     console.log(privateRoom.currentRoomID);
-    //console.log(privateRoom.valueOf(privateRoom.currentRoomID));
-    window.roomId = privateRoom.currentRoomID;
+		window.roomId = privateRoom.currentRoomID;
+    console.log(window.tempMap.get(window.roomId));
     redirectToRoom();
   });
     /*let response = await fetch('/join-room');
