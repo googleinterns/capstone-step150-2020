@@ -3,6 +3,7 @@ package com.google.sps.data;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import com.google.gson.JsonElement;
@@ -11,38 +12,25 @@ import com.google.gson.JsonObject;
 
 public class Room {
 
-    private ArrayList<String> members;
+    private List<String> members;
     private LinkedList<Message> messages;
     private ArrayList<String> video_urls;
     private RoomState state;
 
     /**
       * Room constructor
-      * @param obj a JsonObject representing the configurations the Room creator specified
+      * @param members a JsonObject representing the configurations the Room creator specified
       * @param urls an arraylist of the video urls of the initial Room playlist
       * @return a new Room object
       */
-    public Room(JsonObject obj, ArrayList<String> urls){
+    public Room(List<String> members, ArrayList<String> urls){
         this.messages = new LinkedList<Message>();
         this.state = new RoomState();
-        this.members = DataUtil.PARSER.fromJson(obj.getAsJsonArray("members"), ArrayList.class);
+        this.members = members;
         this.video_urls = urls;
     }
-    
-    //Function that transforms a Room to a HashMap
-    public HashMap<String, Object> toMap() {
-        HashMap<String,Object> ret = new HashMap<String,Object>();
-        ret.put("video_state", this.state.currentState);
-        ret.put("video_timestamp", this.state.currentVideoTimestamp);
-        ret.put("members", this.members);
-        ret.put("video_urls", this.video_urls);
-        ret.put("current_video", this.state.currentVideo);
-        ret.put("message_count", this.state.messageCount);
-        ret.put("messages", this.messages);
-        return ret;
-    }
     //Returns the Room's members
-    public ArrayList<String> getMembers() {
+    public List<String> getMembers() {
         return this.members;
     }
     //Returns the Room's video url list
