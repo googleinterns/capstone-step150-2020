@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,16 +33,21 @@ public final class JoinRoomServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO: Create hard-coded hashmap of {Room ID : URL} Hashmap
-    // TODO: Print json-ified string to /join-room page for private room to fetch
+    HashMap<String, String> privateRooms = new HashMap<String, String>();
+    privateRooms.put("currentRoomID", currentRoomId);
+    privateRooms.put("234532", "https://www.youtube.com/watch?v=a9HIaGcBocc");
+    privateRooms.put("4822654", "https://www.youtube.com/watch?v=Bc9Y58TeZk0");
+    String json = new Gson().toJson(privateRooms);
+
+		// Print hard-coded map of private room's and their url to the writer
+    response.setContentType("application/json");
+    response.getWriter().println(json);
   }
 
 	@Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Take in user's private room and store it to global variable
 		currentRoomId = request.getParameter(inputtedUserTag);
-		response.getWriter().println(currentRoomId);
-		// TODO: Redirect to private room Page
 		response.sendRedirect("/views/private-room.html");
   }
 }
