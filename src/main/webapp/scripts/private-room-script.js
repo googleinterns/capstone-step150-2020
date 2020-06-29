@@ -18,19 +18,16 @@
 function fetchPrivateRoom() {
   console.log('Fetching private room.');
   fetch('/join-room').then(response => response.json()).then((privateRoom) => {
-    console.log(privateRoom);
 		window.tempMap = privateRoom;
-    console.log(privateRoom.currentRoomID);
 		window.roomId = privateRoom.currentRoomID;
-    console.log(window.tempMap.get(window.roomId));
-    redirectToRoom();
+    window.roomUrl = window.tempMap[window.roomId];
   });
 }
 
 //2. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement('script');
 
-tag.src = "https://www.youtube.com/iframe_api";
+tag.src = window.roomUrl;
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
