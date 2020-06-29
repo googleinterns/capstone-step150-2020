@@ -50,6 +50,7 @@ public class ChatServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // TODO: get the correct HTML element from room page
     String message = getParameter(request, "text-input", "");
     long timestamp = System.currentTimeMillis();
 
