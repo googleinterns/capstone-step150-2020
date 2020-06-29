@@ -34,12 +34,27 @@ public final class CreateRoomServlet extends HttpServlet {
         String emails = req.getParameter("Invitees").replace(" ", "");
         List<String> members = new ArrayList<String>();
         members = Arrays.asList(emails.split(","));
+
         //Requests playlist information from YT api and transforms playlist url to video url list
         String playlistUrl = req.getParameter("PlaylistUrl");
-        String playlistID = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+5);
+        String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+5);
+        
+        ArrayList<String> videoUrls = playlistIdToUrls(playlistId);
+        Room newRoom = new Room(members, videoUrls);
+        
+        //TODO(rossjohnson): Find an efficient way to store this in datastore since it has collections of objects in it
+    }
+    /**
+      * Communicates with the Youtube Data API to get playlistItem information
+      * @param playlistId the string representing the playlistId
+      * @return an arraylist of video Urls (limit is 15)
+      */
+    ArrayList<String> playlistIdToUrls(String playlistId){
+        //Connect to the YouTube Data API
         URL url = new URL("https://www.googleapis.com/youtube/v3/playlistItems?key="+ServletUtil.DATA_API_KEY+"&part=contentDetails&playlistId="+playlistID);
         HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
         YTDataCon.setRequestMethod("GET");
+        //Read the response
         BufferedReader in = new BufferedReader(
         new InputStreamReader(YTDataCon.getInputStream()));
         String inputLine;
@@ -48,14 +63,15 @@ public final class CreateRoomServlet extends HttpServlet {
             content.append(inputLine);
         }
         in.close();
+        //Parse json for the specific data that is necessary
         JsonObject obj = ServletUtil.PARSER.fromJson(content.toString(), JsonObject.class);
-        JsonArray inforay = obj.getAsJsonArray("items");
+        JsonArray VideoInformation = obj.getAsJsonArray("items");
         ArrayList<String> videoUrls =  new ArrayList<String>();
-        for(int i = 0; i < inforay.size() && i < 15; ++i ) {
-            String videoid = inforay.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
+        //Create urls from video IDs
+        for(int i = 0; i < VideoInformation.size() && i < 15; ++i ) {
+            String videoid = VideoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
             videoUrls.add(ServletUtil.YT_BASE_URL + videoid);
         }
-        
-        Room newRoom = new Room(members, videoUrls);
+        return videoUrls
     }
 }
