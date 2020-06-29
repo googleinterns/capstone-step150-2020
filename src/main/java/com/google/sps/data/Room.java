@@ -26,19 +26,6 @@ public class Room {
         this.members = this.PARSER.fromJson(obj.getAsJsonArray("members"),ArrayList.class);
         this.videoUrls = urls;
     }
-    
-    //Function that transforms a Room to a HashMap
-    public HashMap<String, Object> toMap() {
-        HashMap<String,Object> ret = new HashMap<String,Object>();
-        ret.put("video_state", this.state.currentState);
-        ret.put("video_timestamp", this.state.currentVideoTimestamp);
-        ret.put("members", this.members);
-        ret.put("videoUrls", this.videoUrls);
-        ret.put("currentVideo", this.state.currentVideo);
-        ret.put("messageCount", this.state.messageCount);
-        ret.put("messages", this.messages);
-        return ret;
-    }
 
     //Function that returns the Room as a Json String
     public String toJson(){
