@@ -21,6 +21,33 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ChatServlet extends HttpServlet {
 
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      long roomID = Long.parseLong(request.getQueryString());
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    
+    Gson gson = new Gson();
+
+     // Handle entity not found exception
+    try{
+        // Retrieves the entity with matching ID and its corresponding messages property as a JSON string
+        Entity roomEntity = datastore.get(KeyFactory.createKey("Room", roomID));
+        String jsonMessages = (String) roomEntity.getProperty("messages");
+        
+        response.setContentType("application/json;");
+        response.getWriter().println(jsonMessages);
+
+
+        // TODO: Correct redirect
+        response.sendRedirect("/index.html");
+        }
+
+    catch(EntityNotFoundException exc){
+        System.out.println(exc.toString());
+        response.sendRedirect("/error.html");
+    }
+      
+  }
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String message = getParameter(request, "text-input", "");
@@ -38,7 +65,7 @@ public class ChatServlet extends HttpServlet {
     
     Gson gson = new Gson();
 
-    // TODO: Entity not found exception
+    // Handle entity not found exception
     try{
         // Retrieves the entity with matching ID and its corresponding messages property as a JSON string
         Entity roomEntity = datastore.get(KeyFactory.createKey("Room", roomID));
@@ -60,7 +87,7 @@ public class ChatServlet extends HttpServlet {
         }
     catch(EntityNotFoundException exc){
         System.out.println(exc.toString());
-        response.sendRedirect(ServletUtil.ERROR_HTML);
+        response.sendRedirect("/error.html");
     }
   }
 
