@@ -17,7 +17,7 @@ public class Room {
  
     /**
       * Room constructor
-      * @param obj a JsonObject representing the configurations the Room creator specified
+      * @param members a list of strings that represent members of the room
       * @param urls an arraylist of the video urls of the initial Room playlist
       * @return a new Room object
       */
