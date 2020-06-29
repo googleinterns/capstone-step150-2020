@@ -4,6 +4,7 @@ import com.google.sps.data.Message;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -37,26 +38,32 @@ public class ChatServlet extends HttpServlet {
     
     Gson gson = new Gson();
 
-    // TODO: Entity not found exception?
+    // TODO: Entity not found exception
+    try{
+        // Retrieves the entity with matching ID and its corresponding messages property as a JSON string
+        Entity roomEntity = datastore.get(KeyFactory.createKey("Room", roomID));
+        String jsonMessages = (String) roomEntity.getProperty("messages");
+        LinkedList<Message> messages = gson.fromJson(jsonMessages, LinkedList.class);
 
-    // Retrieves the entity with matching ID and its corresponding messages property as a JSON string
-    Entity roomEntity = datastore.get(KeyFactory.createKey("Room", roomID));
-    String jsonMessages = (String) roomEntity.getProperty("messages");
-    LinkedList<Message> messages = gson.fromJson(jsonMessages, LinkedList.class);
+        // Add the most recent message to the end of the linked list and remove the oldest if necessary
+        if(messages.size() >= 10) {
+            messages.remove();
+        }
+        messages.add(chatMessage);
 
-    // Add the most recent message to the end of the linked list and remove the oldest if necessary
-    if(messages.size() >= 10) {
-        messages.remove();
+        String newJsonMessages = gson.toJson(messages);
+        roomEntity.setProperty("chatRoom", newJsonMessages);
+        datastore.put(roomEntity);
+        
+        // TODO: Correct redirect
+        response.sendRedirect("/index.html");
+        }
+    catch(EntityNotFoundException exc){
+        System.out.println(exc.toString());
+        response.sendRedirect(ServletUtil.ERROR_HTML);
     }
-    messages.add(chatMessage);
-
-    String newJsonMessages = gson.toJson(messages);
-    roomEntity.setProperty("chatRoom", newJsonMessages);
-    datastore.put(roomEntity);
-    
-    // TODO: Correct redirect
-    response.sendRedirect("/index.html");
   }
+
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
