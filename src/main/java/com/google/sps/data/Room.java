@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-
 public class Room {
 
     private List<String> members;
