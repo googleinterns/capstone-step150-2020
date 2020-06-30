@@ -36,7 +36,7 @@ public final class JoinRoomServlet extends HttpServlet {
     // TODO: Print json-ified string to /join-room page for private room to fetch
   }
 
-	@Override
+  @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Take in user's private room and store it to global variable
 		currentRoomId = request.getParameter(inputtedUserTag);
