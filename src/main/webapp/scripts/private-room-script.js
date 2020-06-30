@@ -22,28 +22,34 @@ function fetchPrivateRoom() {
 		window.roomId = privateRoom.currentRoomID;
     window.roomUrl = window.tempMap[window.roomId];
     console.log('In the fetch function');
-
+		console.log('The room url is ' + window.roomUrl);
+		loadIframe();
   });
 }
 
+function loadIframe(){
+	console.log('Inside iframe function');
+	var iframeTag = document.getElementById("video-tag");
+	const iframeTagSrc = document.createElement('src');
+	iframeTagSrc.innerText = window.roomUrl;
+	iframeTag.appendChild(iframeTagSrc);
+	loadVideo();
+}
 //2. This code loads the IFrame Player API code asynchronously.
-var tag = document.createElement('script');
+function loadVideo(){
+	var tag = document.createElement('script');
 
-console.log('About to append the src');
-tag.src = window.roomUrl;
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-
+	console.log('About to append the src');
+	tag.src = "https://www.youtube.com/iframe_api";;
+	var firstScriptTag = document.getElementsByTagName('script')[0];
+	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
 
 // 3. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
 var player;
 function onYouTubeIframeAPIReady() {
-	player = new YT.Player('player', {
-		height: '390',
-		width: '640',
-		videoId: 'M7lc1UVf-VE',
+	player = new YT.Player('video-tag', {
 		events: {
 			'onReady': onPlayerReady,
 			'onStateChange': onPlayerStateChange
@@ -53,8 +59,8 @@ function onYouTubeIframeAPIReady() {
 
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
-	event.target.playVideo();
-}
+    document.getElementById('video-tag').style.borderColor = '#FF6D00';
+  }
 
 // 5. The API calls this function when the player's state changes.
 //    The function indicates that when playing a video (state=1),
