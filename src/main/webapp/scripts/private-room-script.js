@@ -30,9 +30,7 @@ function fetchPrivateRoom() {
 function loadIframe(){
 	console.log('Inside iframe function');
 	var iframeTag = document.getElementById("video-tag");
-	const iframeTagSrc = document.createElement('src');
-	iframeTagSrc.innerText = window.roomUrl;
-	iframeTag.appendChild(iframeTagSrc);
+	iframeTag.src = window.roomUrl;
 	loadVideo();
 }
 //2. This code loads the IFrame Player API code asynchronously.
@@ -40,7 +38,7 @@ function loadVideo(){
 	var tag = document.createElement('script');
 
 	console.log('About to append the src');
-	tag.src = "https://www.youtube.com/iframe_api";;
+	tag.src = "https://www.youtube.com/iframe_api";
 	var firstScriptTag = document.getElementsByTagName('script')[0];
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }

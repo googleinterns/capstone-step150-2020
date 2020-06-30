@@ -35,8 +35,8 @@ public final class JoinRoomServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     HashMap<String, String> privateRooms = new HashMap<String, String>();
     privateRooms.put("currentRoomID", currentRoomId);
-    privateRooms.put("234532", "https://www.youtube.com/watch?v=a9HIaGcBocc");
-    privateRooms.put("4822654", "https://www.youtube.com/watch?v=Bc9Y58TeZk0");
+    privateRooms.put("234532", "https://www.youtube.com/embed?v=a9HIaGcBocc");
+    privateRooms.put("4822654", "https://www.youtube.com/embed?v=Bc9Y58TeZk0");
     String json = new Gson().toJson(privateRooms);
 
 		// Print hard-coded map of private room's and their url to the writer
