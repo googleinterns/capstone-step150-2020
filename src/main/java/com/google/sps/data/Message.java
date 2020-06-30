@@ -1,5 +1,6 @@
 package com.google.sps.data;
 
+
 public class Message{
     public static String sender;
     public static String message;
