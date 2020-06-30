@@ -21,15 +21,20 @@ function fetchPrivateRoom() {
 		window.tempMap = privateRoom;
 		window.roomId = privateRoom.currentRoomID;
     window.roomUrl = window.tempMap[window.roomId];
+    console.log('In the fetch function');
+
   });
 }
 
 //2. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement('script');
 
+console.log('About to append the src');
 tag.src = window.roomUrl;
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
 
 // 3. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
