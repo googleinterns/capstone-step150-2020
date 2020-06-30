@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
   private String inputtedUserTag = "user-party-link";
-  private String currentRoomId = "";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
