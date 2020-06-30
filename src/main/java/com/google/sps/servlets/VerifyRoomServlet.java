@@ -24,30 +24,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that takes in the user's inputted Room ID and directs them
-    to the associated private room once ensurred that it's an actual room*/
-@WebServlet("/join-room")
-public final class JoinRoomServlet extends HttpServlet {
+/** Servlet that takes in the user's room Id and verifies that it
+ * exists, then redirects you to that room
+*/
+@WebServlet("/verify-room")
+public final class VerifyRoomServlet extends HttpServlet {
   private String inputtedUserTag = "user-party-link";
   private String currentRoomId = "";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    HashMap<String, String> privateRooms = new HashMap<String, String>();
-    privateRooms.put("currentRoomID", currentRoomId);
-    privateRooms.put("234532", "https://www.youtube.com/embed?v=a9HIaGcBocc");
-    privateRooms.put("4822654", "https://www.youtube.com/embed?v=Bc9Y58TeZk0");
-    String json = new Gson().toJson(privateRooms);
-
-		// Print hard-coded map of private room's and their url to the writer
-    response.setContentType("application/json");
-    response.getWriter().println(json);
-  }
-
-	@Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// Take in user's private room and store it to global variable
-		currentRoomId = request.getParameter(inputtedUserTag);
-		response.sendRedirect("/views/private-room.html");
+    String currentRoomId = request.getParameter(inputtedUserTag);
+    // TODO: If the currentRoomId is included in the datastore redirect them to the private room page
+    response.sendRedirect("/views/private-room.html");
   }
 }
