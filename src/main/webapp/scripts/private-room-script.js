@@ -17,7 +17,8 @@
  */
 function fetchPrivateRoom() {
   console.log('Fetching private room.');
-  fetch('/join-room').then(response => response.json()).then((privateRoom) => {
+  fetch('/verify-room').then(response => response.json()).then((privateRoom) => {
+		console.log(privateRoom);
 		window.tempMap = privateRoom;
 		window.roomId = privateRoom.currentRoomID;
     window.roomUrl = window.tempMap[window.roomId];

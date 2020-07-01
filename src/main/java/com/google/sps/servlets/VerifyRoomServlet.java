@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +33,13 @@ public final class VerifyRoomServlet extends HttpServlet {
   private String inputtedUserTag = "user-party-link";
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String currentRoomId = request.getParameter(inputtedUserTag);
     // TODO: If the currentRoomId is included in the datastore redirect them to the private room page
-    response.sendRedirect("/views/private-room.html");
+    if(true){
+      response.getWriter().println("valid URL");
+    } else {
+      response.getWriter().println("not valid url");
+    }
   }
 }
