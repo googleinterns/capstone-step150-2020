@@ -36,10 +36,18 @@ public final class VerifyRoomServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String currentRoomId = request.getParameter(inputtedUserTag);
     // TODO: If the currentRoomId is included in the datastore redirect them to the private room page
-    if(true){
-      response.getWriter().println("valid URL");
+    
+    HashMap<String, String> privateRooms = new HashMap<String, String>();
+    privateRooms.put("234532", "https://www.youtube.com/watch?v=a9HIaGcBocc");
+    privateRooms.put("4822654", "https://www.youtube.com/watch?v=Bc9Y58TeZk0");
+
+    response.setContentType("application/json");
+    if(privateRooms.containsKey(currentRoomId)){
+      String jsonOfUrl = new Gson().toJson(privateRooms.get(currentRoomId));
+      response.getWriter().println(jsonOfUrl);
     } else {
-      response.getWriter().println("not valid url");
+      String jsonOfTestUrl = new Gson().toJson("https://www.youtube.com/watch?v=C0DPdy98e4c");
+      response.getWriter().println(jsonOfTestUrl);
     }
   }
 }
