@@ -38,15 +38,15 @@ public final class VerifyRoomServlet extends HttpServlet {
     // TODO: If the currentRoomId is included in the datastore redirect them to the private room page
     
     HashMap<String, String> privateRooms = new HashMap<String, String>();
-    privateRooms.put("234532", "https://www.youtube.com/watch?v=a9HIaGcBocc");
-    privateRooms.put("4822654", "https://www.youtube.com/watch?v=Bc9Y58TeZk0");
+    privateRooms.put("234532", "https://www.youtube.com/embed?v=a9HIaGcBocc");
+    privateRooms.put("4822654", "https://www.youtube.com/embed?v=Bc9Y58TeZk0");
 
     response.setContentType("application/json");
     if(privateRooms.containsKey(currentRoomId)){
       String jsonOfUrl = new Gson().toJson(privateRooms.get(currentRoomId));
       response.getWriter().println(jsonOfUrl);
     } else {
-      String jsonOfTestUrl = new Gson().toJson("https://www.youtube.com/watch?v=C0DPdy98e4c");
+      String jsonOfTestUrl = new Gson().toJson("https://www.youtube.com/embed?v=C0DPdy98e4c");
       response.getWriter().println(jsonOfTestUrl);
     }
   }

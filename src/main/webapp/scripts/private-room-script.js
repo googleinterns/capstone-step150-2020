@@ -19,9 +19,7 @@ function fetchPrivateRoom() {
   console.log('Fetching private room.');
   fetch('/verify-room').then(response => response.json()).then((privateRoom) => {
 		console.log(privateRoom);
-		window.tempMap = privateRoom;
-		window.roomId = privateRoom.currentRoomID;
-    window.roomUrl = window.tempMap[window.roomId];
+    window.roomUrl = privateRoom;
     console.log('In the fetch function');
 		console.log('The room url is ' + window.roomUrl);
 		loadIframe();
