@@ -2,9 +2,9 @@ package com.google.sps.data;
 import com.google.appengine.api.datastore.EmbeddedEntity;
 
 public class Message{
-    public static String sender;
-    public static String message;
-    public static Long timestamp;
+    private String sender;
+    private String message;
+    private Long timestamp;
     
     /**
       * Message constructor
@@ -17,6 +17,18 @@ public class Message{
         this.sender = sender;
         this.message = message;
         this.timestamp = timestamp;
+    }
+
+    public String getSender(){
+        return this.sender;
+    }
+
+    public String getMessageBody(){
+        return this.message;
+    }
+
+    public Long getTimestamp(){
+        return this.timestamp;
     }
     
     //Turns the MEssage object into an embedded entity
