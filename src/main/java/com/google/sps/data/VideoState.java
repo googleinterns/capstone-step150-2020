@@ -15,7 +15,10 @@ public enum VideoState {
         CUED(5);
         
         private int value;
-            private VideoState(int value){
+            private VideoState(int value) {
                 this.value = value;
+            }
+            public int getValue() {
+                return this.value;
             }
 };
