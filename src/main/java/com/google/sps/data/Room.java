@@ -16,6 +16,7 @@ import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import java.util.stream.Collectors;
 import java.util.Map;
+import java.util.stream.*;
 
 public class Room {
     private static final String ROOM_ENTITY = "Room";
@@ -73,12 +74,12 @@ public class Room {
         return this.messages;
     }
     //Returns the messages as a list of embedded entities
-    private LinkedList<EmbeddedEntity> getMessagesAsEntities() {
-        return (LinkedList) messages.stream().map(Message::toEmbeddedEntity).collect(Collectors.toList());
+    private List<EmbeddedEntity> getMessagesAsEntities() {
+        return messages.stream().map(Message::toEmbeddedEntity).collect(Collectors.toList());
     }
     //Returns a queue of embedded entities
-    private Queue<EmbeddedEntity> getVideosAsEntities() {
-        return (Queue<EmbeddedEntity>) this.videos.stream().map(Video::toEmbeddedEntity).collect(Collectors.toList());
+    private List<EmbeddedEntity> getVideosAsEntities() {
+        return this.videos.stream().map(Video::toEmbeddedEntity).collect(Collectors.toList());
     }
     //Turns the Room object into a datastore entity
     public static Entity toEntity(Room room){
@@ -97,27 +98,27 @@ public class Room {
         }
         return null;
     }
-    public void setMessages(LinkedList<Message> messages){
-        this.messages = messages;
+    //Adds a message to the room
+    public void addMessage(Message message){
+        if(this.messages.size() < 10) {
+            this.messages.add(message);
+        } else {
+            this.messages.remove(0);
+            this.messages.add(message);
+        }
+    }
+
+    //Adds a video to the Room's video queue
+    public void addVideo(String url) {
+        this.videos.add(Video.createVideo(url));
     }
 
     //Turns a Room entitiy into a Room object
     public static Room fromEntity(Entity roomEntity) {
         Map<String, Object> properties = roomEntity.getProperties();
-        ArrayList<Member> memberList = new ArrayList<Member>();
-        for(EmbeddedEntity e : (List<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)){
-            memberList.add(Member.fromEmbeddedEntity(e));
-        }
-        Queue<Video> videoQueue = new LinkedList<Video>();
-        for(EmbeddedEntity e : (List<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)){
-            videoQueue.add(Video.fromEmbeddedEntity(e));
-        }
-        LinkedList<Message> messageList = new LinkedList<Message>();
-        for(EmbeddedEntity e : (List<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)){
-            messageList.add(Message.fromEmbeddedEntity(e));
-        }
-        Room room = new Room(memberList, videoQueue);
-        room.setMessages(messageList);
-        return room;
+        List<Member> memberList = ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
+        Queue<Video> videoQueue = ((Queue<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+        LinkedList<Message> messageList = ((LinkedList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+        return new Room(memberList, videoQueue, messageList);
     }
 }
