@@ -51,9 +51,12 @@ public class Room {
         this.videos = videos;
         this.messages = messages;
     }
+
+    //Room factory function
     public static Room createRoom(List<Member> members, Queue<Video> videos, LinkedList<Message> messages){
         return new Room(members, videos, messages);
     }
+
     //Returns the Room's members
     public List<Member> getMembers() {
         return this.members;
@@ -73,14 +76,17 @@ public class Room {
     public LinkedList<Message> getMessages(){
         return this.messages;
     }
+
     //Returns the messages as a list of embedded entities
     private List<EmbeddedEntity> getMessagesAsEntities() {
         return messages.stream().map(Message::toEmbeddedEntity).collect(Collectors.toList());
     }
+
     //Returns a queue of embedded entities
     private List<EmbeddedEntity> getVideosAsEntities() {
         return this.videos.stream().map(Video::toEmbeddedEntity).collect(Collectors.toList());
     }
+
     //Turns the Room object into a datastore entity
     public static Entity toEntity(Room room){
         Entity newRoom = new Entity(ROOM_ENTITY);
@@ -89,6 +95,7 @@ public class Room {
         newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
         return newRoom;
     }
+    //Creates a room object from a Datastore Key
     public static Room fromKey(Key roomKey) {
         try {
         Entity roomEntity = datastore.get(roomKey);
@@ -98,6 +105,7 @@ public class Room {
         }
         return null;
     }
+
     //Adds a message to the room
     public void addMessage(Message message){
         if(this.messages.size() < 10) {
