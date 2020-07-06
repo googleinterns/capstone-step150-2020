@@ -107,29 +107,21 @@ public class Video {
         }
 
         public static VideoState fromInt(int val) {
-            switch (val){
-
-                case(-1): {
+            switch (val) {
+                case(-1): 
                     return VideoState.UNSTARTED;
-                }
-                case(0): {
+                case(0): 
                     return VideoState.ENDED;
-                }
-                case(1): {
+                case(1): 
                     return VideoState.PLAYING;
-                }
-                case(2): {
+                case(2): 
                     return VideoState.PAUSED;
-                }
-                case(3): {
+                case(3): 
                     return VideoState.BUFFERING;
-                }
-                case(5): {
+                case(5): 
                     return VideoState.CUED;
-                }
-                default: {
+                default: 
                     return null;
-                }
             }
         }
     };
