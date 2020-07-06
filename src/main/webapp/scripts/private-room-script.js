@@ -29,6 +29,7 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 // 3. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
+// TODO: Make videoId mutable
 var player;
 function onYouTubeIframeAPIReady() {
 	player = new YT.Player('player', {
@@ -50,11 +51,11 @@ function onPlayerReady(event) {
 // 5. The API calls this function when the player's state changes.
 //    The function indicates that when playing a video (state=1),
 //    the player should play for six seconds and then stop.
-var done = false;
+var videoFinished = false;
 function onPlayerStateChange(event) {
-	if (event.data == YT.PlayerState.PLAYING && !done) {
+	if (event.data == YT.PlayerState.PLAYING && !videoFinished) {
 		setTimeout(stopVideo, 6000);
-		done = true;
+		videoFinished = true;
 	}
 }
 function stopVideo() {
