@@ -26,20 +26,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that prints out the youtube URL associated with the given currentRoomId
+/** Servlet that takes in inputted room Id and directs them to that room
 */
 @WebServlet("/private-room")
 public final class PrivateRoomServlet extends HttpServlet {
-  private String inputtedUserTag = "user-party-link";
+  private String inputtedIdTag = "user-party-link";
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) 
-                    throws ServletException, IOException {
-    RequestDispatcher rd = request.getRequestDispatcher("/verify-room"); 
-    //rd.include(request, response);
-    
-    String currentRoomId = request.getParameter(inputtedUserTag);
-
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String currentRoomId = request.getParameter(inputtedIdTag);
     response.sendRedirect("/views/private-room.html?id="+currentRoomId);
   }
 }

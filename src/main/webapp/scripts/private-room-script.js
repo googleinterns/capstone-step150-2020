@@ -10,7 +10,7 @@ async function loadIframe(){
 }
 
 /**
-* Get the room id attatched to the end of the room url
+* Get the room id by parsing the room's url
 * @param {url} String url of the current webpage
 * @return {roomId} room id at end of the url
 */

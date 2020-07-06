@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that takes in the user's room Id and verifies that it
- * exists, then redirects you to that room
+ * exists, then prints the url associated with the verified room id
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
@@ -35,14 +35,14 @@ public final class VerifyRoomServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String currentRoomId = request.getParameter("roomId");
-    System.out.println("currentRoomId is " + currentRoomId);
-    
     // TODO: If the currentRoomId is included in the datastore redirect them to the private room page
     // TODO: Parse out the src from the URL tag
     HashMap<String, String> privateRooms = new HashMap<String, String>();
     privateRooms.put("234532", "https://www.youtube.com/embed/a9HIaGcBocc");
     privateRooms.put("4822654", "https://www.youtube.com/embed/Bc9Y58TeZk0");
-
+    
+    // If the room Id is in the privateRooms hashmap, print that url
+    // if not print a hardcoded dummy youtube video
     response.setContentType("application/json");
     if(privateRooms.containsKey(currentRoomId)){
       String jsonOfUrl = new Gson().toJson(privateRooms.get(currentRoomId));
