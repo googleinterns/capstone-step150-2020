@@ -39,6 +39,7 @@ public class Room {
         this.members = members;
         this.videos = videos;
     }
+    
     /**
       * Room constructor
       * @param members a List of Member objects
