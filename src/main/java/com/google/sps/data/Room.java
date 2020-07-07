@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.appengine.api.datastore.Key;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.EmbeddedEntity;
@@ -48,7 +49,7 @@ public class Room {
       * @return a new Room object
       */
     private Room(List<Member> members, Queue<Video> videos, LinkedList<Message> messages) {
-        this.messages = messages;
+        this.members = members;
         this.videos = videos;
         this.messages = messages;
     }
@@ -64,8 +65,8 @@ public class Room {
     }
 
     //Get all of the members as a list of EmbeddedEntities
-    private List<EmbeddedEntity> getMembersAsEmbeddedEntities(){
-        return members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
+    private List<EmbeddedEntity> getMembersAsEmbeddedEntities() {
+        return (List<EmbeddedEntity>) members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
     }
 
     //Returns the Room's video url list

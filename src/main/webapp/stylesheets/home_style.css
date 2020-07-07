@@ -1,0 +1,16 @@
+#join_button{
+    border-radius: 10%;
+    height: 30%;
+    width: 15%;
+    color: blue;
+}
+#create_button{
+    border-radius: 10%;
+    height: 30%;
+    width:15%;
+    color: greenyellow;
+}
+#button_row{
+    margin-top: 20%;
+    margin-bottom: 20%;
+}
