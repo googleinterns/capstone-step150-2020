@@ -14,6 +14,7 @@
 
 package com.google.sps.servlets;
 
+<<<<<<< HEAD
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -22,6 +23,9 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import com.google.sps.data.PrivateRoom;
+=======
+import com.google.gson.Gson;
+>>>>>>> structure
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/join-room")
 public final class JoinRoomServlet extends HttpServlet {
   private String inputtedUserTag = "user-party-link";
+<<<<<<< HEAD
   private String joinRoomPageLink = "/join-room";
   private String currentRoomID = "";
   private PrivateRoom userRoom;
@@ -69,3 +74,21 @@ public final class JoinRoomServlet extends HttpServlet {
     response.sendRedirect(joinRoomPageLink);
   }
 }
+=======
+  private String currentRoomId = "";
+
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // TODO: Create hard-coded hashmap of {Room ID : URL} Hashmap
+    // TODO: Print json-ified string to /join-room page for private room to fetch
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// Take in user's private room and store it to global variable
+		currentRoomId = request.getParameter(inputtedUserTag);
+		response.getWriter().println(currentRoomId);
+		// TODO: Redirect to private room Page
+  }
+}
+>>>>>>> structure
