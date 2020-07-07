@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.stream.*;
 
+
 public class Room {
     private static final String ROOM_ENTITY = "Room";
     private static final String MEMBERS_PROPERTY = "members";
@@ -40,7 +41,7 @@ public class Room {
         this.members = members;
         this.videos = videos;
     }
-    
+
     /**
       * Room constructor
       * @param members a List of Member objects
@@ -97,6 +98,7 @@ public class Room {
         newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
         return newRoom;
     }
+
     //Creates a room object from a Datastore Key
     public static Room fromKey(Key roomKey) {
         try {
@@ -107,13 +109,25 @@ public class Room {
         return null;
     }
 
-    //Adds a message to the room
-    public void addMessage(Message message){
-        if(this.messages.size() < 10) {
-            this.messages.add(message);
-        } else {
-            this.messages.remove(0);
-            this.messages.add(message);
+    // Helper addMessage function to manipulate the list of messages
+    private void addMessage(Message msg){
+        if(messages.size() >= 10) {
+            messages.remove(0);
+        }
+        messages.add(msg);
+    }
+
+    // Manipulates the messages property of the room given a room key and a new message to be added
+    public static void addMessagesFromKey(Key roomKey, Message chatMessage) {
+        try {
+        Entity roomEntity = datastore.get(roomKey);
+        Room room = Room.fromEntity(roomEntity);
+        room.addMessage(chatMessage);
+
+        roomEntity.setProperty("messages", room.getMessagesAsEntities());
+        datastore.put(roomEntity);
+        } catch (EntityNotFoundException e){
+            System.out.println(e.toString());
         }
     }
 

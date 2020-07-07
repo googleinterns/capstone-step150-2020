@@ -81,3 +81,22 @@ function onPlayerStateChange(event) {
 function stopVideo() {
 	player.stopVideo();
 }
+async function displayChat() {
+    let response = await fetch('/chat');
+    let messages = await response.json();
+    const messageElement = document.getElementById('chat-messages');
+    messageElement.innerHTML = '';
+    for (message in messages) {
+      commentElement.appendChild(createParagraph(comments[comment]));
+    }  
+}
+
+function createParagraph(msgJson) {
+    var msg = JSON.parse(msgJson);
+    const paragraph = document.createElement('p');
+    paragraph.innerHTML = '<h4>';
+    paragraph.innerText = msg.sender;
+    paragraph.innerHTML = '</4>';
+    paragraph.innerText = msg.message;
+    return paragraph;
+}
