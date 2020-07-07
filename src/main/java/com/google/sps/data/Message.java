@@ -2,6 +2,8 @@ package com.google.sps.data;
 import com.google.appengine.api.datastore.EmbeddedEntity;
 import java.util.Map;
 
+//Message object representing messages sent in the chat of the Room
+
 public class Message{
     private static final String SENDER_PROPERTY = "sender";
     private static final String MESSAGE_PROPERTY = "message";
@@ -22,17 +24,22 @@ public class Message{
         this.message = message;
         this.timestamp = timestamp;
     }
+
+    //Creates a new message
     public static Message createNewMessage(String sender, String message, Long timestamp) {
         return new Message(sender, message, timestamp);
     }
+
     //Returns the sender of the string
     public String getSender(){
         return this.sender;
     }
+
     //Returns the body of the message
     public String getMessageBody(){
         return this.message;
     }
+    
     //Returns when the message was sent
     public Long getTimestamp(){
         return this.timestamp;
@@ -50,6 +57,6 @@ public class Message{
     //Turns the message embedded entity into a Message object
     public static Message fromEmbeddedEntity(EmbeddedEntity messageEntity) {
         Map<String,Object> properties = messageEntity.getProperties();
-        return new Message((String) properties.get("sender"), (String) properties.get("message"), (long) properties.get("timestamp"));
+        return new Message((String) properties.get(SENDER_PROPERTY), (String) properties.get(MESSAGE_PROPERTY), (long) properties.get(TIMESTAMP_PROPERTY));
     }
 }
