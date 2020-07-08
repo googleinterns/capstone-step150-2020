@@ -49,8 +49,6 @@ public final class CreateRoomServlet extends HttpServlet {
         String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+5);
         
         Queue<Video> videos = playlistIdToVideoQueue(playlistId);
-        System.out.println(members);
-        System.out.println(videos);
 
         Room newRoom = Room.createRoom(members, videos, new LinkedList<Message>());
 
@@ -59,7 +57,7 @@ public final class CreateRoomServlet extends HttpServlet {
         try{
            Key newRoomKey = DATASTORE.put(roomEntity);
            res.setContentType("text/html");
-           res.getWriter().println(createHtmlString(newRoomKey.toString()));
+           res.getWriter().println(createHtmlString(newRoomKey.getId()));
         } 
         catch(DatastoreFailureException e){
             System.out.println(e.toString());
@@ -96,7 +94,7 @@ public final class CreateRoomServlet extends HttpServlet {
         }
         return videoUrls;
     }
-    public String createHtmlString(String key){
+    public String createHtmlString(Long key){
         return "<center><h2>Congratulations! This is your new Room ID.</h2><br><br><h1>"+key+"</h1></center>";
     }
 }
