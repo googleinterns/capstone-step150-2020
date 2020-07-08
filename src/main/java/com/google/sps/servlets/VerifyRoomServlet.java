@@ -59,12 +59,12 @@ public final class VerifyRoomServlet extends HttpServlet {
       String jsonOfTempUrl = new Gson().toJson("https://www.youtube.com/embed/Bey4XXJAqS8");
       response.getWriter().println(jsonOfTempUrl);
     } else {
-			Queue<Video> videosOfPlaylist = currentRoom.getVideos();
-			ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
-			String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
-			response.getWriter().println(jsonOfUrls);
+      Queue<Video> videosOfPlaylist = currentRoom.getVideos();
+      ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
+      String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
+      response.getWriter().println(jsonOfUrls);
     }
-	}
+  }
 
 	// Finds the key from the datastore using the String of the ID
 	public Key getKeyFromString(String roomId){

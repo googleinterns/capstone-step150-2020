@@ -18,7 +18,7 @@ function getRoomId(url) {
 	var parser = document.createElement('a');
 	parser.href = url;
 	var query = parser.search.substring(1);
-  // Create a temp array of len=2, 
+    // Create a temp array of len=2, 
 	// holds 'roomId=' in [0] and room id in [1]
 	var tempArrayForRoomId = query.split('=');
 	var roomId = tempArrayForRoomId[1];
@@ -31,20 +31,20 @@ function getRoomId(url) {
 * @return {roomVideoUrl} The Url of the video to be displayed for the room
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
-	console.log("i am in the fetch private room function");
-  // Check that the current room id exits, 
-  // then return video url associated with that id
-	let roomPromise = await fetch('/verify-room?roomId='+currentRoomId);
-  let roomVideoUrl = await roomPromise.json();
-	var arrayOfUrls = parseJsonOfVideos(roomVideoUrl);
-	window.roomVideoUrl = arrayOfUrls[0];
-	console.log("in the fetch function " + window.roomVideoUrl);
+    console.log("i am in the fetch private room function");
+    // Check that the current room id exits, 
+    // then return video url associated with that id
+    let roomPromise = await fetch('/verify-room?roomId='+currentRoomId);
+    let roomVideoUrl = await roomPromise.json();
+    var arrayOfUrls = parseJsonOfVideos(roomVideoUrl);
+    window.roomVideoUrl = arrayOfUrls[0];
+    console.log("in the fetch function " + window.roomVideoUrl);
 }
 
 function parseJsonOfVideos(jsonOfVideos){
 	var arrayOfUrls = [];
 	for(i = 0; i < jsonOfVideos.length; i++) {
-			arrayOfUrls.push(jsonOfVideos[i]);
+		arrayOfUrls.push(jsonOfVideos[i]);
 	}
 	return arrayOfUrls;
 }
@@ -71,7 +71,7 @@ function onYouTubeIframeAPIReady() {
 
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
-  document.getElementById('player').style.borderColor = '#FF6D00';
+    document.getElementById('player').style.borderColor = '#FF6D00';
 }
 
 /**
