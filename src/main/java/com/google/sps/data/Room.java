@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.appengine.api.datastore.Key;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.EmbeddedEntity;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.stream.*;
 
-
+// The Room object representing the private room containers users and videos
 public class Room {
     public static final String ROOM_ENTITY = "Room";
     public static final String MEMBERS_PROPERTY = "members";
@@ -143,11 +142,7 @@ public class Room {
         ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
         Queue<Video> videoQueue = 
         ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
-<<<<<<< HEAD
-        LinkedList<Message> messageList = properties.get(MESSAGES_PROPERTY) != null ? 
-=======
         LinkedList<Message> messageList = properties.get(MESSAGES_PROPERTY) != null ?
->>>>>>> 679b021327b3de23200fd0f359d1dfd6618ba9b8
         ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList<Message>();
         return new Room(memberList, videoQueue, messageList);
     }

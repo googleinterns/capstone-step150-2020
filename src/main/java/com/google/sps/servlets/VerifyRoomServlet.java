@@ -50,8 +50,8 @@ public final class VerifyRoomServlet extends HttpServlet {
     response.setContentType("application/json");
 		
     String currentRoomId = request.getParameter("roomId");
-		Key currentRoomKey = getKeyFromString(currentRoomId);
-		Room currentRoom = Room.fromKey(currentRoomKey);
+	Key currentRoomKey = getKeyFromString(currentRoomId);
+	Room currentRoom = Room.fromKey(currentRoomKey);
 
     // If the user sent in a room id not in the datastore, send them to a dummy room
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
@@ -68,29 +68,29 @@ public final class VerifyRoomServlet extends HttpServlet {
 
 	// Finds the key from the datastore using the String of the ID
 	public Key getKeyFromString(String roomId){
-		Query query = new Query(Room.ROOM_ENTITY);
-		PreparedQuery results = datastore.prepare(query);
-		for(Entity currentRoomEntity : results.asIterable()) {
-			Key currentRoomKey = currentRoomEntity.getKey();
-			System.out.println("The temp currentRoomKey is " + currentRoomKey.toString());
-			String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
-			System.out.println("parsedRoomKey is " + parsedRoomKey);
-			if(roomId.equals(parsedRoomKey)){
-				return currentRoomKey;
-			}
+	  Query query = new Query(Room.ROOM_ENTITY);
+	  PreparedQuery results = datastore.prepare(query);
+	  for(Entity currentRoomEntity : results.asIterable()) {
+		Key currentRoomKey = currentRoomEntity.getKey();
+		System.out.println("The temp currentRoomKey is " + currentRoomKey.toString());
+		String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
+		System.out.println("parsedRoomKey is " + parsedRoomKey);
+		if(roomId.equals(parsedRoomKey)){
+		  return currentRoomKey;
 		}
-		return null;
+	  }
+	  return null;
 	}
 
 	/*
 	* Take the queue of videos associated with the room and transfer it into an array
 	*/
 	public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-		ArrayList<String> videoUrls = new ArrayList<>();
-		while(!videosOfPlaylist.isEmpty()){
-			Video currVideo = videosOfPlaylist.remove();
-			videoUrls.add(currVideo.getUrl());
-		}
-		return videoUrls;
+	  ArrayList<String> videoUrls = new ArrayList<>();
+	  while(!videosOfPlaylist.isEmpty()){
+		Video currVideo = videosOfPlaylist.remove();
+		videoUrls.add(currVideo.getUrl());
+	  }
+	  return videoUrls;
 	}
 }

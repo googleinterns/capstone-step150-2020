@@ -53,9 +53,7 @@ public final class CreateRoomServlet extends HttpServlet {
         System.out.println(videos);
 
         Room newRoom = Room.createRoom(members, videos, new LinkedList<Message>());
-
         Entity roomEntity = Room.toEntity(newRoom);
-        
         try{
            Key newRoomKey = DATASTORE.put(roomEntity);
            res.setContentType("text/html");
@@ -64,7 +62,6 @@ public final class CreateRoomServlet extends HttpServlet {
         catch(DatastoreFailureException e){
             System.out.println(e.toString());
         }
-
     }
     /**
       * Communicates with the Youtube Data API to get playlistItem information
