@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -62,9 +63,11 @@ public final class VerifyRoomServlet extends HttpServlet {
       String jsonOfTempUrl = new Gson().toJson("https://www.youtube.com/embed/Bey4XXJAqS8");
       response.getWriter().println(jsonOfTempUrl);
     } else {
-			String jsonOfUrl = new Gson().toJson(currentRoom.getVideos());
-			System.out.println(jsonOfUrl);
-			response.getWriter().println(jsonOfUrl);
+			Queue<Video> videosOfPlaylist = currentRoom.getVideos();
+			ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
+			String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
+			System.out.println("jsonOfUrls is " + jsonOfUrls);
+			response.getWriter().println(jsonOfUrls);
     }
 	}
 
@@ -73,14 +76,23 @@ public final class VerifyRoomServlet extends HttpServlet {
         Query query = new Query(Room.ROOM_ENTITY);
         PreparedQuery results = datastore.prepare(query);
         for(Entity currentRoomEntity : results.asIterable()) {
-            Key currentRoomKey = currentRoomEntity.getKey();
-						System.out.println("The temp currentRoomKey is " + currentRoomKey.toString());
-						String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
-						System.out.println("parsedRoomKey is " + parsedRoomKey);
-            if(roomId.equals(parsedRoomKey)){
-              return currentRoomKey;
-            }
+					Key currentRoomKey = currentRoomEntity.getKey();
+					System.out.println("The temp currentRoomKey is " + currentRoomKey.toString());
+					String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
+					System.out.println("parsedRoomKey is " + parsedRoomKey);
+					if(roomId.equals(parsedRoomKey)){
+						return currentRoomKey;
+					}
         }
         return null;
     }
+
+		public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
+			ArrayList<String> videoUrls = new ArrayList<>();
+			while(!videosOfPlaylist.isEmpty()){
+				Video currVideo = videosOfPlaylist.remove();
+				videoUrls.add(currVideo.getUrl());
+			}
+			return videoUrls;
+		}
 }
