@@ -3,18 +3,17 @@
   <head>
     <meta charset="UTF-8">
     <title>Youtube Party</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="../scripts/script.js"></script>
+    <link rel="stylesheet" href="../stylesheets/create_room_style.css">
   </head>
   <body>
     <center>
       <h2>Create a new Youtube Party</h2>
       <form action="/create-room" method="POST">
         <label for="PlaylistUrl">PlayList URL:</label><br>
-        <textarea name="PlaylistUrl"></textarea><br><br>
+        <textarea class="textbox" name="PlaylistUrl"></textarea><br><br>
         <label for="Invitees">Add invitees(email addresses):</label><br>
-        <textarea name="Invitees"></textarea><br><br>
-        <input type="submit">
+        <textarea class="textbox" name="Invitees"></textarea><br><br>
+        <input id="submitbutton" type="submit">
       </form>
     </center>
   </body>

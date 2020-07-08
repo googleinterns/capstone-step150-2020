@@ -143,7 +143,11 @@ public class Room {
         ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
         Queue<Video> videoQueue = 
         ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+<<<<<<< HEAD
         LinkedList<Message> messageList = properties.get(MESSAGES_PROPERTY) != null ? 
+=======
+        LinkedList<Message> messageList = properties.get(MESSAGES_PROPERTY) != null ?
+>>>>>>> 679b021327b3de23200fd0f359d1dfd6618ba9b8
         ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList<Message>();
         return new Room(memberList, videoQueue, messageList);
     }

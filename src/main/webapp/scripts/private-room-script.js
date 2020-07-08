@@ -23,6 +23,7 @@ function getRoomId(url) {
 	var tempArrayForRoomId = query.split('=');
 	var roomId = tempArrayForRoomId[1];
 	window.roomId = roomId;
+    return roomId;
 }
 
 /**

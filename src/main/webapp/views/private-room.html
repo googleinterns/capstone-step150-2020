@@ -18,6 +18,11 @@
     <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">
       <textarea name="text-input"></textarea>
       <br/>
+      <input type="hidden" id="roomId" name="roomId" value="" />
+        <script type="text/javascript">
+        var elem = document.getElementById("roomId");
+        elem.value = getRoomId(window.location.href);
+        </script>
       <input type="submit" value="Send"/>
     </form>
   </body>
