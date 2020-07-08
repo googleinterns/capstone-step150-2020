@@ -29,22 +29,10 @@
     	<scope>provided</scope>
     </dependency>
     <dependency>
-<<<<<<< HEAD
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.8.6</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-1.0-sdk</artifactId>
-      <version>1.9.59</version>
-    </dependency>
-=======
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
         <version>2.8.6</version>
     </dependency>
->>>>>>> 01e304e801ebc27598710258f75686e934426667
   </dependencies>
 
   <build>
