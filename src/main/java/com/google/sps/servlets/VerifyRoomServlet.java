@@ -49,13 +49,9 @@ public final class VerifyRoomServlet extends HttpServlet {
     // if not print a hardcoded dummy youtube video
     response.setContentType("application/json");
 		
-    // TODO: If the currentRoomId is included in the datastore redirect them to the private room page
     String currentRoomId = request.getParameter("roomId");
-		System.out.println("roomId is " + currentRoomId);
 		Key currentRoomKey = getKeyFromString(currentRoomId);
-		System.out.println("currentRoomId is " + currentRoomKey);
 		Room currentRoom = Room.fromKey(currentRoomKey);
-		System.out.println("currentRoomKey is " + currentRoomKey);
 
     // If the user sent in a room id not in the datastore, send them to a dummy room
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
@@ -66,33 +62,35 @@ public final class VerifyRoomServlet extends HttpServlet {
 			Queue<Video> videosOfPlaylist = currentRoom.getVideos();
 			ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
 			String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
-			System.out.println("jsonOfUrls is " + jsonOfUrls);
 			response.getWriter().println(jsonOfUrls);
     }
 	}
 
 	// Finds the key from the datastore using the String of the ID
-    public Key getKeyFromString(String roomId){
-        Query query = new Query(Room.ROOM_ENTITY);
-        PreparedQuery results = datastore.prepare(query);
-        for(Entity currentRoomEntity : results.asIterable()) {
-					Key currentRoomKey = currentRoomEntity.getKey();
-					System.out.println("The temp currentRoomKey is " + currentRoomKey.toString());
-					String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
-					System.out.println("parsedRoomKey is " + parsedRoomKey);
-					if(roomId.equals(parsedRoomKey)){
-						return currentRoomKey;
-					}
-        }
-        return null;
-    }
-
-		public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-			ArrayList<String> videoUrls = new ArrayList<>();
-			while(!videosOfPlaylist.isEmpty()){
-				Video currVideo = videosOfPlaylist.remove();
-				videoUrls.add(currVideo.getUrl());
+	public Key getKeyFromString(String roomId){
+		Query query = new Query(Room.ROOM_ENTITY);
+		PreparedQuery results = datastore.prepare(query);
+		for(Entity currentRoomEntity : results.asIterable()) {
+			Key currentRoomKey = currentRoomEntity.getKey();
+			System.out.println("The temp currentRoomKey is " + currentRoomKey.toString());
+			String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
+			System.out.println("parsedRoomKey is " + parsedRoomKey);
+			if(roomId.equals(parsedRoomKey)){
+				return currentRoomKey;
 			}
-			return videoUrls;
 		}
+		return null;
+	}
+
+	/*
+	* Take the queue of videos associated with the room and transfer it into an array
+	*/
+	public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
+		ArrayList<String> videoUrls = new ArrayList<>();
+		while(!videosOfPlaylist.isEmpty()){
+			Video currVideo = videosOfPlaylist.remove();
+			videoUrls.add(currVideo.getUrl());
+		}
+		return videoUrls;
+	}
 }

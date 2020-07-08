@@ -36,8 +36,17 @@ async function fetchPrivateRoomVideo(currentRoomId) {
   // then return video url associated with that id
 	let roomPromise = await fetch('/verify-room?roomId='+currentRoomId);
   let roomVideoUrl = await roomPromise.json();
-	window.roomVideoUrl = roomVideoUrl;
-	console.log("in the fetch function" + window.roomVideoUrl);
+	var arrayOfUrls = parseJsonOfVideos(roomVideoUrl);
+	window.roomVideoUrl = arrayOfUrls[0];
+	console.log("in the fetch function " + window.roomVideoUrl);
+}
+
+function parseJsonOfVideos(jsonOfVideos){
+	var arrayOfUrls = [];
+	for(i = 0; i < jsonOfVideos.length; i++) {
+			arrayOfUrls.push(jsonOfVideos[i]);
+	}
+	return arrayOfUrls;
 }
 
 // This code loads the IFrame Player API code asynchronously.
