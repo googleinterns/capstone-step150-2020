@@ -32,13 +32,22 @@ function getRoomId(url) {
 * @return {roomVideoUrl} The Url of the video to be displayed for the room
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
-	console.log("i am in the fetch private room function");
+    console.log("i am in the fetch private room function");
     // Check that the current room id exits, 
     // then return video url associated with that id
     let roomPromise = await fetch('/verify-room?roomId='+currentRoomId);
     let roomVideoUrl = await roomPromise.json();
-	window.roomVideoUrl = roomVideoUrl;
-	console.log("in the fetch function" + window.roomVideoUrl);
+    var arrayOfUrls = parseJsonOfVideos(roomVideoUrl);
+    window.roomVideoUrl = arrayOfUrls[0];
+    console.log("in the fetch function " + window.roomVideoUrl);
+}
+
+function parseJsonOfVideos(jsonOfVideos){
+	var arrayOfUrls = [];
+	for(i = 0; i < jsonOfVideos.length; i++) {
+		arrayOfUrls.push(jsonOfVideos[i]);
+	}
+	return arrayOfUrls;
 }
 
 // This code loads the IFrame Player API code asynchronously.
@@ -63,7 +72,7 @@ function onYouTubeIframeAPIReady() {
 
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
-  document.getElementById('player').style.borderColor = '#FF6D00';
+    document.getElementById('player').style.borderColor = '#FF6D00';
 }
 
 /**
