@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.stream.*;
 
+
 public class Room {
     private static final String ROOM_ENTITY = "Room";
     private static final String MEMBERS_PROPERTY = "members";
@@ -40,7 +41,7 @@ public class Room {
         this.members = members;
         this.videos = videos;
     }
-    
+
     /**
       * Room constructor
       * @param members a List of Member objects
@@ -49,7 +50,7 @@ public class Room {
       * @return a new Room object
       */
     private Room(List<Member> members, Queue<Video> videos, LinkedList<Message> messages) {
-        this.messages = messages;
+        this.members = members;
         this.videos = videos;
         this.messages = messages;
     }
@@ -65,8 +66,8 @@ public class Room {
     }
 
     //Get all of the members as a list of EmbeddedEntities
-    private List<EmbeddedEntity> getMembersAsEmbeddedEntities(){
-        return members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
+    private List<EmbeddedEntity> getMembersAsEmbeddedEntities() {
+        return (List<EmbeddedEntity>) members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
     }
 
     //Returns the Room's video url list
@@ -97,6 +98,7 @@ public class Room {
         newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
         return newRoom;
     }
+
     //Creates a room object from a Datastore Key
     public static Room fromKey(Key roomKey) {
         try {
@@ -107,13 +109,25 @@ public class Room {
         return null;
     }
 
-    //Adds a message to the room
-    public void addMessage(Message message){
-        if(this.messages.size() < 10) {
-            this.messages.add(message);
-        } else {
-            this.messages.remove(0);
-            this.messages.add(message);
+    // Helper addMessage function to manipulate the list of messages
+    private void addMessage(Message msg){
+        if(messages.size() >= 10) {
+            messages.remove(0);
+        }
+        messages.add(msg);
+    }
+
+    // Manipulates the messages property of the room given a room key and a new message to be added
+    public static void addMessagesFromKey(Key roomKey, Message chatMessage) {
+        try {
+        Entity roomEntity = datastore.get(roomKey);
+        Room room = Room.fromEntity(roomEntity);
+        room.addMessage(chatMessage);
+
+        roomEntity.setProperty("messages", room.getMessagesAsEntities());
+        datastore.put(roomEntity);
+        } catch (EntityNotFoundException e){
+            System.out.println(e.toString());
         }
     }
 
@@ -128,9 +142,9 @@ public class Room {
         List<Member> memberList = 
         ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
         Queue<Video> videoQueue = 
-        ((Queue<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
-        LinkedList<Message> messageList = 
-        ((LinkedList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+        ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+        LinkedList<Message> messageList = properties.get(MESSAGES_PROPERTY) != null ?
+        ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList<Message>();
         return new Room(memberList, videoQueue, messageList);
     }
 }
