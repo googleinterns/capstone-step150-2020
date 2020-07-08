@@ -21,10 +21,10 @@ import java.util.stream.*;
 
 
 public class Room {
-    private static final String ROOM_ENTITY = "Room";
-    private static final String MEMBERS_PROPERTY = "members";
-    private static final String MESSAGES_PROPERTY = "messages";
-    private static final String VIDEOS_PROPERTY = "videos";
+    public static final String ROOM_ENTITY = "Room";
+    public static final String MEMBERS_PROPERTY = "members";
+    public static final String MESSAGES_PROPERTY = "messages";
+    public static final String VIDEOS_PROPERTY = "videos";
     private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private List<Member> members;
     private LinkedList<Message> messages;
@@ -142,9 +142,9 @@ public class Room {
         List<Member> memberList = 
         ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
         Queue<Video> videoQueue = 
-        ((Queue<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
-        LinkedList<Message> messageList = 
-        ((LinkedList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+        ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+        LinkedList<Message> messageList = properties.get(MESSAGES_PROPERTY) != null ? 
+        ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList<Message>();
         return new Room(memberList, videoQueue, messageList);
     }
 }
