@@ -37,17 +37,28 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     // then return video url associated with that id
     let roomPromise = await fetch('/verify-room?roomId='+currentRoomId);
     let roomVideoUrl = await roomPromise.json();
-    var arrayOfUrls = parseJsonOfVideos(roomVideoUrl);
-    window.roomVideoUrl = arrayOfUrls[0];
+    var playlistUrls = parseJsonOfVideos(roomVideoUrl);
+    window.roomVideoUrl = playlistUrls[0];
+    extractVideoIds(playlistUrls);
     console.log("in the fetch function " + window.roomVideoUrl);
 }
 
 function parseJsonOfVideos(jsonOfVideos){
-	var arrayOfUrls = [];
+	var playlistUrls = [];
 	for(i = 0; i < jsonOfVideos.length; i++) {
-		arrayOfUrls.push(jsonOfVideos[i]);
+		playlistUrls.push(jsonOfVideos[i]);
 	}
-	return arrayOfUrls;
+	return playlistUrls;
+}
+var YT_BASE_URL = "https://www.youtube.com/embed/";
+function extractVideoIds(playlistUrls){
+    var playlistIds = [];
+    for(i = 0; i < playlistUrls.length; i++) {
+        var currentUrl = playlistUrls[i];
+        var currentRoomId = currentUrl.substring(YT_BASE_URL.length);
+        playlistIds.push(currentRoomId);
+    }
+    window.playlistIds = playlistIds;
 }
 
 // This code loads the IFrame Player API code asynchronously.
@@ -91,6 +102,11 @@ function onPlayerStateChange(event) {
 function stopVideo() {
 	player.stopVideo();
 }
+
+function cuePlaylist(){
+    player.cuePlaylist()
+}
+
 async function displayChat() {
     let response = await fetch('/chat');
     let messages = await response.json();
