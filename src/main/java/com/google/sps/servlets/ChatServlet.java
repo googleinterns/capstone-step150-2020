@@ -20,12 +20,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/chat")
-
 public class ChatServlet extends HttpServlet {
 
   // Retrieve messages from datastore
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    long roomID = Long.parseLong(request.getQueryString());
+    String query = request.getParameter("roomId");
+    System.out.println(query);
+    long roomID = Long.parseLong(query);
     Gson gson = new Gson();
 
     // Retrieves the entity with matching ID and its corresponding messages property as a JSON string
@@ -48,7 +49,9 @@ public class ChatServlet extends HttpServlet {
     String sender = "sender"; 
 
     // Get room ID from URL request
-    long roomID = Long.parseLong(request.getQueryString());
+    String query = request.getParameter("roomId");
+    System.out.println(query);
+    long roomID = Long.parseLong(query);
     Message chatMessage = Message.createNewMessage(sender, message, timestamp);
 
     Room.addMessagesFromKey(KeyFactory.createKey("Room",roomID), chatMessage);
