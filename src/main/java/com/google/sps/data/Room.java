@@ -119,12 +119,12 @@ public class Room {
     // Manipulates the messages property of the room given a room key and a new message to be added
     public static void addMessagesFromKey(Key roomKey, Message chatMessage) {
         try {
-        Entity roomEntity = datastore.get(roomKey);
-        Room room = Room.fromEntity(roomEntity);
-        room.addMessage(chatMessage);
+            Entity roomEntity = datastore.get(roomKey);
+            Room room = Room.fromEntity(roomEntity);
+            room.addMessage(chatMessage);
 
-        roomEntity.setProperty("messages", room.getMessagesAsEntities());
-        datastore.put(roomEntity);
+            roomEntity.setProperty("messages", room.getMessagesAsEntities());
+            datastore.put(roomEntity);
         } catch (EntityNotFoundException e){
             System.out.println(e.toString());
         }

@@ -72,9 +72,7 @@ public final class VerifyRoomServlet extends HttpServlet {
 	  PreparedQuery results = datastore.prepare(query);
 	  for(Entity currentRoomEntity : results.asIterable()) {
 		Key currentRoomKey = currentRoomEntity.getKey();
-		System.out.println("The temp currentRoomKey is " + currentRoomKey.toString());
 		String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
-		System.out.println("parsedRoomKey is " + parsedRoomKey);
 		if(roomId.equals(parsedRoomKey)){
 		  return currentRoomKey;
 		}
