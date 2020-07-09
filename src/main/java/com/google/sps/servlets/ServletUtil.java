@@ -1,5 +1,7 @@
 package com.google.sps.servlets;
 import com.google.gson.Gson;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class ServletUtil {
     public static final Gson PARSER = new Gson();
@@ -13,4 +15,7 @@ public class ServletUtil {
     public static final String DATA_API_KEY = "AIzaSyA6NypfS8qTc_1O73fx2ZP6JwMZdB_FSas";
     public static final String YT_BASE_URL = "https://www.youtube.com/embed/";
     public static final String PLAYLIST_QUERY_PARAMETER = "list=";
+    public static final String JSON_CONTENT_TYPE = "application/json";
+    public static final UserService USER_SERVICE = UserServiceFactory.getUserService();
+    public static final String HTML_CONTENT_TYPE = "text/html";
 }
