@@ -5,6 +5,7 @@ var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 // Boolean used to handle statechange function
 var isVideoFinished = false;
+var youtubePlayer;
 
 /**
  * Fetches prvivate room and prints the room to console
@@ -19,7 +20,6 @@ function fetchPrivateRoom() {
 * after the API code downloads.
 * TODO: Make videoId mutable
 */
-var youtubePlayer;
 function onYouTubeIframeAPIReady() {
 	youtubePlayer = new YT.Player('player', {
 		height: '390',
