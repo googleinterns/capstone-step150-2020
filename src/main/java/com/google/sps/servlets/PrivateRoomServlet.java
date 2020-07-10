@@ -14,29 +14,27 @@
 
 package com.google.sps.servlets;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that takes in the user's inputted Room ID and directs them
-    to the associated private room once ensurred that it's an actual room*/
-@WebServlet("/join-room")
-public final class JoinRoomServlet extends HttpServlet {
-  private String inputtedUserTag = "user-party-link";
-  private String currentRoomId = "";
+/** Servlet that takes in inputted room Id and directs them to that room
+*/
+@WebServlet("/private-room")
+public final class PrivateRoomServlet extends HttpServlet {
+  private String inputtedIdTag = "user-party-link";
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Take in user's private room and store it to global variable
-	currentRoomId = request.getParameter(inputtedUserTag);
-	response.getWriter().println(currentRoomId);
-    // TODO: Create hard-coded hashmap of {Room ID : URL} Hashmap
-    // TODO: Print json-ified string to /join-room page for private room to fetch
-	response.sendRedirect(ServletUtil.PRIVATE_ROOM_PATH);
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String currentRoomId = request.getParameter(inputtedIdTag);
+    response.sendRedirect("/views/private-room.html?id="+currentRoomId);
   }
 }
