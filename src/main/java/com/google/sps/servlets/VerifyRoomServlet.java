@@ -67,28 +67,28 @@ public final class VerifyRoomServlet extends HttpServlet {
   }
 
 	// Finds the key from the datastore using the String of the ID
-	public Key getKeyFromString(String roomId){
-	  Query query = new Query(Room.ROOM_ENTITY);
-	  PreparedQuery results = datastore.prepare(query);
-	  for(Entity currentRoomEntity : results.asIterable()) {
-		Key currentRoomKey = currentRoomEntity.getKey();
-		String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
-		if(roomId.equals(parsedRoomKey)){
-		  return currentRoomKey;
-		}
-	  }
-	  return null;
-	}
+  public Key getKeyFromString(String roomId) {
+    Query query = new Query(Room.ROOM_ENTITY);
+    PreparedQuery results = datastore.prepare(query);
+    for(Entity currentRoomEntity : results.asIterable()) {
+      Key currentRoomKey = currentRoomEntity.getKey();
+      String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
+      if(roomId.equals(parsedRoomKey)){
+        return currentRoomKey;
+      }
+    }
+    return null;
+  }
 
-	/*
-	* Take the queue of videos associated with the room and transfer it into an array
-	*/
-	public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-	  ArrayList<String> videoUrls = new ArrayList<>();
-	  while(!videosOfPlaylist.isEmpty()){
-		Video currVideo = videosOfPlaylist.remove();
-		videoUrls.add(currVideo.getUrl());
-	  }
-	  return videoUrls;
+  /*
+  * Take the queue of videos associated with the room and transfer it into an array
+  */
+  public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
+	ArrayList<String> videoUrls = new ArrayList<>();
+	while(!videosOfPlaylist.isEmpty()){
+	  Video currVideo = videosOfPlaylist.remove();
+	  videoUrls.add(currVideo.getUrl());
 	}
+	return videoUrls;
+  }
 }

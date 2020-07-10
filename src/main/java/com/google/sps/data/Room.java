@@ -20,10 +20,10 @@ import java.util.stream.*;
 
 // The Room object representing the private room containers users and videos
 public class Room {
-    public static final String ROOM_ENTITY = "Room";
-    public static final String MEMBERS_PROPERTY = "members";
-    public static final String MESSAGES_PROPERTY = "messages";
-    public static final String VIDEOS_PROPERTY = "videos";
+    private static final String ROOM_ENTITY = "Room";
+    private static final String MEMBERS_PROPERTY = "members";
+    private static final String MESSAGES_PROPERTY = "messages";
+    private static final String VIDEOS_PROPERTY = "videos";
     private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private List<Member> members;
     private LinkedList<Message> messages;
