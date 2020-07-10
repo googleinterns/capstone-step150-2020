@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
 * Calls the three functions associated with loading the room's iframe
  */
@@ -54,6 +55,35 @@ function loadVideo(){
 var player;
 function onYouTubeIframeAPIReady() {
 	player = new YT.Player('player', {
+=======
+// This code loads the IFrame Player API code asynchronously.
+var scriptTag = document.createElement('script');
+scriptTag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+// Boolean used to handle statechange function
+var isVideoFinished = false;
+var youtubePlayer;
+
+/**
+ * Fetches prvivate room and prints the room to console
+ */
+function fetchPrivateRoom() {
+  console.log('Fetching private room.');
+  // TODO: fetch hard-coded private room
+}
+
+/**
+* This function creates an <iframe> (and YouTube player)
+* after the API code downloads.
+* TODO: Make videoId mutable
+*/
+function onYouTubeIframeAPIReady() {
+	youtubePlayer = new YT.Player('player', {
+		height: '390',
+		width: '640',
+		videoId: 'M7lc1UVf-VE',
+>>>>>>> 1350517c522ff56cc3081af8fd6914f1d5f5a90a
 		events: {
 			'onReady': onPlayerReady,
 			'onStateChange': onPlayerStateChange
@@ -63,6 +93,7 @@ function onYouTubeIframeAPIReady() {
 
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
+<<<<<<< HEAD
   document.getElementById('player').style.borderColor = '#FF6D00';
 }
 
@@ -76,10 +107,23 @@ function onPlayerStateChange(event) {
 	if (event.data == YT.PlayerState.PLAYING && !done) {
 		setTimeout(stopVideo, 6000);
 		done = true;
+=======
+	event.target.playVideo();
+}
+
+// The API calls this function when the player's state changes.
+// The function indicates that when playing a video (state=1),
+// the player should play for six seconds and then stop.
+function onPlayerStateChange(event) {
+	if (event.data == YT.PlayerState.PLAYING && !isVideoFinished) {
+		setTimeout(stopVideo, 6000);
+		isVideoFinished = true;
+>>>>>>> 1350517c522ff56cc3081af8fd6914f1d5f5a90a
 	}
 }
 
 function stopVideo() {
+<<<<<<< HEAD
 	player.stopVideo();
 }
 
@@ -102,3 +146,7 @@ function createParagraph(msgJson) {
     paragraph.innerText = msg.message;
     return paragraph;
 }
+=======
+	youtubePlayer.stopVideo();
+}
+>>>>>>> 1350517c522ff56cc3081af8fd6914f1d5f5a90a

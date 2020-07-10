@@ -32,6 +32,7 @@ public final class JoinRoomServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+<<<<<<< HEAD
     /** TODO: Create hard-coded hashmap of {Room ID : URL} Hashmap
         TODO: Print json-ified string to /join-room page for private room to fetch */
   }
@@ -43,5 +44,13 @@ public final class JoinRoomServlet extends HttpServlet {
 		response.getWriter().println(currentRoomId);
 		// TODO: Redirect to private room Page
 		response.sendRedirect("/views/private-room.html");
+=======
+    // Take in user's private room and store it to global variable
+	currentRoomId = request.getParameter(inputtedUserTag);
+	response.getWriter().println(currentRoomId);
+    // TODO: Create hard-coded hashmap of {Room ID : URL} Hashmap
+    // TODO: Print json-ified string to /join-room page for private room to fetch
+	response.sendRedirect(ServletUtil.PRIVATE_ROOM_PATH);
+>>>>>>> 1350517c522ff56cc3081af8fd6914f1d5f5a90a
   }
 }
