@@ -5,12 +5,13 @@
     <title>Private Room</title>
 </head>
 <script src="/scripts/private-room-script.js"></script>   
-<body onload="loadIframe()" onload="setInterval(displayChat, 3000)">
-    <iframe id="video-tag"
+<body onload="loadPlayerDiv()" onload="setInterval(displayChat, 3000)">
+    <div id='player-div'></div>
+    <!-- <iframe id="video-tag"
         width="640" height="360"
         frameborder="0"
         style="border: solid 4px #37474F">
-    </iframe>
+    </iframe> -->
     <h3>Chat Area</h3>
     <div id="chat-messages">
     </div>
