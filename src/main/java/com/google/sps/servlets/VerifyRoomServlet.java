@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
 /** Servlet that takes in the user's room Id and verifies that it
- * exists, then prints the url associated with the verified room id
+ * exists, then prints the json version of all the urls in playlist
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
@@ -45,8 +45,6 @@ public final class VerifyRoomServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    // If the room Id provided is in the privateRooms hashmap, print that url
-    // if not print a hardcoded dummy youtube video
     response.setContentType("application/json");
 		
     String currentRoomId = request.getParameter("roomId");
@@ -54,7 +52,7 @@ public final class VerifyRoomServlet extends HttpServlet {
 	Key currentRoomKey = getKeyFromString(currentRoomId);
 	Room currentRoom = Room.fromKey(currentRoomKey);
 
-    // If the user sent in a room id not in the datastore, send them to a dummy room
+    // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
     if(currentRoom == null){
       String jsonOfTempUrl = new Gson().toJson("https://www.youtube.com/embed/Bey4XXJAqS8");
@@ -67,7 +65,9 @@ public final class VerifyRoomServlet extends HttpServlet {
     }
   }
 
-  // Finds the key from the datastore using the String of the ID
+  /*
+  * Finds the key from the datastore using the String of the ID
+  */
   public Key getKeyFromString(String roomId) {
     Query query = new Query(Room.ROOM_ENTITY);
     PreparedQuery results = datastore.prepare(query);

@@ -2,6 +2,8 @@ var roomId;
 var playlistUrls;
 var playlistIds;
 var youtubePlayer;
+// TODO: find way to access servletutil.java 's YT_BASE_URL instead of creating my own
+var YT_BASE_URL = "https://www.youtube.com/embed/";
 
 /**
 * Calls the three functions associated with loading the room's iframe
@@ -10,11 +12,7 @@ async function loadPlayerDiv(){
     loadVideo();
 	// Get the room id from the private room's url
 	await getRoomId(window.location.href);
-    console.log(roomId);
 	await fetchPrivateRoomVideo(roomId);
-	//var iframeTag = document.getElementById("video-tag");
-	//iframeTag.src = window.roomVideoUrl;
-    //loadRoomPlaylist();
 }
 
 /**
@@ -47,10 +45,12 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     let roomVideoUrl = await roomPromise.json();
     // create an array of all the YT videos' urls
     playlistUrls = parseJsonOfVideos(roomVideoUrl);
-    // window.roomVideoUrl = playlistUrls[0];
     playlistIds = extractVideoIds(playlistUrls);
 }
 
+/*
+* Takes json of the urls of videos in playlist and puts them in a array of strings of urls
+*/
 function parseJsonOfVideos(jsonOfVideos){
 	var playlistUrls = [];
 	for(i = 0; i < jsonOfVideos.length; i++) {
@@ -59,7 +59,6 @@ function parseJsonOfVideos(jsonOfVideos){
 	return playlistUrls;
 }
 
-var YT_BASE_URL = "https://www.youtube.com/embed/";
 function extractVideoIds(playlistUrls){
     var currentPlaylistIds = [];
     for(i = 0; i < playlistUrls.length; i++) {
@@ -82,7 +81,7 @@ function loadVideo(){
 	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }
 
-// This function creates an <iframe> (and YouTube player)
+// This function puts player in the div tag
 // after the API code downloads.
 function onYouTubeIframeAPIReady() {
     youtubePlayer = new YT.Player('player-div', 
@@ -157,7 +156,7 @@ function createParagraph(msgJson) {
     const paragraph = document.createElement('p');
     paragraph.innerHTML = '<h4>';
     paragraph.innerText = msg.sender;
-    paragraph.innerHTML = '</4>';
+    paragraph.innerHTML = '</h4>';
     paragraph.innerText = msg.message;
     return paragraph;
 }
