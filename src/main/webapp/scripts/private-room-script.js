@@ -10,9 +10,9 @@ var YT_BASE_URL = "https://www.youtube.com/embed/";
  */
 async function loadPlayerDiv(){
     loadVideo();
-	// Get the room id from the private room's url
-	await getRoomId(window.location.href);
-	await fetchPrivateRoomVideo(roomId);
+    // Get the room id from the private room's url
+    await getRoomId(window.location.href);
+    await fetchPrivateRoomVideo(roomId);
 }
 
 /**
@@ -21,14 +21,14 @@ async function loadPlayerDiv(){
 * @return {roomId} room id at end of the url
 */
 function getRoomId(url) {
-	var parser = document.createElement('a');
-	parser.href = url;
-	var query = parser.search.substring(1);
+    var parser = document.createElement('a');
+    parser.href = url;
+    var query = parser.search.substring(1);
     // Create a temp array of len=2, 
-	// holds 'roomId=' in [0] and room id in [1]
-	var tempArrayForRoomId = query.split('=');
-	var currentRoomId = tempArrayForRoomId[1];
-	roomId = currentRoomId;
+    // holds 'roomId=' in [0] and room id in [1]
+    var tempArrayForRoomId = query.split('=');
+    var currentRoomId = tempArrayForRoomId[1];
+    roomId = currentRoomId;
     return roomId;
 }
 
@@ -52,11 +52,11 @@ async function fetchPrivateRoomVideo(currentRoomId) {
 * Takes json of the urls of videos in playlist and puts them in a array of strings of urls
 */
 function parseJsonOfVideos(jsonOfVideos){
-	var playlistUrls = [];
-	for(i = 0; i < jsonOfVideos.length; i++) {
-		playlistUrls.push(jsonOfVideos[i]);
-	}
-	return playlistUrls;
+    var playlistUrls = [];
+    for(i = 0; i < jsonOfVideos.length; i++) {
+        playlistUrls.push(jsonOfVideos[i]);
+    }
+    return playlistUrls;
 }
 
 function extractVideoIds(playlistUrls){
@@ -75,10 +75,10 @@ function loadRoomPlaylist(){
 
 // This code loads the IFrame Player API code asynchronously.
 function loadVideo(){
-	var tag = document.createElement('script');
-	tag.src = "https://www.youtube.com/iframe_api";
-	var firstScriptTag = document.getElementsByTagName('script')[0];
-	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }
 
 // This function puts player in the div tag
@@ -110,7 +110,7 @@ function onPlayerReady(event) {
 }
 
 function stopVideo() {
-	youtubePlayer.stopVideo();
+    youtubePlayer.stopVideo();
 }
 
 // Log state changes
