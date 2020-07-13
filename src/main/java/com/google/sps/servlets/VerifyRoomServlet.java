@@ -50,6 +50,7 @@ public final class VerifyRoomServlet extends HttpServlet {
     response.setContentType("application/json");
 		
     String currentRoomId = request.getParameter("roomId");
+    // TODO: handle if they inputted a key string that does not exist in datastore
 	Key currentRoomKey = getKeyFromString(currentRoomId);
 	Room currentRoom = Room.fromKey(currentRoomKey);
 
@@ -66,7 +67,7 @@ public final class VerifyRoomServlet extends HttpServlet {
     }
   }
 
-	// Finds the key from the datastore using the String of the ID
+  // Finds the key from the datastore using the String of the ID
   public Key getKeyFromString(String roomId) {
     Query query = new Query(Room.ROOM_ENTITY);
     PreparedQuery results = datastore.prepare(query);
