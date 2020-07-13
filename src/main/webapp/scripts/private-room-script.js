@@ -4,11 +4,11 @@ var youtubePlayer;
 * Calls the three functions associated with loading the room's iframe
  */
 async function loadIframe(){
-	// Get the room id from the private room's url
-	await getRoomId(window.location.href);
-	await fetchPrivateRoomVideo(window.roomId);
-	var iframeTag = document.getElementById("video-tag");
-	iframeTag.src = window.roomVideoUrl;
+    // Get the room id from the private room's url
+    await getRoomId(window.location.href);
+    await fetchPrivateRoomVideo(window.roomId);
+    var iframeTag = document.getElementById("video-tag");
+    iframeTag.src = window.roomVideoUrl;
 }
 
 /**
@@ -17,14 +17,14 @@ async function loadIframe(){
 * @return {roomId} room id at end of the url
 */
 function getRoomId(url) {
-	var parser = document.createElement('a');
-	parser.href = url;
-	var query = parser.search.substring(1);
+    var parser = document.createElement('a');
+    parser.href = url;
+    var query = parser.search.substring(1);
     // Create a temp array of len=2, 
-	// holds 'roomId=' in [0] and room id in [1]
-	var tempArrayForRoomId = query.split('=');
-	var roomId = tempArrayForRoomId[1];
-	window.roomId = roomId;
+    // holds 'roomId=' in [0] and room id in [1]
+    var tempArrayForRoomId = query.split('=');
+    var roomId = tempArrayForRoomId[1];
+    window.roomId = roomId;
     return roomId;
 }
 
@@ -45,30 +45,30 @@ async function fetchPrivateRoomVideo(currentRoomId) {
 }
 
 function parseJsonOfVideos(jsonOfVideos){
-	var arrayOfUrls = [];
-	for(i = 0; i < jsonOfVideos.length; i++) {
-		arrayOfUrls.push(jsonOfVideos[i]);
-	}
-	return arrayOfUrls;
+    var arrayOfUrls = [];
+    for(i = 0; i < jsonOfVideos.length; i++) {
+	arrayOfUrls.push(jsonOfVideos[i]);
+    }
+    return arrayOfUrls;
 }
 
 // This code loads the IFrame Player API code asynchronously.
 function loadVideo(){
-	var tag = document.createElement('script');
-	tag.src = "https://www.youtube.com/iframe_api";
-	var firstScriptTag = document.getElementsByTagName('script')[0];
-	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 }
 
 // This function creates an <iframe> (and YouTube player)
 // after the API code downloads.
 function onYouTubeIframeAPIReady() {
-	youtubePlayer = new YT.Player('player', {
-		events: {
-			'onReady': onPlayerReady,
-			'onStateChange': onPlayerStateChange
-		}
-	});
+    youtubePlayer = new YT.Player('player', {
+        events: {
+	    'onReady': onPlayerReady,
+	    'onStateChange': onPlayerStateChange
+	}
+    });
 }
 
 // The API will call this function when the video player is ready.
@@ -82,14 +82,14 @@ function onPlayerReady(event) {
 * the player should play for six seconds and then stop.
 */ 
 function onPlayerStateChange(event) {
-	if (event.data == YT.PlayerState.PLAYING && !isVideoFinished) {
-		setTimeout(stopVideo, 6000);
-		isVideoFinished = true;
-	}
+    if (event.data == YT.PlayerState.PLAYING && !isVideoFinished) {
+        setTimeout(stopVideo, 6000);
+        isVideoFinished = true;
+    }
 }
 
 function stopVideo() {
-	youtubePlayer.stopVideo();
+    youtubePlayer.stopVideo();
 }
 
 async function displayChat() {
