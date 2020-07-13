@@ -14,5 +14,4 @@ async function authenticate(redirectPath){
         let loginHtml = await res.text();
         document.getElementsByTagName("body")[0].innerHTML = loginHtml;
     }
-    
 }

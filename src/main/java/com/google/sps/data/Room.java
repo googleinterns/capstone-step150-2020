@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.appengine.api.datastore.Key;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.EmbeddedEntity;
@@ -35,18 +34,17 @@ public class Room {
     //Room factory function
     public static Room createRoom(List<Member> members, Queue<Video> videos, Queue<Message> messages){
         return new Room(members, videos, messages);
-
     }
 
     // Manipulates the messages property of the room given a room key and a new message to be added
     public static void addMessagesFromKey(Key roomKey, Message chatMessage) {
         try {
-        Entity roomEntity = datastore.get(roomKey);
-        Room room = Room.fromEntity(roomEntity);
-        room.addMessage(chatMessage);
+            Entity roomEntity = datastore.get(roomKey);
+            Room room = Room.fromEntity(roomEntity);
+            room.addMessage(chatMessage);
 
-        roomEntity.setProperty("messages", room.getMessagesAsEntities());
-        datastore.put(roomEntity);
+            roomEntity.setProperty("messages", room.getMessagesAsEntities());
+            datastore.put(roomEntity);
         } catch (EntityNotFoundException e){
             System.out.println(e.toString());
         }
