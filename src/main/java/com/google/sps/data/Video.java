@@ -2,6 +2,7 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.EmbeddedEntity;
 import java.util.Map;
+import java.util.HashMap;
 
 //Video object representing the videos in the room
 
@@ -97,32 +98,28 @@ public class Video {
         CUED(5);
         
         private int value;
+        private static Map map = new HashMap<>();
 
+        //constructor
         private VideoState(int value) {
             this.value = value;
         }
 
+        //Instantiates map
+        static {
+            for (VideoState videoState : VideoState.values()) {
+                map.put(videoState.value, videoState);
+            }
+        }
+
+        //To get int value from VideoState enum
         public int getValue() {
             return this.value;
         }
 
+        //To turn integer into VideoState enum
         public static VideoState fromInt(int val) {
-            switch (val) {
-                case(-1): 
-                    return VideoState.UNSTARTED;
-                case(0): 
-                    return VideoState.ENDED;
-                case(1): 
-                    return VideoState.PLAYING;
-                case(2): 
-                    return VideoState.PAUSED;
-                case(3): 
-                    return VideoState.BUFFERING;
-                case(5): 
-                    return VideoState.CUED;
-                default: 
-                    return null;
-            }
+            return (VideoState) map.get(val);
         }
     };
 }

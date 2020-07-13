@@ -33,20 +33,25 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.QueryResultList;
 
+//Tested
+
 @WebServlet("/create-room")
 public final class CreateRoomServlet extends HttpServlet {
     public static final DatastoreService DATASTORE = DatastoreServiceFactory.getDatastoreService();
+    public static final String Invitees = "Invitees";
+    public static final String PlaylistUrl = "PlaylistUrl";
+    public static final int MAX_VIDEOS = 15;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
-        String emails = req.getParameter("Invitees").replace(" ", "");
+        String emails = req.getParameter(Invitees).replace(" ", "");
         List<Member> members = new ArrayList<Member>();
         for(String m : Arrays.asList(emails.split(","))){
             members.add(Member.createNewMember(m));
         }
         //Requests playlist information from YT api and transforms playlist url to video url list
-        String playlistUrl = req.getParameter("PlaylistUrl");
-        String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+5);
+        String playlistUrl = req.getParameter(PlaylistUrl);
+        String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+ServletUtil.PLAYLIST_QUERY_PARAMETER.length());
         
         Queue<Video> videos = playlistIdToVideoQueue(playlistId);
 
@@ -71,7 +76,7 @@ public final class CreateRoomServlet extends HttpServlet {
       */
     Queue<Video> playlistIdToVideoQueue(String playlistId) throws IOException {
         //Connect to the YouTube Data API
-        URL url = new URL("https://www.googleapis.com/youtube/v3/playlistItems?key="+ServletUtil.DATA_API_KEY+"&part=contentDetails&playlistId="+playlistId);
+        URL url = new URL(ServletUtil.YT_DATA_API_BASE_URL+ServletUtil.DATA_API_KEY+ServletUtil.YT_DATA_API_PARAMETERS+playlistId);
         HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
         YTDataCon.setRequestMethod("GET");
         //Read the response
@@ -88,7 +93,7 @@ public final class CreateRoomServlet extends HttpServlet {
         JsonArray VideoInformation = obj.getAsJsonArray("items");
         Queue<Video> videoUrls = new LinkedList<Video>();
         //Create urls from video IDs
-        for(int i = 0; i < VideoInformation.size() && i < 15; ++i ) {
+        for(int i = 0; i < VideoInformation.size() && i < MAX_VIDEOS; ++i ) {
             String videoid = VideoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
             videoUrls.add(Video.createVideo(ServletUtil.YT_BASE_URL + videoid));
         }
