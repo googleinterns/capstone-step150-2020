@@ -22,4 +22,5 @@ public class ServletUtil {
     public static final String YT_DATA_API_BASE_URL = "https://www.googleapis.com/youtube/v3/playlistItems?key=";
     //String representing the parameters of the Youtube data api endpoint
     public static final String YT_DATA_API_PARAMETERS = "&part=contentDetails&playlistId=";
+    public static final String PRIVATE_ROOM_PATH = "/views/private-room.html";
 }
