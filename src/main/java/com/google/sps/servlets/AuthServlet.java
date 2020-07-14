@@ -9,23 +9,25 @@ import com.google.gson.Gson;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
+//Servlet to authenticate users before they create or join a Room
+
 @WebServlet("/auth")
 public class AuthServlet extends HttpServlet{
     
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException{
-        if(!ServletUtil.USER_SERVICE.isUserLoggedIn()){
-            String urlToRedirectToAfterUserLogsIn = req.getParameter("redirectUrl");
-            String loginUrl = ServletUtil.USER_SERVICE.createLoginURL(urlToRedirectToAfterUserLogsIn);
-            res.setContentType(ServletUtil.HTML_CONTENT_TYPE);
-            res.getWriter().println("<center><a href=\"" + loginUrl + "\"><button style=\"background-color: cyan; border-radius:12px;\"><span style=\"color:white;\">Login</span></button/></a></center>");
-        }
-        else{
+        if(ServletUtil.USER_SERVICE.isUserLoggedIn()){
             String userEmail = ServletUtil.USER_SERVICE.getCurrentUser().getEmail();
             String urlToRedirectToAfterUserLogsOut = "/";
             String logoutUrl = ServletUtil.USER_SERVICE.createLogoutURL(urlToRedirectToAfterUserLogsOut);
             res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
-            res.getWriter().println(ServletUtil.PARSER.toJson(userEmail));
+            res.getWriter().println(ServletUtil.PARSER.toJson(userEmail));  
+        }
+        else{
+            String urlToRedirectToAfterUserLogsIn = req.getParameter("redirectUrl");
+            String loginUrl = ServletUtil.USER_SERVICE.createLoginURL(urlToRedirectToAfterUserLogsIn);
+            res.setContentType(ServletUtil.HTML_CONTENT_TYPE);
+            res.getWriter().println("<center><a href=\"" + loginUrl + "\"><button style=\"background-color: cyan; border-radius:12px;\"><span style=\"color:white;\">Login</span></button/></a></center>");
         }
     }
 }
