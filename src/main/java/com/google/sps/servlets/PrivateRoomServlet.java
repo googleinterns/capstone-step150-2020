@@ -27,11 +27,12 @@ import javax.servlet.http.HttpServletResponse;
 */
 @WebServlet("/private-room")
 public final class PrivateRoomServlet extends HttpServlet {
-  private String inputtedIdTag = "user-party-link";
+  private static String inputtedIdTag = "inputted-party-id";
+  private static String privateRoomPathWithIdInput = "/views/private-room.html?id=";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String currentRoomId = request.getParameter(inputtedIdTag);
-    response.sendRedirect("/views/private-room.html?id="+currentRoomId);
+    response.sendRedirect(privateRoomPathWithIdInput+currentRoomId);
   }
 }
