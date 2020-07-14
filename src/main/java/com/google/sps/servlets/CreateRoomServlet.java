@@ -33,7 +33,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.QueryResultList;
 
-//Tested
+//Tested with old Room implementation, writing a unit test to test soon.
 
 @WebServlet("/create-room")
 public final class CreateRoomServlet extends HttpServlet {
@@ -43,7 +43,6 @@ public final class CreateRoomServlet extends HttpServlet {
     public static final int MAX_VIDEOS = 15;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-
         String emails = req.getParameter(Invitees).replace(" ", "");
         List<Member> members = new ArrayList<Member>();
         for(String m : Arrays.asList(emails.split(","))){

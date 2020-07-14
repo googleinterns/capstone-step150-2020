@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.appengine.api.datastore.Key;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.EmbeddedEntity;
@@ -22,11 +21,11 @@ import java.util.stream.*;
 //Object repsresenting the Room that the chat and video streaming will be in
 //TODO: Restgructure so logic is more split up
 public class Room {
+    public static final int MAX_MESSAGES = 10;
     private static final String ROOM_ENTITY = "Room";
     private static final String MEMBERS_PROPERTY = "members";
     private static final String MESSAGES_PROPERTY = "messages";
     private static final String VIDEOS_PROPERTY = "videos";
-    public static final int MAX_MESSAGES = 10;
     private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private List<Member> members;
     private Queue<Message> messages;
@@ -75,17 +74,25 @@ public class Room {
 
     //Returns the Room's video url list
     public Queue<Video> getVideos() {
-        return this.videos;
+        return new LinkedList<Video>(this.videos);
     }
 
     //Returns the Room's message list
     public Queue<Message> getMessages(){
-        return this.messages;
+        return new LinkedList<Message>(this.messages);
     }
 
     //Returns the Room's members
     public List<Member> getMembers() {
-        return this.members;
+        return new ArrayList<Member>(this.members);
+    }
+
+    // Helper addMessage function to manipulate the list of messages
+    public void addMessage(Message msg){
+        if(messages.size() >= MAX_MESSAGES) {
+            messages.poll();
+        }
+        messages.add(msg);
     }
 
     //Adds a video to the Room's video queue
@@ -132,13 +139,5 @@ public class Room {
     //Returns a queue of embedded entities
     private List<EmbeddedEntity> getVideosAsEntities() {
         return this.videos.stream().map(Video::toEmbeddedEntity).collect(Collectors.toList());
-    }
-
-    // Helper addMessage function to manipulate the list of messages
-    private void addMessage(Message msg){
-        if(messages.size() >= MAX_MESSAGES) {
-            messages.poll();
-        }
-        messages.add(msg);
     }
 }
