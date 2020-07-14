@@ -15,13 +15,8 @@
 package com.google.sps.servlets;
 
 import com.google.sps.data.*;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,23 +28,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.appengine.api.datastore.Key;
 
 /** Servlet that takes in the user's room Id and verifies that it
  * exists, then prints the json version of all the urls in playlist
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
-  private String inputtedUserTag = "user-party-link";
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
 		
-    String currentRoomId = request.getParameter("roomId");
+    long currentRoomId = Long.parseLong(request.getParameter("roomId"));
     // TODO: handle if they inputted a key string that does not exist in datastore
-    Key currentRoomKey = getKeyFromString(currentRoomId);
+    Key currentRoomKey = KeyFactory.createKey(ServletUtil.ROOM_ENTITY, currentRoomId);
     Room currentRoom = Room.fromKey(currentRoomKey);
 
     // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
@@ -63,22 +55,6 @@ public final class VerifyRoomServlet extends HttpServlet {
       String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
       response.getWriter().println(jsonOfUrls);
     }
-  }
-
-  /*
-  * Finds the key from the datastore using the String of the ID
-  */
-  public Key getKeyFromString(String roomId) {
-    Query query = new Query(ServletUtil.ROOM_ENTITY);
-    PreparedQuery results = datastore.prepare(query);
-    for(Entity currentRoomEntity : results.asIterable()) {
-      Key currentRoomKey = currentRoomEntity.getKey();
-      String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
-      if(roomId.equals(parsedRoomKey)){
-        return currentRoomKey;
-      }
-    }
-    return null;
   }
 
   /*
