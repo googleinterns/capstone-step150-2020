@@ -20,7 +20,7 @@ import java.util.stream.*;
 
 // The Room object representing the private room containers users and videos
 public class Room {
-    public static final String ROOM_ENTITY = "Room";
+    private static final String ROOM_ENTITY = "Room";
     private static final String MEMBERS_PROPERTY = "members";
     private static final String MESSAGES_PROPERTY = "messages";
     private static final String VIDEOS_PROPERTY = "videos";
@@ -66,7 +66,7 @@ public class Room {
 
     //Get all of the members as a list of EmbeddedEntities
     private List<EmbeddedEntity> getMembersAsEmbeddedEntities() {
-        return (List<EmbeddedEntity>) members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
+        return members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
     }
 
     //Returns the Room's video url list
@@ -109,7 +109,7 @@ public class Room {
     }
 
     // Helper addMessage function to manipulate the list of messages
-    private void addMessage(Message msg){
+    public void addMessage(Message msg){
         if(messages.size() >= 10) {
             messages.remove(0);
         }

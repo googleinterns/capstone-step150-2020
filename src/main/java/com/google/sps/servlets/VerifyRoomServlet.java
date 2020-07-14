@@ -69,7 +69,7 @@ public final class VerifyRoomServlet extends HttpServlet {
   * Finds the key from the datastore using the String of the ID
   */
   public Key getKeyFromString(String roomId) {
-    Query query = new Query(Room.ROOM_ENTITY);
+    Query query = new Query(ServletUtil.ROOM_ENTITY);
     PreparedQuery results = datastore.prepare(query);
     for(Entity currentRoomEntity : results.asIterable()) {
       Key currentRoomKey = currentRoomEntity.getKey();
