@@ -120,7 +120,6 @@ function listenForStateChange(){
             } else {
                 console.log('Group video is on state: paused')
                 pauseVideo();
-
             }
         })
     })
