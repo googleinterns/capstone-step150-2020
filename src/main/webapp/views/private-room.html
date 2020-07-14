@@ -1,11 +1,63 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Private Room</title>
-  </head>
-  <script src="/scripts/private-room-script.js"></script>   
-  <body onload="fetchPrivateRoom()">
-    <div id="player"></div> 
-  </body>
+<!DOCTYPE html>
+<html>  
+    <head>    
+        <meta charset="UTF-8">    
+        <title>Private Room</title>    
+        <link rel="stylesheet" href="../stylesheets/private-room.css">  
+    </head>  
+    <script src="/scripts/private-room-script.js"></script>     
+    <body onload="loadIframe(); displayChat()">    
+        <div class="videoContainer">        
+            <iframe id="video-tag"                
+                width="640" height="360"                
+                frameborder="0"                
+                style="border: solid 4px #37474F">        
+            </iframe>    
+        </div>    
+        <div class="chatContainer">    
+            <div class="titleContainer">      
+                <label>Chat</label>    
+            </div>    
+            <div class="msgContainer">        
+                <ul id = "chat-messages" class="msgList">            
+                    <li>                
+                        <div class="msgSender">
+                        </div>                
+                        <div class="msgText">                    
+                            <p class="">Hello this is a test comment.</p> <span class="date sub-text">on March 5th, 2014</span>
+                        </div>            
+                    </li>            
+                    <li>                
+                        <div class="msgSender">                                  
+                        </div>                
+                        <div class="msgText">                    
+                            <p class="">Hello this is a test comment and this comment is particularly very long and it goes on and on and on.</p> <span class="date sub-text">on March 5th, 2014</span>
+                        </div>            
+                    </li>            
+                    <li>                
+                        <div class="msgSender">                                  
+                        </div>                
+                        <div class="msgText">                    
+                            <p class="">Hello this is a test comment.</p> <span class="date sub-text">on March 5th, 2014</span>                
+                        </div>            
+                    </li>        
+                </ul>
+                <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>        
+                <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">            
+                    <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />            
+                    <input type="hidden" id="roomId" name="roomId" value="" />            
+                    <script type="text/javascript">                
+                        var id = document.getElementById("roomId");                
+                        id.value = getRoomId(window.location.href);            
+                    </script>            
+                    <input type="hidden" id="userEmail" name="userEmail" value="" />            
+                    <script type="text/javascript">                
+                        var email = document.getElementById("userEmail");                
+                        email.value = window.userEmail;            
+                    </script>            
+                    <input class="subButton" type="submit" value="Send"/>        
+                </form>
+            </div>
+        </div>
+    </body>
 </html>
