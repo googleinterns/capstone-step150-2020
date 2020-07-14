@@ -9,4 +9,5 @@ public class ServletUtil {
     public static final String PLAYLIST_QUERY_PARAMETER = "list=";
     public static final String PRIVATE_ROOM_PATH = "/views/private-room.html";
     public static final String ROOM_ENTITY = "Room";
+    public static String INPUTTED_ID_TAG = "roomId";
 }

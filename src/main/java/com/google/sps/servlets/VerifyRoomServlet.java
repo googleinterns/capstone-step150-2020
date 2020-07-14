@@ -39,7 +39,7 @@ public final class VerifyRoomServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
 		
-    long currentRoomId = Long.parseLong(request.getParameter("roomId"));
+    long currentRoomId = Long.parseLong(request.getParameter(ServletUtil.INPUTTED_ID_TAG));
     // TODO: handle if they inputted a key string that does not exist in datastore
     Key currentRoomKey = KeyFactory.createKey(ServletUtil.ROOM_ENTITY, currentRoomId);
     Room currentRoom = Room.fromKey(currentRoomKey);
