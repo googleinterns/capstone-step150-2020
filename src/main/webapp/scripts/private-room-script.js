@@ -103,6 +103,13 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
+// Every three seconds you listen to youtube player for any detection of change
+window.setInterval(function(){
+    listenForStateChange();
+}, 3000);
+
+// This function fetches the state of the private room video and
+// plays/pauses it accordingly
 function listenForStateChange(){
     $(document).ready(function(){
         const Url = '/state-change';
@@ -117,6 +124,14 @@ function listenForStateChange(){
             }
         })
     })
+}
+
+// Send the user's state to the servlet every time their state changes
+function updateCurrentState(currentState){
+    $(document).ready(function(){
+        $.post("demo_test_post.asp", {userState: currentState});
+    })
+    console.log('I am sending the state: ' + currentState)
 }
 
 // The API will call this function when the video player is ready.
@@ -163,22 +178,8 @@ function onStateChange(event) {
             state = "unknown (" + event.data + ")";
     }
     console.log('onStateChange: ' + state);
-    // TODO: Call this function every three seconds instead of only on state changes
-    
-
-    // TODO: Post new state to the StateChangeServlet 
-    // const Url = "/state-change";
-    // const data={
-    //     currState = state
-    // }
-    // $.post(Url,data, function(data,status){
-    //     console.log(`${data} and status is ${status}`)
-    // });
+    updateCurrentState(state);
 }
-
-window.setInterval(function(){
-    listenForStateChange();
-}, 3000);
 
 async function displayChat() {
     let response = await fetch('/chat');
