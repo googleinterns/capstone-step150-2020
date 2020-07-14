@@ -106,14 +106,15 @@ function onYouTubeIframeAPIReady() {
 function listenForStateChange(){
     $(document).ready(function(){
         const Url = '/state-change';
-        $.get(Url,function(data,status){
-            var roomVideoStatus = `${data}`
-            if(roomVideoStatus === 'played'){
-                console.log('video is playing')
+        $.get(Url,function(data, status){
+            if(data === "played"){
+                console.log('Group video is on state: playing')
+                playVideo();
             } else {
-                console.log('video is paused')
+                console.log('Group video is on state: paused')
+                pauseVideo();
+
             }
-            console.log(roomVideoStatus)
         })
     })
 }
@@ -126,6 +127,14 @@ function onPlayerReady(event) {
 
 function stopVideo() {
     youtubePlayer.stopVideo();
+}
+
+function playVideo() {
+    youtubePlayer.playVideo();
+}
+
+function pauseVideo() {
+    youtubePlayer.pauseVideo();
 }
 
 // Log state changes
@@ -155,7 +164,7 @@ function onStateChange(event) {
     }
     console.log('onStateChange: ' + state);
     // TODO: Call this function every three seconds instead of only on state changes
-    listenForStateChange();
+    
 
     // TODO: Post new state to the StateChangeServlet 
     // const Url = "/state-change";
@@ -166,6 +175,10 @@ function onStateChange(event) {
     //     console.log(`${data} and status is ${status}`)
     // });
 }
+
+window.setInterval(function(){
+    listenForStateChange();
+}, 3000);
 
 async function displayChat() {
     let response = await fetch('/chat');
