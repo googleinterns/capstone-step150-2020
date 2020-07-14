@@ -128,7 +128,7 @@ function listenForStateChange(){
 // Send the user's state to the servlet every time their state changes
 function updateCurrentState(currentState){
     $(document).ready(function(){
-        $.post("demo_test_post.asp", {userState: currentState});
+        $.post(Url, {userState: currentState});
     })
     console.log('I am sending the state: ' + currentState)
 }
