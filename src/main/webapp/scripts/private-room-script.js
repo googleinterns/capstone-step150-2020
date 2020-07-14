@@ -103,6 +103,21 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
+function listenForStateChange(){
+    $(document).ready(function(){
+        const Url = '/state-change';
+        $.get(Url,function(data,status){
+            var roomVideoStatus = `${data}`
+            if(roomVideoStatus === 'played'){
+                console.log('video is playing')
+            } else {
+                console.log('video is paused')
+            }
+            console.log(roomVideoStatus)
+        })
+    })
+}
+
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
     document.getElementById('player-div').style.borderColor = '#FF6D00';
@@ -139,6 +154,17 @@ function onStateChange(event) {
             state = "unknown (" + event.data + ")";
     }
     console.log('onStateChange: ' + state);
+    // TODO: Call this function every three seconds instead of only on state changes
+    listenForStateChange();
+
+    // TODO: Post new state to the StateChangeServlet 
+    // const Url = "/state-change";
+    // const data={
+    //     currState = state
+    // }
+    // $.post(Url,data, function(data,status){
+    //     console.log(`${data} and status is ${status}`)
+    // });
 }
 
 async function displayChat() {
