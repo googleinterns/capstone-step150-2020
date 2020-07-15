@@ -14,18 +14,20 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.DatastoreFailureException;
 import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.stream.*;
+import com.google.appengine.api.datastore.KeyFactory;
 
 //Object repsresenting the Room that the chat and video streaming will be in
 //TODO: Restgructure so logic is more split up
 public class Room {
+    private static final int MAX_MESSAGES = 10;
     private static final String ROOM_ENTITY = "Room";
     private static final String MEMBERS_PROPERTY = "members";
     private static final String MESSAGES_PROPERTY = "messages";
     private static final String VIDEOS_PROPERTY = "videos";
-    public static final int MAX_MESSAGES = 10;
     private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     private List<Member> members;
     private Queue<Message> messages;
@@ -50,6 +52,17 @@ public class Room {
         }
     }
 
+    //Creates a room object from a Datastore Key
+    public static Room fromKey(long roomID) {
+        Key roomKey = KeyFactory.createKey("Room", roomID);
+        try {
+            return Room.fromEntity(datastore.get(roomKey));
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.toString());
+        }
+        return null;
+    }
+
     //Turns a Room entitiy into a Room object
     public static Room fromEntity(Entity roomEntity) {
         Map<String, Object> properties = roomEntity.getProperties();
@@ -70,20 +83,37 @@ public class Room {
         newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
         return newRoom;
     }
+    public static Key toDatastore(Room room){
+        Entity newRoom = Room.toEntity(room);
+        try {
+            return DatastoreServiceFactory.getDatastoreService().put(newRoom);
+        } catch (DatastoreFailureException e){
+            System.out.println(e.toString());
+        }
+        return null;
+    }
 
     //Returns the Room's video url list
     public Queue<Video> getVideos() {
-        return this.videos;
+        return new LinkedList<Video>(this.videos);
     }
 
     //Returns the Room's message list
     public Queue<Message> getMessages(){
-        return this.messages;
+        return new LinkedList<Message>(this.messages);
     }
 
     //Returns the Room's members
     public List<Member> getMembers() {
-        return this.members;
+        return new ArrayList<Member>(this.members);
+    }
+
+    // Helper addMessage function to manipulate the list of messages
+    public void addMessage(Message msg){
+        if(messages.size() >= MAX_MESSAGES) {
+            messages.poll();
+        }
+        messages.add(msg);
     }
 
     //Adds a video to the Room's video queue
@@ -119,7 +149,7 @@ public class Room {
 
     //Get all of the members as a list of EmbeddedEntities
     private List<EmbeddedEntity> getMembersAsEmbeddedEntities() {
-        return (List<EmbeddedEntity>) members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
+        return members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
     }
 
     //Returns the messages as a list of embedded entities
@@ -130,13 +160,5 @@ public class Room {
     //Returns a queue of embedded entities
     private List<EmbeddedEntity> getVideosAsEntities() {
         return this.videos.stream().map(Video::toEmbeddedEntity).collect(Collectors.toList());
-    }
-
-    // Helper addMessage function to manipulate the list of messages
-    private void addMessage(Message msg){
-        if(messages.size() >= MAX_MESSAGES) {
-            messages.poll();
-        }
-        messages.add(msg);
     }
 }

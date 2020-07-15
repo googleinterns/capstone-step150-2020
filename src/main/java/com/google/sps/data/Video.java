@@ -10,7 +10,6 @@ public class Video {
     private static final String URL_PROPERTY = "url";
     private static final String CURRENT_STATE_PROPERTY = "currentState";
     private static final String TIMESTAMP_PROPERTY = "currentVideoTimestamp";
-
     private VideoState currentState;
     private long currentVideoTimestamp;
     private String url;
@@ -98,7 +97,7 @@ public class Video {
         CUED(5);
         
         private int value;
-        private static Map map = new HashMap<>();
+        private static Map<Integer, VideoState> VIDEO_STATE_MAP = new HashMap<Integer, VideoState>();
 
         //constructor
         private VideoState(int value) {
@@ -108,7 +107,7 @@ public class Video {
         //Instantiates map
         static {
             for (VideoState videoState : VideoState.values()) {
-                map.put(videoState.value, videoState);
+                VIDEO_STATE_MAP.put(videoState.value, videoState);
             }
         }
 
@@ -119,7 +118,7 @@ public class Video {
 
         //To turn integer into VideoState enum
         public static VideoState fromInt(int val) {
-            return (VideoState) map.get(val);
+            return VIDEO_STATE_MAP.get(val);
         }
     };
 }
