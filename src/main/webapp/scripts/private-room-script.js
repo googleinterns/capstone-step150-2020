@@ -4,9 +4,7 @@ var playlistIds;
 var youtubePlayer;
 var YT_BASE_URL = "https://www.youtube.com/embed/";
 
-/**
-* Calls the three functions associated with loading the room's iframe
- */
+// Calls the three functions associated with loading the room's iframe
 async function loadPlayerDiv(){
     loadVideo();
     // Get the room id from the private room's url
@@ -116,10 +114,10 @@ function stopVideo() {
 
 // Log state changes
 function onStateChange(event) {
-    var state = "undefiend";
+    var state = "undefined";
     switch (event.data) {
         case YT.PlayerState.UNSTARTED:
-            state= "unstarted";
+            state = "unstarted";
             break;
         case YT.PlayerState.ENDED:
             state = "ended";
