@@ -3,7 +3,6 @@ package com.google.sps.data;
 import com.google.appengine.api.datastore.EmbeddedEntity;
 
 //Member object representing members of the Room
-
 public class Member {
     private static final String ALIAS_PROPERTY = "alias";
     private String alias;
