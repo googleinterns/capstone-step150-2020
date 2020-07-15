@@ -21,7 +21,7 @@ import java.util.stream.*;
 import com.google.appengine.api.datastore.KeyFactory;
 
 //Object repsresenting the Room that the chat and video streaming will be in
-//TODO: Restgructure so logic is more split up
+//TODO: Restructure so logic is more split up
 public class Room {
     private static final int MAX_MESSAGES = 10;
     private static final String ROOM_ENTITY = "Room";
@@ -83,6 +83,8 @@ public class Room {
         newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
         return newRoom;
     }
+
+    //Takes a room object and puts it into datastore
     public static Key toDatastore(Room room){
         Entity newRoom = Room.toEntity(room);
         try {
@@ -132,7 +134,6 @@ public class Room {
         this.members = members;
         this.videos = videos;
     }
-    
 
     /**
       * Room constructor
