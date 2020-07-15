@@ -23,7 +23,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 //Object repsresenting the Room that the chat and video streaming will be in
 //TODO: Restgructure so logic is more split up
 public class Room {
-    public static final int MAX_MESSAGES = 10;
+    private static final int MAX_MESSAGES = 10;
     private static final String ROOM_ENTITY = "Room";
     private static final String MEMBERS_PROPERTY = "members";
     private static final String MESSAGES_PROPERTY = "messages";
@@ -53,8 +53,8 @@ public class Room {
     }
 
     //Creates a room object from a Datastore Key
-    public static Room fromKey(long roomID) {
-        Key roomKey = KeyFactory.createKey("Room", roomID);
+    public static Room fromRoomId(long roomId) {
+        Key roomKey = KeyFactory.createKey("Room", roomId);
         try {
             return Room.fromEntity(datastore.get(roomKey));
         } catch (EntityNotFoundException e) {
@@ -64,7 +64,7 @@ public class Room {
     }
 
     //Turns a Room entitiy into a Room object
-    public static Room fromEntity(Entity roomEntity) {
+    private static Room fromEntity(Entity roomEntity) {
         Map<String, Object> properties = roomEntity.getProperties();
         List<Member> memberList = 
         ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
@@ -105,7 +105,7 @@ public class Room {
 
     //Returns the Room's members
     public List<Member> getMembers() {
-        return new ArrayList<Member>(this.members);
+        return this.members.copy();
     }
 
     // Helper addMessage function to manipulate the list of messages
@@ -117,8 +117,8 @@ public class Room {
     }
 
     //Adds a video to the Room's video queue
-    public void addVideo(String url) {
-        this.videos.add(Video.createVideo(url));
+    public void addVideo(Video video) {
+        this.videos.add(video);
     }
 
     /**
