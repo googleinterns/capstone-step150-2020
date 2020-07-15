@@ -10,4 +10,5 @@ public class ServletUtil {
     public static final String PRIVATE_ROOM_PATH = "/views/private-room.html";
     public static final String ROOM_ENTITY = "Room";
     public static String INPUTTED_ID_TAG = "roomId";
+    public static final String JOIN_ROOM_PATH = "/views/join-room.html";
 }

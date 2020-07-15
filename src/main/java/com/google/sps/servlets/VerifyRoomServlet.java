@@ -34,12 +34,14 @@ import javax.servlet.http.HttpServletResponse;
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
+  public static int errorCodeFound = 404;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
-		
-    long currentRoomId = Long.parseLong(request.getParameter(ServletUtil.INPUTTED_ID_TAG));
+	String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
+    System.out.println(tempStringOfRoomId);
+    long currentRoomId = Long.parseLong(tempStringOfRoomId);
     // TODO: handle if they inputted a key string that does not exist in datastore
     Key currentRoomKey = KeyFactory.createKey(ServletUtil.ROOM_ENTITY, currentRoomId);
     Room currentRoom = Room.fromKey(currentRoomKey);
@@ -47,8 +49,10 @@ public final class VerifyRoomServlet extends HttpServlet {
     // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
     if(currentRoom == null){
-      String jsonOfTempUrl = new Gson().toJson("https://www.youtube.com/embed/Bey4XXJAqS8");
-      response.getWriter().println(jsonOfTempUrl);
+      System.out.println("Not an existing room");
+      response.setStatus(errorCodeFound);
+      response.sendRedirect(ServletUtil.JOIN_ROOM_PATH);
+      // Set type to HTML
     } else {
       Queue<Video> videosOfPlaylist = currentRoom.getVideos();
       ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
