@@ -161,3 +161,38 @@ function createParagraph(msgJson) {
     paragraph.innerText = msg.message;
     return paragraph;
 }
+
+// Shows and refreshes the messages shown on the private room page
+async function displayChat() {    
+    let response = await fetch(`/chat?roomID=${window.roomId}`);
+    let messages = await response.json();    
+    const messageElement = document.getElementById('chat-messages');    
+    messageElement.innerHTML = '';    
+    for (message in messages) {      
+        messageElement.appendChild(createNewMessage(messages[message]));    
+    }      
+    displayChat();
+}
+
+// Inserts messages as HTML elements
+function createNewMessage(msg) {    
+    const listItem = document.createElement('li');    
+    listItem.innerHTML += '<div class="msgText"><p><span class="sender">'+msg.sender+': </span><span class="msgBody">'+msg.message+'</span></p> <span class="sub-text"> Sent at ' + toTime(msg.timestamp)+ '</span></div>';    
+    return listItem;
+}
+
+// Manipulates timestamp value to be displayed in hh:mm(+AM/PM) format 
+function toTime(ms) {    
+    // Adds '0' if necessary for single digit values    
+    function checkZero(n) {        
+        return (n<10 ? '0':'') + n;    
+    }    
+    var date = new Date(ms);    
+    var hrs = date.getHours();    
+    var mins = date.getMinutes();    
+    var ampm = hrs >= 12 ? 'PM' : 'AM';    
+    hrs = hrs % 12;    
+    hrs = hrs ? hrs : 12;    
+    var time = checkZero(hrs) + ':' + checkZero(mins)+ ' ' + ampm;    
+    return time;
+}
