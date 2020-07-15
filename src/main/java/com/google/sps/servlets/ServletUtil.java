@@ -3,7 +3,9 @@ import com.google.gson.Gson;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
+// Util File for Servlet that defines the paths and other strings
 public class ServletUtil {
+    public static final String PRIVATE_ROOM_PATH = "/views/private-room.html";
     //Gson parser
     public static final Gson PARSER = new Gson();
     //API key for the Youtube Data API
