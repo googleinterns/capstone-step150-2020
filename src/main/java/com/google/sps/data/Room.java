@@ -14,9 +14,11 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.DatastoreFailureException;
 import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.stream.*;
+import com.google.appengine.api.datastore.KeyFactory;
 
 //Object repsresenting the Room that the chat and video streaming will be in
 //TODO: Restgructure so logic is more split up
@@ -34,7 +36,6 @@ public class Room {
     //Room factory function
     public static Room createRoom(List<Member> members, Queue<Video> videos, Queue<Message> messages){
         return new Room(members, videos, messages);
-
     }
 
     // Manipulates the messages property of the room given a room key and a new message to be added
@@ -49,6 +50,17 @@ public class Room {
         } catch (EntityNotFoundException e){
             System.out.println(e.toString());
         }
+    }
+
+    //Creates a room object from a Datastore Key
+    public static Room fromKey(long roomID) {
+        Key roomKey = KeyFactory.createKey("Room", roomID);
+        try {
+            return Room.fromEntity(datastore.get(roomKey));
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.toString());
+        }
+        return null;
     }
 
     //Turns a Room entitiy into a Room object
@@ -70,6 +82,15 @@ public class Room {
         newRoom.setProperty(VIDEOS_PROPERTY, room.getVideosAsEntities());
         newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
         return newRoom;
+    }
+    public static Key toDatastore(Room room){
+        Entity newRoom = Room.toEntity(room);
+        try {
+            return DatastoreServiceFactory.getDatastoreService().put(newRoom);
+        } catch (DatastoreFailureException e){
+            System.out.println(e.toString());
+        }
+        return null;
     }
 
     //Returns the Room's video url list
@@ -128,7 +149,7 @@ public class Room {
 
     //Get all of the members as a list of EmbeddedEntities
     private List<EmbeddedEntity> getMembersAsEmbeddedEntities() {
-        return (List<EmbeddedEntity>) members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
+        return members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
     }
 
     //Returns the messages as a list of embedded entities

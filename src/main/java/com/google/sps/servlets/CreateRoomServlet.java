@@ -33,14 +33,17 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.QueryResultList;
 
-//Tested with old Room implementation, writing a unit test to test soon.
+//Tested by end to end testing the creation of the new Room. 
+//This was successful and the room Id was returned to the user
 
+//Servlet that handles the creation of a new Room
 @WebServlet("/create-room")
 public final class CreateRoomServlet extends HttpServlet {
     public static final DatastoreService DATASTORE = DatastoreServiceFactory.getDatastoreService();
     public static final String Invitees = "Invitees";
     public static final String PlaylistUrl = "PlaylistUrl";
     public static final int MAX_VIDEOS = 15;
+    public static final String ERROR_HTML = "<h1>An error occured while creating you room.</h1>";
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String emails = req.getParameter(Invitees).replace(" ", "");
@@ -56,15 +59,15 @@ public final class CreateRoomServlet extends HttpServlet {
 
         Room newRoom = Room.createRoom(members, videos, new LinkedList<Message>());
 
-        Entity roomEntity = Room.toEntity(newRoom);
-        
-        try{
-           Key newRoomKey = DATASTORE.put(roomEntity);
+        // Entity roomEntity = Room.toEntity(newRoom);
+        Key newRoomKey = Room.toDatastore(newRoom);
+        if(newRoomKey != null) {
            res.setContentType("text/html");
            res.getWriter().println(createHtmlString(newRoomKey.getId()));
         } 
-        catch(DatastoreFailureException e){
-            System.out.println(e.toString());
+        else {
+            res.setContentType("text/html");
+            res.getWriter().println(ERROR_HTML);
         }
 
     }
@@ -73,7 +76,7 @@ public final class CreateRoomServlet extends HttpServlet {
       * @param playlistId the string representing the playlistId
       * @return an arraylist of video Urls (limit is 15)
       */
-    Queue<Video> playlistIdToVideoQueue(String playlistId) throws IOException {
+    public Queue<Video> playlistIdToVideoQueue(String playlistId) throws IOException {
         //Connect to the YouTube Data API
         URL url = new URL(ServletUtil.YT_DATA_API_BASE_URL+ServletUtil.DATA_API_KEY+ServletUtil.YT_DATA_API_PARAMETERS+playlistId);
         HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
@@ -98,7 +101,8 @@ public final class CreateRoomServlet extends HttpServlet {
         }
         return videoUrls;
     }
-    public String createHtmlString(Long key){
+    //Returns the HTML string for with the new Room ID
+    public String createHtmlString(Long key) {
         return "<center><h2>Congratulations! This is your new Room ID.</h2><br><br><h1>"+key+"</h1></center>";
     }
 }
