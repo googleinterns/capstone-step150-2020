@@ -43,7 +43,7 @@ public class Room {
     public static Room fromRoomId(long roomId) {
         Key roomKey = KeyFactory.createKey("Room", roomId);
         try {
-            return Room.fromRoomKey(roomKey));
+            return Room.fromRoomKey(roomKey);
         } catch (EntityNotFoundException e) {
             System.out.println(e.toString());
         }
@@ -72,9 +72,8 @@ public class Room {
         return newRoom;
     }
 
-    //Takes a room object and puts it into datastore
+    //Takes a room object, puts it into datastore and returns the resulting entity's key
     public Key toDatastore(){
-
         Entity room = Room.toEntity(this);
         try {
             roomKey = DatastoreServiceFactory.getDatastoreService().put(room);
