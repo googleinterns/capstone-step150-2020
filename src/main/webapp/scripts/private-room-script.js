@@ -153,28 +153,28 @@ function pauseVideo() {
 
 // Log state changes
 function onStateChange(event) {
-    var state = "undefiend";
+    var state;
     switch (event.data) {
         case YT.PlayerState.UNSTARTED:
-            state= "unstarted";
+            state = -1;
             break;
         case YT.PlayerState.ENDED:
-            state = "ended";
+            state = 0;
             break;
         case YT.PlayerState.PLAYING:
-            state = "playing";
+            state = 1;
             break;
         case YT.PlayerState.PAUSED:
-            state = "paused";
+            state = 2;
             break;
         case YT.PlayerState.BUFFERING:
-            state = "buffering";
+            state = 3;
             break;
         case YT.PlayerState.CUED:
-            state = "video cued";
+            state = 5;
             break;
         default:
-            state = "unknown (" + event.data + ")";
+            state = 6;
     }
     console.log('onStateChange: ' + state);
     updateCurrentState(state);
