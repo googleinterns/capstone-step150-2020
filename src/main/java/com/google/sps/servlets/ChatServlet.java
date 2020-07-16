@@ -45,7 +45,9 @@ public class ChatServlet extends HttpServlet {
         System.out.println(query);    
         long roomID = Long.parseLong(query);    
         Message chatMessage = Message.createNewMessage(sender, message, timestamp);
-        Room.addMessagesFromKey(KeyFactory.createKey("Room",roomID), chatMessage);            
+        Room room = Room.fromRoomId(roomID);
+        room.addMessage(chatMessage);
+        room.toDatastore();          
         // TODO: Correct redirect    
         response.sendRedirect("/index.html");  
     }
