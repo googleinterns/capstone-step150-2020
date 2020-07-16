@@ -43,25 +43,25 @@ public class Room {
     //Creates a room object from a Datastore Key
     public static Room fromRoomId(long roomId) {
         Key roomKey = KeyFactory.createKey("Room", roomId);
-        try {
-            return Room.fromRoomKey(roomKey);
-        } catch (EntityNotFoundException e) {
-            System.out.println(e.toString());
-        }
-        return null;
+        return Room.fromRoomKey(roomKey);
     }
 
     //Turns a Room key into a Room object
     private static Room fromRoomKey(Key roomKey) {
-        Entity roomEntity = datastore.get(roomKey);
-        Map<String, Object> properties = roomEntity.getProperties();
-        List<Member> memberList = 
-        ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
-        Queue<Video> videoQueue = 
-        ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
-        Queue<Message> messageQueue = (Queue<Message>) properties.get(MESSAGES_PROPERTY) != null ?
-        ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList();
-        return new Room(memberList, videoQueue, messageQueue, roomKey);
+        try {
+            Entity roomEntity = datastore.get(roomKey);
+            Map<String, Object> properties = roomEntity.getProperties();
+            List<Member> memberList = 
+            ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
+            Queue<Video> videoQueue = 
+            ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+            Queue<Message> messageQueue = (Queue<Message>) properties.get(MESSAGES_PROPERTY) != null ?
+            ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList();
+            return new Room(memberList, videoQueue, messageQueue, roomKey);
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.toString());
+        }
+        return null;
     }
 
     //Turns the Room object into a datastore entity
@@ -74,10 +74,10 @@ public class Room {
     }
 
     //Takes a room object, puts it into datastore and returns the resulting entity's key
-    public Key toDatastore(){
+    public Long toDatastore(){
         Entity room = Room.toEntity(this);
         try {
-            return DatastoreServiceFactory.getDatastoreService().put(newRoom).getId();
+            return DatastoreServiceFactory.getDatastoreService().put(room).getId();
         } catch (DatastoreFailureException e){
             System.out.println(e.toString());
         }
