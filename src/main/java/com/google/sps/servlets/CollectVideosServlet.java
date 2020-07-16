@@ -55,9 +55,13 @@ public final class VerifyRoomServlet extends HttpServlet {
     // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
     if(currentRoom == null){
-      response.getWriter().println(false);
+      String jsonOfTempUrl = new Gson().toJson("https://www.youtube.com/embed/Bey4XXJAqS8");
+      response.getWriter().println(jsonOfTempUrl);
     } else {
-      response.getWriter().println(true);
+      Queue<Video> videosOfPlaylist = currentRoom.getVideos();
+      ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
+      String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
+      response.getWriter().println(jsonOfUrls);
     }
   }
 
@@ -75,5 +79,17 @@ public final class VerifyRoomServlet extends HttpServlet {
       }
     }
     return null;
+  }
+
+  /*
+  * Take the queue of videos associated with the room and transfer it into an array
+  */
+  public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
+    ArrayList<String> videoUrls = new ArrayList<>();
+    while(!videosOfPlaylist.isEmpty()){
+      Video currVideo = videosOfPlaylist.remove();
+      videoUrls.add(currVideo.getUrl());
+    }
+    return videoUrls;
   }
 }
