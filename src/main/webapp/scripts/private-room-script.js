@@ -140,26 +140,6 @@ function onStateChange(event) {
     console.log('onStateChange: ' + state);
 }
 
-async function displayChat() {
-    let response = await fetch('/chat');
-    let messages = await response.json();
-    const messageElement = document.getElementById('chat-messages');
-    messageElement.innerHTML = '';
-    for (message in messages) {
-      commentElement.appendChild(createParagraph(comments[comment]));
-    }  
-}
-
-function createParagraph(msgJson) {
-    var msg = JSON.parse(msgJson);
-    const paragraph = document.createElement('p');
-    paragraph.innerHTML = '<h4>';
-    paragraph.innerText = msg.sender;
-    paragraph.innerHTML = '</h4>';
-    paragraph.innerText = msg.message;
-    return paragraph;
-}
-
 // Shows and refreshes the messages shown on the private room page
 async function displayChat() {    
     let response = await fetch(`/chat?roomID=${window.roomId}`);
@@ -175,7 +155,13 @@ async function displayChat() {
 // Inserts messages as HTML elements
 function createNewMessage(msg) {    
     const listItem = document.createElement('li');    
-    listItem.innerHTML += '<div class="msgText"><p><span class="sender">'+msg.sender+': </span><span class="msgBody">'+msg.message+'</span></p> <span class="sub-text"> Sent at ' + toTime(msg.timestamp)+ '</span></div>';    
+    listItem.innerHTML += 
+    `<div class="msgText">
+        <p>
+            <span class="sender">'+msg.sender+': </span><span class="msgBody">'+msg.message+'</span>
+        </p> 
+        <span class="sub-text"> Sent at ' + toTime(msg.timestamp)+ '</span>
+    </div>`;    
     return listItem;
 }
 
