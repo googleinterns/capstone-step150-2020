@@ -23,7 +23,8 @@ import com.google.appengine.api.datastore.KeyFactory;
 //Object repsresenting the Room that the chat and video streaming will be in
 //TODO: Restgructure so logic is more split up
 public class Room {
-    public static final int MAX_MESSAGES = 10;
+    private static final int MAX_MESSAGES = 10;
+    private static final int MAX_VIDEOS = 15;
     private static final String ROOM_ENTITY = "Room";
     private static final String MEMBERS_PROPERTY = "members";
     private static final String MESSAGES_PROPERTY = "messages";
@@ -83,10 +84,10 @@ public class Room {
         newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
         return newRoom;
     }
-    public static Key toDatastore(Room room){
+    public static Long toDatastore(Room room){
         Entity newRoom = Room.toEntity(room);
         try {
-            return DatastoreServiceFactory.getDatastoreService().put(newRoom);
+            return DatastoreServiceFactory.getDatastoreService().put(newRoom).getId();
         } catch (DatastoreFailureException e){
             System.out.println(e.toString());
         }
@@ -117,8 +118,12 @@ public class Room {
     }
 
     //Adds a video to the Room's video queue
-    public void addVideo(String url) {
-        this.videos.add(Video.createVideo(url));
+    public boolean addVideo(Video video) {
+        if(this.videos.size() >  MAX_VIDEOS){
+            this.videos.add(video);
+            return true;
+        }
+        return false;
     }
 
     /**
