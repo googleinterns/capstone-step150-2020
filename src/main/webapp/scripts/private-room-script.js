@@ -126,9 +126,14 @@ function listenForStateChange(){
 }
 
 // Send the user's state to the servlet every time their state changes
-function updateCurrentState(currentState){
+function updateCurrentState(currentState, currentTime){
     $(document).ready(function(){
-        $.post(Url, {userState: currentState});
+        $.post(Url,
+        {
+            userState: currentState,
+            timeStamp: currentTime
+        }
+        );
     })
     console.log('I am sending the state: ' + currentState)
 }
@@ -177,7 +182,9 @@ function onStateChange(event) {
             state = 6;
     }
     console.log('onStateChange: ' + state);
-    updateCurrentState(state);
+    var currentTime = youtubePlayer.getCurrentTime();
+    console.log('sending time: ' + currentTime);
+    updateCurrentState(state, currentTime);
 }
 
 async function displayChat() {
