@@ -73,9 +73,9 @@ public class Room {
         return newRoom;
     }
 
-    //Takes a room object and puts it into datastore
-    public static Long toDatastore(Room room){
-        Entity newRoom = Room.toEntity(room);
+    //Takes a room object, puts it into datastore and returns the resulting entity's key
+    public Key toDatastore(){
+        Entity room = Room.toEntity(this);
         try {
             return DatastoreServiceFactory.getDatastoreService().put(newRoom).getId();
         } catch (DatastoreFailureException e){
