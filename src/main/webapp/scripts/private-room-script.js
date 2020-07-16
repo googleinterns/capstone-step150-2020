@@ -23,7 +23,7 @@ async function loadPlayerDiv(){
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
     // Check that the current room id exits, then return playlist of given room
-    let roomPromise = await fetch('/verify-room?roomId='+roomId);
+    let roomPromise = await fetch('/collect-videos?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
     let roomVideoUrl = await roomPromise.json();
     // create an array of all the YT videos' urls

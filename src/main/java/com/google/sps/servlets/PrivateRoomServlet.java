@@ -32,6 +32,6 @@ public final class PrivateRoomServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String currentRoomId = request.getParameter(inputtedIdTag);
-    response.sendRedirect("/views/private-room.html?id="+currentRoomId);
+    response.sendRedirect("/views/redirect-page.html?id="+currentRoomId);
   }
 }

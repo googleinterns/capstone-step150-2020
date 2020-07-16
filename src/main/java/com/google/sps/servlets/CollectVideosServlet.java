@@ -38,8 +38,8 @@ import com.google.appengine.api.datastore.Key;
 /** Servlet that takes in the user's room Id and verifies that it
  * exists, then prints the json version of all the urls in playlist
 */
-@WebServlet("/verify-room")
-public final class VerifyRoomServlet extends HttpServlet {
+@WebServlet("/collect-videos")
+public final class CollectVideosServlet extends HttpServlet {
   private String inputtedUserTag = "user-party-link";
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 

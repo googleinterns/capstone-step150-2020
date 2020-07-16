@@ -2,7 +2,8 @@ var roomId;
 const privateRoomPath = "/views/private-room.html?id=";
 const joinRoomPath = "/views/join-room.html";
 
-function verifyRoom() {
+async function verifyRoom() {
+    console.log('in the verify room function');
     roomId = getRoomId(window.location.href);
      // Check that the current room id exits, then return playlist of given room
     let roomPromise = await fetch('/verify-room?roomId='+roomId);
