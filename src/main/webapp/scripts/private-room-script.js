@@ -49,10 +49,12 @@ async function fetchPrivateRoomVideo(currentRoomId) {
 * Takes json of the urls of videos in playlist and puts them in a array of strings of urls
 */
 function parseJsonOfVideos(jsonOfVideos){
+    console.log(jsonOfVideos);
     var playlistUrls = [];
     for(i = 0; i < jsonOfVideos.length; i++) {
         playlistUrls.push(jsonOfVideos[i]);
     }
+    console.log(playlistUrls);
     return playlistUrls;
 }
 

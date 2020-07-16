@@ -24,6 +24,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 //TODO: Restructure so logic is more split up
 public class Room {
     private static final int MAX_MESSAGES = 10;
+    private static final int MAX_VIDEOS = 15;
     private static final String ROOM_ENTITY = "Room";
     private static final String MEMBERS_PROPERTY = "members";
     private static final String MESSAGES_PROPERTY = "messages";
@@ -43,7 +44,7 @@ public class Room {
     public static Room fromRoomId(long roomId) {
         Key roomKey = KeyFactory.createKey("Room", roomId);
         try {
-            return Room.fromRoomKey(roomKey));
+            return Room.fromRoomKey(roomKey);
         } catch (EntityNotFoundException e) {
             System.out.println(e.toString());
         }
@@ -73,12 +74,10 @@ public class Room {
     }
 
     //Takes a room object and puts it into datastore
-    public Key toDatastore(){
-
-        Entity room = Room.toEntity(this);
+    public static Long toDatastore(Room room){
+        Entity newRoom = Room.toEntity(room);
         try {
-            roomKey = DatastoreServiceFactory.getDatastoreService().put(room);
-            return roomKey;
+            return DatastoreServiceFactory.getDatastoreService().put(newRoom).getId();
         } catch (DatastoreFailureException e){
             System.out.println(e.toString());
         }
@@ -97,7 +96,7 @@ public class Room {
 
     //Returns the Room's members
     public List<Member> getMembers() {
-        return this.members.copy();
+        return new ArrayList<Member>(this.members);
     }
 
     // Helper addMessage function to manipulate the list of messages
@@ -109,8 +108,12 @@ public class Room {
     }
 
     //Adds a video to the Room's video queue
-    public void addVideo(Video video) {
-        this.videos.add(video);
+    public boolean addVideo(Video video) {
+        if(this.videos.size() >  MAX_VIDEOS){
+            this.videos.add(video);
+            return true;
+        }
+        return false;
     }
 
     /**
