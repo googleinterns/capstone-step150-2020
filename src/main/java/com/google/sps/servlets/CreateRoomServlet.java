@@ -53,8 +53,7 @@ public final class CreateRoomServlet extends HttpServlet {
 
         Room newRoom = Room.createRoom(members);
         playlistIdToVideoQueue(playlistId, newRoom);
-        Entity roomEntity = Room.toEntity(newRoom);
-        Long newRoomId = Room.toDatastore(newRoom);
+        Long newRoomId = newRoom.toDatastore();
         if(newRoomId != null) {
            res.setContentType("text/html");
            res.getWriter().println(createHtmlString(newRoomId));
@@ -78,7 +77,7 @@ public final class CreateRoomServlet extends HttpServlet {
         //Read the response
         InputStreamReader responseReader = new InputStreamReader(youtubeDataConnection.getInputStream(), "UTF-8");
         JsonObject response = ServletUtil.PARSER.fromJson(responseReader, JsonObject.class);
-       responseReader.close();
+        responseReader.close();
         JsonArray videoInformation = response.getAsJsonArray("items");
         //Create urls from video IDs
         for(int i = 0; i < videoInformation.size(); ++i) {

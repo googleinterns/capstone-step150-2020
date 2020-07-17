@@ -91,8 +91,8 @@ public class Room {
         return newRoom;
     }
     //Puts the room into datastore
-    public static Long toDatastore(Room room){
-        Entity newRoom = Room.toEntity(room);
+    public Long toDatastore(){
+        Entity newRoom = Room.toEntity(this);
         try {
             return DatastoreServiceFactory.getDatastoreService().put(newRoom).getId();
         } catch (DatastoreFailureException e){
@@ -130,7 +130,7 @@ public class Room {
       * @return a boolean representing whether the video was successfully added. If false there were already 15 videos inside.
      */
     public boolean addVideo(Video video) {
-        if(this.videos.size() >  MAX_VIDEOS){
+        if(this.videos.size() <  MAX_VIDEOS){
             this.videos.add(video);
             return true;
         }
