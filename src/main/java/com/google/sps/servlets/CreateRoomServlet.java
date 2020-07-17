@@ -57,7 +57,7 @@ public final class CreateRoomServlet extends HttpServlet {
         Room newRoom = Room.createRoom(members, videos, new LinkedList<Message>());
 
         // Entity roomEntity = Room.toEntity(newRoom);
-        Long newRoomId = Room.toDatastore(newRoom);
+        Long newRoomId = newRoom.toDatastore();
         if(newRoomId != null) {
            res.setContentType("text/html");
            res.getWriter().println(createHtmlString(newRoomId));

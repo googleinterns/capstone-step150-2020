@@ -1,6 +1,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.data.Room;
+import java.util.Queue;
 import com.google.sps.data.Message;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -20,52 +21,43 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/chat")
-
 public class ChatServlet extends HttpServlet {
-
-  // Retrieve messages from datastore
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String query = request.getParameter("roomId");
-    System.out.println(query);
-    long roomID = Long.parseLong(query);
-    Gson gson = new Gson();
-
-    // Retrieves the entity with matching ID and its corresponding messages property as a JSON string
-    Room room = Room.fromKey(KeyFactory.createKey("Room",roomID));
-    LinkedList<Message> messages = room.getMessages();
-    String jsonMessages = gson.toJson(messages);
-      
-    response.setContentType("application/json;");
-    response.getWriter().println(jsonMessages);
-  }
- 
-  // Update messages in datastore
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO: get the correct HTML element from room page
-    String message = getParameter(request, "text-input", "");
-    long timestamp = System.currentTimeMillis();
-
-    // TODO: get sender information based on their login
-    String sender = "sender"; 
-
-    // Get room ID from URL request
-    String query = request.getParameter("roomId");
-    System.out.println(query);
-    long roomID = Long.parseLong(query);
-    Message chatMessage = Message.createNewMessage(sender, message, timestamp);
-
-    Room.addMessagesFromKey(KeyFactory.createKey("Room",roomID), chatMessage);
-        
-    // TODO: Correct redirect
-    response.sendRedirect("/index.html");
-  }
-
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
+    // Retrieve messages from datastore 
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String query = request.getParameter("roomID");
+        long roomID = Long.parseLong(query);
+        Gson gson = new Gson();
+        // Retrieves the entity with matching ID and its corresponding messages property as a JSON string 
+        Room room = Room.fromRoomId(roomID);
+        Queue<Message> messages = room.getMessages();
+        String jsonMessages = gson.toJson(messages);
+        response.setContentType("application/json;");
+        response.getWriter().println(jsonMessages);
     }
-    return value;
-  }
+    // Update messages in datastore
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String message = getParameter(request, "text-input", "");
+        long timestamp = System.currentTimeMillis();
+        // TODO: get sender information based on their login    
+        String sender = request.getParameter("userEmail");
+        // Get room ID from URL request
+        String query = request.getParameter("roomId");
+        System.out.println(query);
+        long roomID = Long.parseLong(query);
+        Message chatMessage = Message.createNewMessage(sender, message, timestamp);
+        Room room = Room.fromRoomId(roomID);
+        room.addMessage(chatMessage);
+        room.toDatastore();
+        // TODO: Correct redirect
+        response.sendRedirect("/index.html");
+    }
+    
+    private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+        String value = request.getParameter(name);
+        if (value == null) {
+            return defaultValue;
+        }
+        return value;
+    }
 }
