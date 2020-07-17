@@ -1,13 +1,8 @@
-body{
-    margin: auto;
-    text-align: center;
-}
-
-#textbox {
+.textbox {
     background-color: lightgrey;
     border-radius: 12px;
 }
-#textbox:focus{
+.textbox:focus{
     outline: none;
 }
 

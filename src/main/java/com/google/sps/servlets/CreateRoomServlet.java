@@ -7,6 +7,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Key;
 import com.google.gson.Gson;
 import java.util.Queue;
 import com.google.gson.JsonElement;
@@ -52,17 +53,15 @@ public final class CreateRoomServlet extends HttpServlet {
         System.out.println(videos);
 
         Room newRoom = Room.createRoom(members, videos, new LinkedList<Message>());
-
         Entity roomEntity = Room.toEntity(newRoom);
-        
         try{
-            DATASTORE.put(roomEntity);
+           Key newRoomKey = DATASTORE.put(roomEntity);
+           res.setContentType("text/html");
+           res.getWriter().println(createHtmlString(newRoomKey.toString()));
         } 
         catch(DatastoreFailureException e){
             System.out.println(e.toString());
         }
-        
-
     }
     /**
       * Communicates with the Youtube Data API to get playlistItem information
@@ -93,5 +92,8 @@ public final class CreateRoomServlet extends HttpServlet {
             videoUrls.add(Video.createVideo(ServletUtil.YT_BASE_URL + videoid));
         }
         return videoUrls;
+    }
+    public String createHtmlString(String key){
+        return "<center><h2>Congratulations! This is your new Room ID.</h2><br><br><h1>"+key+"</h1></center>";
     }
 }

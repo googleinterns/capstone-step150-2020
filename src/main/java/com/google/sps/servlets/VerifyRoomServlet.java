@@ -28,6 +28,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.datastore.Key;
 
 /** Servlet that takes in the user's room Id and verifies that it
  * exists, then prints the json version of all the urls in playlist
@@ -58,15 +59,15 @@ public final class VerifyRoomServlet extends HttpServlet {
     }
   }
 
-  /*
-  * Take the queue of videos associated with the room and transfer it into an array
-  */
-  public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-    ArrayList<String> videoUrls = new ArrayList<>();
-    while(!videosOfPlaylist.isEmpty()){
-      Video currVideo = videosOfPlaylist.remove();
-      videoUrls.add(currVideo.getUrl());
-    }
-    return videoUrls;
-  }
+	/*
+	* Take the queue of videos associated with the room and transfer it into an array
+	*/
+	public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
+	  ArrayList<String> videoUrls = new ArrayList<>();
+	  while(!videosOfPlaylist.isEmpty()){
+		Video currVideo = videosOfPlaylist.remove();
+		videoUrls.add(currVideo.getUrl());
+	  }
+	  return videoUrls;
+	}
 }

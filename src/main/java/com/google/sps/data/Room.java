@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.appengine.api.datastore.Key;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.EmbeddedEntity;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.stream.*;
 import com.google.appengine.api.datastore.KeyFactory;
-
 
 //Object repsresenting the Room that the chat and video streaming will be in
 //TODO: Restructure so logic is more split up
