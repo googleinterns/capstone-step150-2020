@@ -78,6 +78,11 @@ public class Room {
         return this.messages;
     }
 
+    //Updates the current video in the room's state
+    public void updateCurrentVideoState(Video.VideoState state, long videoTimeStamp){
+        this.videos.peek().updateVideoState(state, videoTimeStamp);
+    }
+
     //Returns the messages as a list of embedded entities
     private List<EmbeddedEntity> getMessagesAsEntities() {
         return messages.stream().map(Message::toEmbeddedEntity).collect(Collectors.toList());
