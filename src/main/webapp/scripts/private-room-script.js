@@ -46,13 +46,7 @@ async function fetchPrivateRoomVideo(currentRoomId) {
 
 // Take the array of urls and create an array of their youtube ids
 function extractVideoIds(roomVideoUrls){
-    var currentPlaylistIds = [];
-    for(i = 0; i < roomVideoUrls.length; i++) {
-        var currentUrl = roomVideoUrls[i];
-        var currentRoomId = currentUrl.substring(YT_BASE_URL.length);
-        currentPlaylistIds.push(currentRoomId);
-    }
-    return currentPlaylistIds;
+    return roomVideoUrls.map(id => id.substring(YT_BASE_URL.length));
 }
 
 // load the playlist of videos to the container
