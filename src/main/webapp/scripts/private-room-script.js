@@ -26,6 +26,7 @@ function getRoomId(url) {
     var tempArrayForRoomId = query.split('=');
     var currentRoomId = tempArrayForRoomId[1];
     roomId = currentRoomId;
+    console.log(roomId);
     return roomId;
 }
 
@@ -144,6 +145,7 @@ function onStateChange(event) {
 
 // Shows and refreshes the messages shown on the private room page
 async function displayChat() {    
+    console.log(window.roomId);
     let response = await fetch(`/chat?roomID=${window.roomId}`);
     let messages = await response.json();    
     const messageElement = document.getElementById('chat-messages');    

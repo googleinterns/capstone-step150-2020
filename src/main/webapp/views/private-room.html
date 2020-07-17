@@ -6,14 +6,8 @@
         <link rel="stylesheet" href="../stylesheets/private-room.css">  
     </head>  
     <script src="/scripts/private-room-script.js"></script>     
-    <body onload="loadIframe(); displayChat()">    
-        <div class="videoContainer">        
-            <iframe id="video-tag"                
-                width="640" height="360"                
-                frameborder="0"                
-                style="border: solid 4px #37474F">        
-            </iframe>    
-        </div>    
+    <body onload="loadPlayerDiv(); displayChat()">    
+        <div id="player-div"></div>    
         <div class="chatContainer">    
             <div class="titleContainer">      
                 <label>Chat</label>    
