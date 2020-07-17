@@ -50,12 +50,10 @@ public final class CreateRoomServlet extends HttpServlet {
         //Requests playlist information from YT api and transforms playlist url to video url list
         String playlistUrl = req.getParameter(PLAYLIST_URL_PARAMETER);
         String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+ServletUtil.PLAYLIST_QUERY_PARAMETER.length());
-        
-        Queue<Video> videos = new LinkedList<Video>();
 
-        Room newRoom = Room.createRoom(members, videos, new LinkedList<Message>());
-
-        // Entity roomEntity = Room.toEntity(newRoom);
+        Room newRoom = Room.createRoom(members);
+        playlistIdToVideoQueue(playlistId, newRoom);
+        Entity roomEntity = Room.toEntity(newRoom);
         Long newRoomId = Room.toDatastore(newRoom);
         if(newRoomId != null) {
            res.setContentType("text/html");
@@ -75,24 +73,17 @@ public final class CreateRoomServlet extends HttpServlet {
     public void playlistIdToVideoQueue(String playlistId, Room room) throws IOException {
         //Connect to the YouTube Data API
         URL url = new URL(ServletUtil.YT_DATA_API_BASE_URL+ServletUtil.DATA_API_KEY+ServletUtil.YT_DATA_API_PARAMETERS+playlistId);
-        HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
-        YTDataCon.setRequestMethod("GET");
+        HttpURLConnection youtubeDataConnection = (HttpURLConnection) url.openConnection();
+        youtubeDataConnection.setRequestMethod("GET");
         //Read the response
-        BufferedReader in = new BufferedReader(
-        new InputStreamReader(YTDataCon.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        //Parse json for the specific data that is necessary
-        JsonObject obj = ServletUtil.PARSER.fromJson(content.toString(), JsonObject.class);
-        JsonArray VideoInformation = obj.getAsJsonArray("items");
+        InputStreamReader responseReader = new InputStreamReader(youtubeDataConnection.getInputStream(), "UTF-8");
+        JsonObject response = ServletUtil.PARSER.fromJson(responseReader, JsonObject.class);
+       responseReader.close();
+        JsonArray videoInformation = response.getAsJsonArray("items");
         //Create urls from video IDs
-        for(int i = 0; i < VideoInformation.size(); ++i) {
-            String videoid = VideoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
-            if(!room.addVideo(Video.createVideo(ServletUtil.YT_BASE_URL + videoid))){
+        for(int i = 0; i < videoInformation.size(); ++i) {
+            String videoId = videoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
+            if(!room.addVideo(Video.createVideo(ServletUtil.YT_BASE_URL + videoId))){
                 break;
             }
         }

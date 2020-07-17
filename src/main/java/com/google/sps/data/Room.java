@@ -39,6 +39,12 @@ public class Room {
         return new Room(members, videos, messages);
     }
 
+    public static Room createRoom(List<Member> members){
+        Queue<Video> videoQueue = new LinkedList<Video>();
+        Queue<Message> messageQueue = new LinkedList<Message>();
+        return new Room(members,videoQueue, messageQueue);
+    }
+
     // Manipulates the messages property of the room given a room key and a new message to be added
     public static void addMessagesFromKey(Key roomKey, Message chatMessage) {
         try {
@@ -84,6 +90,7 @@ public class Room {
         newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
         return newRoom;
     }
+    //Puts the room into datastore
     public static Long toDatastore(Room room){
         Entity newRoom = Room.toEntity(room);
         try {
@@ -117,7 +124,11 @@ public class Room {
         messages.add(msg);
     }
 
-    //Adds a video to the Room's video queue
+    /**
+      * Adds a video to the Room's video queue if the queue has less than 15 videos
+      * @param video the video to be added
+      * @return a boolean representing whether the video was successfully added. If false there were already 15 videos inside.
+     */
     public boolean addVideo(Video video) {
         if(this.videos.size() >  MAX_VIDEOS){
             this.videos.add(video);
