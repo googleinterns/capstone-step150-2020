@@ -28,7 +28,7 @@ public class ChatServlet extends HttpServlet {
         Gson gson = new Gson();
         // Retrieves the entity with matching ID and its corresponding messages property as a JSON string    
         Room room = Room.fromKey(KeyFactory.createKey("Room",roomID));    
-        LinkedList<Message> messages = room.getMessages();    
+        Queue<Message> messages = room.getMessages();    
         String jsonMessages = gson.toJson(messages);          
         response.setContentType("application/json;");    
         response.getWriter().println(jsonMessages);  
@@ -54,7 +54,7 @@ public class ChatServlet extends HttpServlet {
       
     private String getParameter(HttpServletRequest request, String name, String defaultValue) {    
         String value = request.getParameter(name);    
-        if (value == null) {      
+        if (value == null) {      
             return defaultValue;    
         }    
         return value;  
