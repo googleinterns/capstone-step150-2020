@@ -1,0 +1,83 @@
+label {    
+    font-size:18px;
+}
+h4 {    
+    font-size:15px;    
+    color: blue;
+}
+p {    
+    margin-bottom:-16px;
+}
+.msgBody {    
+    color: black;    
+    font-size:14px;
+}    
+.sender {    
+    font-size:15px;    
+    color: blue;
+}
+.videoContainer{    
+    float:left;    
+    margin-left: 200px;    
+    margin-top: 100px;
+}
+.chatContainer {    
+    width:320px;    
+    border:1px solid #bbb;    
+    margin:50px;    
+    float: right;    
+    margin-right:100px;
+}
+.titleContainer {    
+    background-color:#fdfdfd;    
+    padding:10px;
+}
+.titleContainer label{    
+    color:#444;    
+    margin:0;    
+    font-size:20px;    
+    display:inline-block;
+}
+.msgList {    
+    padding:0;    
+    list-style:none;    
+    max-height:450px;    
+    overflow:auto;    
+    margin-top:1px;    
+    margin-bottom:10px;    
+    margin-left:3px;
+}
+.msgList li {    
+    margin:0;    
+    margin-top:5px;    
+    margin-bottom:13px;
+}
+.msgList li > div {    
+    display:table-cell;
+}
+.msgSender {    
+    margin-right:5px;    
+    float:left;
+}
+.msgText p {    
+    margin-top:-1px;    
+    margin-bottom:0px;
+}
+.sub-text {    
+    color:#aaa;    
+    font-family:verdana;    
+    font-size:11px;
+}
+.msgContainer {    
+    border-top:1px dotted #bbb;    
+    padding:10px;    
+    margin-bottom:25px;
+}
+.subButton {    
+    float: left;    
+    margin-left:4px;
+}
+.form-input {    
+    float: left;    
+    width: 80%;
+}
