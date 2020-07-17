@@ -58,7 +58,7 @@ public final class VerifyRoomServlet extends HttpServlet {
       response.getWriter().println(jsonOfUrls);
     }
   }
-
+  
 	/*
 	* Take the queue of videos associated with the room and transfer it into an array
 	*/

@@ -135,7 +135,6 @@ public class Room {
       * @param messages a Queue of message objects
       * @return a new Room object
       */
-
     private Room(List<Member> members, Queue<Video> videos, Queue<Message> messages, Key key) {
         this.members = members;
         this.videos = videos;

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html>  
     <head>    
         <meta charset="UTF-8">    
@@ -33,4 +34,33 @@
             </div>
         </div>
     </body>
+=======
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Private Room</title>
+</head>
+<script src="/scripts/private-room-script.js"></script>   
+<body onload="loadIframe()" onload="setInterval(displayChat, 3000)">
+    <iframe id="video-tag"
+        width="640" height="360"
+        frameborder="0"
+        style="border: solid 4px #37474F">
+    </iframe>
+    <h3>Chat Area</h3>
+    <div id="chat-messages">
+    </div>
+    <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
+    <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">
+        <textarea name="text-input"></textarea>
+        <br/>
+        <input type="hidden" id="roomId" name="roomId" value="" />
+            <script type="text/javascript">
+            var elem = document.getElementById("roomId");
+            elem.value = getRoomId(window.location.href);
+            </script>
+        <input type="submit" value="Send"/>
+    </form>
+  </body>
+>>>>>>> e0fd00de22f874a456942808b9e4215159c1ac50
 </html>
