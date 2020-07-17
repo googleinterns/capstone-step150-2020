@@ -1,0 +1,147 @@
+
+/* Banner */
+#banner {
+    display: -ms-flexbox;
+    padding: 8em 0 6em 0;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background-image: url("../media/white-bg-2.png");
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    border-top: 0;
+    min-height: 100vh;
+    height: 100vh !important;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+}
+
+#banner .inner {
+    transform: scale(1.0);
+    transition: opacity 1s ease, transform 1s ease;
+    opacity: 1;
+    position: relative;
+    z-index: 2;
+}
+
+#banner h1 {
+    font-size: 4em;
+    margin-bottom: .25em;
+}
+
+#banner p {
+    color: black;
+    font-size: 1.5em;
+}
+
+#banner video {
+    transform: translateX(50%) translateY(50%);
+    position: absolute;
+    bottom: 50%;
+    right: 50%;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+    overflow: hidden;
+}
+
+#banner:before {
+    transition: opacity 3s ease;
+    transition-delay: 1.25s;
+    content: '';
+    display: block;
+    height: 100%;
+    left: 0;
+    opacity: 0.45;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+@media screen and (max-width: 1280px) {
+    #banner video {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 736px) {
+    #banner {
+        min-height: 0;
+        height: auto !important;
+        padding: 4em 2em;
+    }
+
+    #banner .inner {
+        width: 100%;
+    }
+
+    #banner h1 {
+        font-size: 1.75em;
+        margin-bottom: 0.5em;
+        padding-bottom: 0;
+    }
+
+    #banner p {
+        font-size: 1.25em;
+    }
+
+    #banner br {
+        display: none;
+    }
+
+    #banner .button {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+
+    #banner p {
+        font-size: 1em;
+    }
+
+}
+
+body.is-loading #banner .inner {
+    transform: scale(0.99);
+    opacity: 0;
+}
+
+body.is-loading #banner:before {
+    opacity: 1;
+}
+
+#buttons-row {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 400px;
+    height: 300px;
+    margin: auto;
+}
+
+.home-button {
+    font-family: 'Noto Sans', sans-serif;
+    cursor: pointer;
+    box-shadow: -1px 3px 3px 0 rgba(80, 80, 80, .2);
+    width: 155px;
+    height: 50px;
+    padding: 17px;
+    border: none;
+    border-radius: 30px;
+    margin: 0 10px 40px;
+    color: #fff;
+    font-weight: bold;
+    flex: 0 0 auto;
+    transition: all 0.3s ease;
+    background: #CB4A46;
+}
+
+.home-button:hover {
+  width: 160px;
+  box-shadow: -1px 6px 10px 0 rgba(120, 60, 20, .2);
+}
