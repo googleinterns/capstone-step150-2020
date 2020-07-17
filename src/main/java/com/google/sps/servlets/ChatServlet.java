@@ -1,6 +1,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.data.Room;
+import java.util.Queue;
 import com.google.sps.data.Message;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -31,7 +32,7 @@ public class ChatServlet extends HttpServlet {
         long roomID = Long.parseLong(query);    
         Gson gson = new Gson();
         // Retrieves the entity with matching ID and its corresponding messages property as a JSON string    
-        Room room = Room.fromRoomId(roomID));       
+        Room room = Room.fromRoomId(roomID);       
         String jsonMessages = gson.toJson(room.getMessages());          
         response.setContentType("application/json;");    
         response.getWriter().println(jsonMessages);  
