@@ -27,7 +27,7 @@ public class ChatServlet extends HttpServlet {
         long roomID = Long.parseLong(query);    
         Gson gson = new Gson();
         // Retrieves the entity with matching ID and its corresponding messages property as a JSON string    
-        Room room = Room.fromKey(KeyFactory.createKey("Room",roomID));    
+        Room room = Room.fromRoomId(roomID));    
         Queue<Message> messages = room.getMessages();    
         String jsonMessages = gson.toJson(messages);          
         response.setContentType("application/json;");    
