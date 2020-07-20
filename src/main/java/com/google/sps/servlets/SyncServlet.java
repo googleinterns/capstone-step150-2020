@@ -19,7 +19,9 @@ public final class SyncServlet extends HttpServlet {
     private static final String VIDEO_TIMESTAMP_PARAMETER = "TimeStamp";
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-
+        long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
+        Room updatedRoom = Room.fromId(roomId);
+        
     }
 
     @Override
@@ -28,8 +30,9 @@ public final class SyncServlet extends HttpServlet {
         Video.VideoState newState = Video.VideoState.fromInt(Integer.parseInt(req.getParameter(UPDATE_STATE_PARAMETER)));
         long currentVideoTimestamp = Long.parseLong(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
 
-        // Room syncRoom; //Room.fromId(roomId);
-        // syncRoom.updateCurrentVideoState(newState, currentVideoTimestamp);
+        Room syncRoom; = Room.fromId(roomId);
+        syncRoom.updateCurrentVideoState(newState, currentVideoTimestamp);
+        syncRoom.toDataStore();
         res.setStatus(200);
         
     }
