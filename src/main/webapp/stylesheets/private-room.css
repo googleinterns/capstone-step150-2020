@@ -1,4 +1,5 @@
-label {
+/* Chat Room Styling */
+label {
     font-size:18px;
     }
 h4 {
@@ -81,4 +82,9 @@ p {
 .form-input {
     float:left;
     width:80%;
+}
+/* Video player Styling */
+player-div{
+    height: 100%;
+    width: 80%;
 }
