@@ -6,7 +6,7 @@ async function authenticate(redirectPath){
     //Stores the users email
     if(contentType === "application/json") {
         let userEmail = await res.json();
-        window.userEmail = userEmail.toString();
+        window.localStorage.setItem("userEmail", userEmail.toString());
         window.location.href = redirectPath;
     }
     //Renders a login button
