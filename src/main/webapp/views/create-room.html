@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <title>Youtube Party</title>
     <link rel="stylesheet" href="../stylesheets/create_room_style.css">
+    <script src="../scripts/home_script.js"></script>
   </head>
-  <body>
+  <body onload=authenticate("create-room.html")>
     <center>
       <h2>Create a new Youtube Party</h2>
       <form action="/create-room" method="POST">
