@@ -10,6 +10,7 @@ async function loadPlayerDiv(){
     // Get the room id from the private room's url
     await getRoomId(window.location.href);
     await fetchPrivateRoomVideo(roomId);
+    getRoomId_caseTested_expectedResult();
 }
 
 /**
@@ -18,6 +19,7 @@ async function loadPlayerDiv(){
 * @return {roomId} room id at end of the url
 */
 function getRoomId(url) {
+    console.log(url);
     var parser = document.createElement('a');
     parser.href = url;
     var query = parser.search.substring(1);
