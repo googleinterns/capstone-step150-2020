@@ -108,9 +108,8 @@ public class Room {
 
     //Adds a video to the Room's video queue
     public boolean addVideo(Video video) {
-        if(this.videos.size() >  MAX_VIDEOS){
-            this.videos.add(video);
-            return true;
+        if(this.videos.size() < MAX_VIDEOS){
+            return this.videos.add(video);
         }
         return false;
     }
