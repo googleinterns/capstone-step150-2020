@@ -30,8 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that takes in the user's room Id and verifies that it
- * exists, then prints the json version of all the urls in playlist
+/** Servlet that takes in the user's room Id and prints whether or not it exists
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
@@ -40,22 +39,18 @@ public final class VerifyRoomServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
+
     String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
     // TODO: handle if they inputted a key string that does not exist in datastore
     Room currentRoom = Room.fromRoomId(currentRoomId);
 
+    // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
     if(currentRoom == null){
-      System.out.println("VerifyRoomServlet could not find a corresponding room");
-      response.setStatus(ERROR_CODE_FOUND);
-      response.sendRedirect(ServletUtil.JOIN_ROOM_PATH);
-      // Set type to HTML
+      response.getWriter().println(false);
     } else {
-      Queue<Video> videosOfPlaylist = currentRoom.getVideos();
-      List<String> urlsOfPlaylist = currentRoom.getVideos().stream().map(Video::getUrl).collect(Collectors.toList());
-      String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
-      response.getWriter().println(jsonOfUrls);
+      response.getWriter().println(true);
     }
   }
 }

@@ -38,7 +38,7 @@ function getRoomId(url) {
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
     // Check that the current room id exits, then return playlist of given room
-    let roomPromise = await fetch('/verify-room?roomId='+roomId);
+    let roomPromise = await fetch('/collect-videos?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
     let roomVideoUrls = await roomPromise.json();
     // create an array of all the YT videos' urls
@@ -50,7 +50,6 @@ function extractVideoIds(roomVideoUrls){
     return roomVideoUrls.map(id => id.substring(YT_BASE_URL.length));
 }
 
-// load the playlist of videos to the container
 function loadRoomPlaylist(){
     youtubePlayer.loadPlaylist({playlist: playlistIds});
 }
@@ -170,7 +169,7 @@ async function displayChat() {
     const messageElement = document.getElementById('chat-messages');
     messageElement.innerHTML = '';
     for (message in messages) {
-        commentElement.appendChild(createParagraph(comments[comment]));
+      commentElement.appendChild(createParagraph(comments[comment]));
     }  
 }
 
@@ -179,7 +178,7 @@ function createParagraph(msgJson) {
     const paragraph = document.createElement('p');
     paragraph.innerHTML = '<h4>';
     paragraph.innerText = msg.sender;
-    paragraph.innerHTML = '</4>';
+    paragraph.innerHTML = '</h4>';
     paragraph.innerText = msg.message;
     return paragraph;
 }

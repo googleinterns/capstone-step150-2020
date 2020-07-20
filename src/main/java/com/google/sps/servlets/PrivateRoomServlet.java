@@ -18,27 +18,19 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that takes in the user's inputted Room ID and directs them
-    to the associated private room once ensurred that it's an actual room*/
+/** Servlet that takes in the user's inputted Room ID and takes them to the redirect page with their inputted room id*/
 @WebServlet("/private-room")
 public final class PrivateRoomServlet extends HttpServlet {
   private String currentRoomId = "";
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Take in user's private room and store it to global variable
-	currentRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
-	response.getWriter().println(currentRoomId);
-    // TODO: Create hard-coded hashmap of {Room ID : URL} Hashmap
-    // TODO: Print json-ified string to /join-room page for private room to fetch
-	response.sendRedirect(ServletUtil.PRIVATE_ROOM_PATH_WITH_QUERY+currentRoomId);
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String currentRoomId = request.getParameter(inputtedIdTag);
+    response.sendRedirect(ServletUtil.REDIRECT_ROOM_PATH_WITH_QUERY+currentRoomId);
   }
 }
