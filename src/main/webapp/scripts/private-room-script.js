@@ -10,6 +10,7 @@ async function loadPlayerDiv(){
     // Get the room id from the private room's url
     await getRoomId(window.location.href);
     await fetchPrivateRoomVideo(roomId);
+    getRoomId_caseTested_expectedResult();
 }
 
 /**
@@ -18,6 +19,7 @@ async function loadPlayerDiv(){
 * @return {roomId} room id at end of the url
 */
 function getRoomId(url) {
+    console.log(url);
     var parser = document.createElement('a');
     parser.href = url;
     var query = parser.search.substring(1);
@@ -140,9 +142,9 @@ function createNewMessage(msg) {
     listItem.innerHTML += 
     `<div class="msgText">
         <p>
-            <span class="sender">'+msg.sender+': </span><span class="msgBody">'+msg.message+'</span>
+            <span class="sender">'+${msg.sender}+': </span><span class="msgBody">'+${msg.message}+'</span>
         </p> 
-        <span class="sub-text"> Sent at ' + toTime(msg.timestamp)+ '</span>
+        <span class="sub-text"> Sent at ' + toTime(${msg.timestamp})+ '</span>
     </div>`;    
     return listItem;
 }
