@@ -1,5 +1,5 @@
 /* Chat Room Styling */
-label {
+label {
     font-size:18px;
     }
 h4 {
@@ -43,6 +43,7 @@ p {
     padding:0;
     list-style:none;
     max-height:450px;
+    min-height:450px;
     overflow:auto;
     margin-top:1px;
     margin-bottom:10px;
