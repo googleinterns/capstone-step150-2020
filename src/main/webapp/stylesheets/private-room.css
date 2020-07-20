@@ -23,11 +23,11 @@ p {
     margin-top: 100px;
 }
 .chatContainer {
-    width:320px;
+    width:350px;
     border:1px solid #bbb;
     margin:50px;
     float: right;
-    margin-right:100px;
+    margin-right:50px;
 }
 .titleContainer {
     background-color:#fdfdfd;

@@ -131,7 +131,7 @@ async function displayChat() {
     const messageElement = document.getElementById('chat-messages');    
     messageElement.innerHTML = '';    
     for (message in messages) {      
-        messageElement.appendChild(createNewMessage(message));    
+        messageElement.appendChild(createNewMessage(messages[message]));    
     }      
     displayChat();
 }

@@ -25,10 +25,8 @@ public class ChatServlet extends HttpServlet {
     // Retrieve messages from datastore 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String query = request.getParameter("roomID");
-        System.out.println(query);
         long roomID = Long.parseLong(query);
         Gson gson = new Gson();
-
         // Retrieves the entity with matching ID and its corresponding messages property as a JSON string
         Room room = Room.fromRoomId(roomID);
         Queue<Message> messages = room.getMessages();
@@ -52,6 +50,7 @@ public class ChatServlet extends HttpServlet {
         Room room = Room.fromRoomId(roomID);
         room.addMessage(chatMessage);
         room.toDatastore();
+        System.out.println(room.toDatastore());
         // TODO: Correct redirect
         response.sendRedirect("/index.html");
     }

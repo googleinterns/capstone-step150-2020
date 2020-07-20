@@ -77,7 +77,9 @@ public class Room {
     public Long toDatastore(){
         Entity room = Room.toEntity(this);
         try {
-            return DatastoreServiceFactory.getDatastoreService().put(room).getId();
+            Key key = DatastoreServiceFactory.getDatastoreService().put(room);
+            this.roomKey = key;
+            return key.getId();
         } catch (DatastoreFailureException e){
             System.out.println(e.toString());
         }
