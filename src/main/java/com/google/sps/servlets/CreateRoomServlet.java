@@ -33,6 +33,8 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.QueryResultList;
 import java.util.stream.Collectors;
+import com.google.appengine.api.datastore.DatastoreServiceConfig;
+import static com.google.appengine.api.datastore.DatastoreServiceConfig.Builder.*;
 
 //Tested by end to end testing the creation of the new Room. 
 //This was successful and the room Id was returned to the user
@@ -51,7 +53,7 @@ public final class CreateRoomServlet extends HttpServlet {
         String playlistUrl = req.getParameter(PLAYLIST_URL_PARAMETER);
         String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+ServletUtil.PLAYLIST_QUERY_PARAMETER.length());
 
-        Room newRoom = Room.createRoom(members);
+        Room newRoom = Room.createRoom(members,new LinkedList<Video>(), new LinkedList<Message>());
         playlistIdToVideoQueue(playlistId, newRoom);
         Long newRoomId = newRoom.toDatastore();
         if(newRoomId != null) {
