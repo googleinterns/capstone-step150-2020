@@ -33,6 +33,11 @@ h1{
     width: 40vh;
 }
 
+#form-text-box:focus{
+    border-radius: 20px;
+    outline: none;
+}
+
 #form-submit-btn{
     background: #CB4A46;
     padding: 12px 35px;
@@ -50,4 +55,8 @@ h1{
 #form-submit-btn:hover{
     opacity:.55;
 }
->>>>>>> f82d0abc4b7dd0edcefc7dc83d1dabe0a8e63ad5
+
+#form-submit-btn:focus{
+    border-radius: 20px;
+    outline: none;
+}

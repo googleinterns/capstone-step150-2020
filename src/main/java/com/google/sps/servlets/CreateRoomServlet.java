@@ -33,6 +33,8 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.QueryResultList;
 import java.util.stream.Collectors;
+import com.google.appengine.api.datastore.DatastoreServiceConfig;
+import static com.google.appengine.api.datastore.DatastoreServiceConfig.Builder.*;
 
 //Tested by end to end testing the creation of the new Room. 
 //This was successful and the room Id was returned to the user
