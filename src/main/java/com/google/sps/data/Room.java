@@ -137,4 +137,14 @@ public class Room {
         ((LinkedList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
         return new Room(memberList, videoQueue, messageList);
     }
+
+    //Removes the current video from the head of the queue
+    public void changeCurrentVideo(){
+        this.videos.poll();
+    }
+
+    //Rrturns the video object at the head of the queue
+    public Video getCurrentVideo(){
+        return this.videos.peek();
+    }
 }

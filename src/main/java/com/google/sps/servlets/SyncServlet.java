@@ -31,7 +31,12 @@ public final class SyncServlet extends HttpServlet {
         long currentVideoTimestamp = Long.parseLong(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
 
         Room syncRoom; = Room.fromId(roomId);
-        syncRoom.updateCurrentVideoState(newState, currentVideoTimestamp);
+
+        if(newState == Video.VideoState.ENDED){
+            syncRoom.changeCurrentVideo();
+        } else {
+            syncRoom.updateCurrentVideoState(newState, currentVideoTimestamp);
+        }
         syncRoom.toDataStore();
         res.setStatus(200);
         
