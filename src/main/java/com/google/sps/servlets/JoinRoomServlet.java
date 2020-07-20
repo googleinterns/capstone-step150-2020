@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that takes in the user's inputted Room ID and directs them
     to the associated private room once ensurred that it's an actual room*/
-@WebServlet("/private-room")
+@WebServlet("/join-room")
 public final class JoinRoomServlet extends HttpServlet {
   private String currentRoomId = "";
 

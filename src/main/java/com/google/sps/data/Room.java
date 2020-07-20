@@ -42,8 +42,7 @@ public class Room {
 
     //Creates a room object from a Datastore Key
     public static Room fromRoomId(long roomId) {
-        Key roomKey = KeyFactory.createKey("Room", roomId);
-        return Room.fromRoomKey(roomKey);
+        return Room.fromRoomKey(KeyFactory.createKey(ROOM_ENTITY, roomId));
     }
 
     //Turns a Room key into a Room object
@@ -109,9 +108,8 @@ public class Room {
 
     //Adds a video to the Room's video queue
     public boolean addVideo(Video video) {
-        if(this.videos.size() >  MAX_VIDEOS){
-            this.videos.add(video);
-            return true;
+        if(this.videos.size() < MAX_VIDEOS){
+            return this.videos.add(video);
         }
         return false;
     }
