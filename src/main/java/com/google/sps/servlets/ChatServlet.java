@@ -27,13 +27,15 @@ public class ChatServlet extends HttpServlet {
         String query = request.getParameter("roomID");
         long roomID = Long.parseLong(query);
         Gson gson = new Gson();
-        // Retrieves the entity with matching ID and its corresponding messages property as a JSON string 
+
+        // Retrieves the entity with matching ID and its corresponding messages property as a JSON string
         Room room = Room.fromRoomId(roomID);
         Queue<Message> messages = room.getMessages();
         String jsonMessages = gson.toJson(messages);
         response.setContentType("application/json;");
         response.getWriter().println(jsonMessages);
     }
+
     // Update messages in datastore
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -61,3 +63,4 @@ public class ChatServlet extends HttpServlet {
         return value;
     }
 }
+
