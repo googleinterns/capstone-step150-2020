@@ -83,7 +83,12 @@ p {
     width:80%;
 }
 /* Video player Styling */
-player-div{
-    height: 100%;
-    width: 80%;
+#player-div{
+    height: 100vh;
+    width: 100vw;
+}
+
+body{
+    display: flex;
+    justify-content: center;
 }
