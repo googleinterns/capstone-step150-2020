@@ -26,22 +26,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-<<<<<<< HEAD:src/main/java/com/google/sps/servlets/PrivateRoomServlet.java
-/** Servlet that takes in inputted room Id and directs them to that room
-*/
-@WebServlet("/private-room")
-public final class PrivateRoomServlet extends HttpServlet {
-  private String inputtedIdTag = "user-party-link";
-
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String currentRoomId = request.getParameter(inputtedIdTag);
-    response.sendRedirect("/views/private-room.html?id="+currentRoomId);
-=======
 /** Servlet that takes in the user's inputted Room ID and directs them
     to the associated private room once ensurred that it's an actual room*/
-@WebServlet("/join-room")
-public final class JoinRoomServlet extends HttpServlet {
+@WebServlet("/private-room")
+public final class PrivateRoomServlet extends HttpServlet {
   private String currentRoomId = "";
 
   @Override
@@ -52,6 +40,5 @@ public final class JoinRoomServlet extends HttpServlet {
     // TODO: Create hard-coded hashmap of {Room ID : URL} Hashmap
     // TODO: Print json-ified string to /join-room page for private room to fetch
 	response.sendRedirect(ServletUtil.PRIVATE_ROOM_PATH_WITH_QUERY+currentRoomId);
->>>>>>> 26367b8f2f7ebc6a4bc552c0d2fa4f27cada1ef5:src/main/java/com/google/sps/servlets/JoinRoomServlet.java
   }
 }
