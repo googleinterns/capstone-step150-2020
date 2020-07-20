@@ -44,7 +44,7 @@ public final class VerifyRoomServlet extends HttpServlet {
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
     // TODO: handle if they inputted a key string that does not exist in datastore
     Room currentRoom = Room.fromRoomId(currentRoomId);
-    // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
+
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
     if(currentRoom == null){
       System.out.println("VerifyRoomServlet could not find a corresponding room");
