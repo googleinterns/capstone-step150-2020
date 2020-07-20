@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.data.*;
+<<<<<<< HEAD
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -22,49 +23,52 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
+====
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.appengine.api.datastore.Key;
 
 /** Servlet that takes in the user's room Id and verifies that it
- * exists, then prints the url associated with the verified room id
+ * exists, then prints the json version of all the urls in playlist
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
-  private String inputtedUserTag = "user-party-link";
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  public static int ERROR_CODE_FOUND = 404;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    // If the room Id provided is in the privateRooms hashmap, print that url
-    // if not print a hardcoded dummy youtube video
     response.setContentType("application/json");
-		
-    String currentRoomId = request.getParameter("roomId");
-	Key currentRoomKey = getKeyFromString(currentRoomId);
-	Room currentRoom = Room.fromKey(currentRoomKey);
-
-    // If the user sent in a room id not in the datastore, send them to a dummy room
+    String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
+    long currentRoomId = Long.parseLong(tempStringOfRoomId);
+    // TODO: handle if they inputted a key string that does not exist in datastore
+    Room currentRoom = Room.fromRoomId(currentRoomId);
+    // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
     if(currentRoom == null){
-      String jsonOfTempUrl = new Gson().toJson("https://www.youtube.com/embed/Bey4XXJAqS8");
-      response.getWriter().println(jsonOfTempUrl);
+      System.out.println("VerifyRoomServlet could not find a corresponding room");
+      response.setStatus(ERROR_CODE_FOUND);
+      response.sendRedirect(ServletUtil.JOIN_ROOM_PATH);
+      // Set type to HTML
     } else {
       Queue<Video> videosOfPlaylist = currentRoom.getVideos();
-      ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
+      List<String> urlsOfPlaylist = currentRoom.getVideos().stream().map(Video::getUrl).collect(Collectors.toList());
+>>>>>>> 26367b8f2f7ebc6a4bc552c0d2fa4f27cada1ef5
       String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
       response.getWriter().println(jsonOfUrls);
     }
   }
+<<<<<<< HEAD
 
 	// Finds the key from the datastore using the String of the ID
   public Key getKeyFromString(String roomId) {
@@ -91,4 +95,6 @@ public final class VerifyRoomServlet extends HttpServlet {
 	}
 	return videoUrls;
   }
+=======
+>>>>>>> 26367b8f2f7ebc6a4bc552c0d2fa4f27cada1ef5
 }
