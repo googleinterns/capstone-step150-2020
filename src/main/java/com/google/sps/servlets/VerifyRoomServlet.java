@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,7 +53,7 @@ public final class VerifyRoomServlet extends HttpServlet {
       // Set type to HTML
     } else {
       Queue<Video> videosOfPlaylist = currentRoom.getVideos();
-      ListString urlsOfPlaylist = currentRoom.getVideos().stream().map(Video::getUrl).collect(Collectors.toList());
+      List<String> urlsOfPlaylist = currentRoom.getVideos().stream().map(Video::getUrl).collect(Collectors.toList());
       String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
       response.getWriter().println(jsonOfUrls);
     }
