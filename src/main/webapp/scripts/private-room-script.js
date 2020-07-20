@@ -39,34 +39,14 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     // Check that the current room id exits, then return playlist of given room
     let roomPromise = await fetch('/verify-room?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
-    let roomVideoUrl = await roomPromise.json();
+    let roomVideoUrls = await roomPromise.json();
     // create an array of all the YT videos' urls
-    playlistUrls = parseJsonOfVideos(roomVideoUrl);
-    playlistIds = extractVideoIds(playlistUrls);
-}
-
-/*
-* Takes json of the urls of videos in playlist and puts them in a array of strings of urls
-*/
-function parseJsonOfVideos(jsonOfVideos){
-    console.log(jsonOfVideos);
-    var playlistUrls = [];
-    for(i = 0; i < jsonOfVideos.length; i++) {
-        playlistUrls.push(jsonOfVideos[i]);
-    }
-    console.log(playlistUrls);
-    return playlistUrls;
+    playlistIds = extractVideoIds(roomVideoUrls);
 }
 
 // Take the array of urls and create an array of their youtube ids
-function extractVideoIds(playlistUrls){
-    var currentPlaylistIds = [];
-    for(i = 0; i < playlistUrls.length; i++) {
-        var currentUrl = playlistUrls[i];
-        var currentRoomId = currentUrl.substring(YT_BASE_URL.length);
-        currentPlaylistIds.push(currentRoomId);
-    }
-    return currentPlaylistIds;
+function extractVideoIds(roomVideoUrls){
+    return roomVideoUrls.map(id => id.substring(YT_BASE_URL.length));
 }
 
 // load the playlist of videos to the container
@@ -143,7 +123,7 @@ function onStateChange(event) {
 }
 
 // Shows and refreshes the messages shown on the private room page
-async function displayChat() {    
+async function displayChat() {   
     let response = await fetch(`/chat?roomID=${window.roomId}`);
     let messages = await response.json();    
     const messageElement = document.getElementById('chat-messages');    
