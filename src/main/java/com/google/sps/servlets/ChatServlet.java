@@ -25,6 +25,7 @@ public class ChatServlet extends HttpServlet {
     // Retrieve messages from datastore 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String query = request.getParameter("roomID");
+        System.out.println(query);
         long roomID = Long.parseLong(query);
         Gson gson = new Gson();
 

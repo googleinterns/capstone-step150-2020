@@ -57,7 +57,8 @@ public class Room {
             Queue<Message> messageQueue = (Queue<Message>) properties.get(MESSAGES_PROPERTY) != null ?
             ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList();
             return new Room(memberList, videoQueue, messageQueue, roomKey);
-        } catch (EntityNotFoundException e) {
+        } 
+        catch (EntityNotFoundException e) {
             System.out.println(e.toString());
         }
         return null;
