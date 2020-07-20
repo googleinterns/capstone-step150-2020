@@ -15,15 +15,6 @@
 package com.google.sps.servlets;
 
 import com.google.sps.data.*;
-<<<<<<< HEAD
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.FetchOptions;
-====
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
@@ -63,38 +54,8 @@ public final class VerifyRoomServlet extends HttpServlet {
     } else {
       Queue<Video> videosOfPlaylist = currentRoom.getVideos();
       List<String> urlsOfPlaylist = currentRoom.getVideos().stream().map(Video::getUrl).collect(Collectors.toList());
->>>>>>> 26367b8f2f7ebc6a4bc552c0d2fa4f27cada1ef5
       String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
       response.getWriter().println(jsonOfUrls);
     }
   }
-<<<<<<< HEAD
-
-	// Finds the key from the datastore using the String of the ID
-  public Key getKeyFromString(String roomId) {
-    Query query = new Query(Room.ROOM_ENTITY);
-    PreparedQuery results = datastore.prepare(query);
-    for(Entity currentRoomEntity : results.asIterable()) {
-      Key currentRoomKey = currentRoomEntity.getKey();
-      String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
-      if(roomId.equals(parsedRoomKey)){
-        return currentRoomKey;
-      }
-    }
-    return null;
-  }
-
-  /*
-  * Take the queue of videos associated with the room and transfer it into an array
-  */
-  public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-	ArrayList<String> videoUrls = new ArrayList<>();
-	while(!videosOfPlaylist.isEmpty()){
-	  Video currVideo = videosOfPlaylist.remove();
-	  videoUrls.add(currVideo.getUrl());
-	}
-	return videoUrls;
-  }
-=======
->>>>>>> 26367b8f2f7ebc6a4bc552c0d2fa4f27cada1ef5
 }

@@ -31,34 +31,12 @@ function getRoomId(url) {
 }
 
 /**
-<<<<<<< HEAD
-* Take in currentRoomId and return the Video Url associated with that room ID
-=======
 * Take in currentRoomId and create a global array of youtube video urls and 
 * a global array of the video ids of the playlist
->>>>>>> 26367b8f2f7ebc6a4bc552c0d2fa4f27cada1ef5
 * @param {currentRoomId} String Holds the room Id of the the user's room
 * @return {roomVideoUrl} The Url of the video to be displayed for the room
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
-<<<<<<< HEAD
-    console.log("i am in the fetch private room function");
-    // Check that the current room id exits, 
-    // then return video url associated with that id
-    let roomPromise = await fetch('/verify-room?roomId='+currentRoomId);
-    let roomVideoUrl = await roomPromise.json();
-    var arrayOfUrls = parseJsonOfVideos(roomVideoUrl);
-    window.roomVideoUrl = arrayOfUrls[0];
-    console.log("in the fetch function " + window.roomVideoUrl);
-}
-
-function parseJsonOfVideos(jsonOfVideos){
-	var arrayOfUrls = [];
-	for(i = 0; i < jsonOfVideos.length; i++) {
-		arrayOfUrls.push(jsonOfVideos[i]);
-	}
-	return arrayOfUrls;
-=======
     // Check that the current room id exits, then return playlist of given room
     let roomPromise = await fetch('/verify-room?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
@@ -75,28 +53,10 @@ function extractVideoIds(roomVideoUrls){
 // load the playlist of videos to the container
 function loadRoomPlaylist(){
     youtubePlayer.loadPlaylist({playlist: playlistIds});
->>>>>>> 26367b8f2f7ebc6a4bc552c0d2fa4f27cada1ef5
 }
 
 // This code loads the IFrame Player API code asynchronously.
 function loadVideo(){
-<<<<<<< HEAD
-	var tag = document.createElement('script');
-	tag.src = "https://www.youtube.com/iframe_api";
-	var firstScriptTag = document.getElementsByTagName('script')[0];
-	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-}
-
-// This function creates an <iframe> (and YouTube player)
-// after the API code downloads.
-function onYouTubeIframeAPIReady() {
-	youtubePlayer = new YT.Player('player', {
-		events: {
-			'onReady': onPlayerReady,
-			'onStateChange': onPlayerStateChange
-		}
-	});
-=======
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -123,33 +83,16 @@ function onYouTubeIframeAPIReady() {
             onStateChange: onStateChange,
         }
     });
->>>>>>> 26367b8f2f7ebc6a4bc552c0d2fa4f27cada1ef5
 }
 
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
-<<<<<<< HEAD
-    document.getElementById('player').style.borderColor = '#FF6D00';
-}
-
-/**
-* The API calls this function when the player's state changes.
-* The function indicates that when playing a video (state=1),
-* the player should play for six seconds and then stop.
-*/ 
-function onPlayerStateChange(event) {
-	if (event.data == YT.PlayerState.PLAYING && !isVideoFinished) {
-		setTimeout(stopVideo, 6000);
-		isVideoFinished = true;
-	}
-=======
     document.getElementById('player-div').style.borderColor = '#FF6D00';
     loadRoomPlaylist();
 }
 
 function stopVideo() {
     youtubePlayer.stopVideo();
->>>>>>> 26367b8f2f7ebc6a4bc552c0d2fa4f27cada1ef5
 }
 
 // Log state changes
