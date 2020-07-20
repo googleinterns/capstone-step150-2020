@@ -77,7 +77,7 @@ public class Video {
 
     //Turns an embedded entity into a video object
     public static Video fromEmbeddedEntity(EmbeddedEntity videoEntity) {
-        return new Video((String) properties.get(URL_PROPERTY), VideoState.fromInt(((Long) properties.get(CURRENT_STATE_PROPERTY)).intValue()), (long) properties.get(TIMESTAMP_PROPERTY));
+        return new Video((String) videoEntity.getProperty(URL_PROPERTY), VideoState.fromInt(((Long) videoEntity.getProperty(CURRENT_STATE_PROPERTY)).intValue()), (long) videoEntity.getProperty(TIMESTAMP_PROPERTY));
     }
 
     //Enum representing the YT player state

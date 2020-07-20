@@ -22,26 +22,28 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/chat")
 public class ChatServlet extends HttpServlet {
-    // Retrieve messages from datastore 
+    // Retrieve messages from datastore 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String query = request.getParameter("roomID");
         long roomID = Long.parseLong(query);
         Gson gson = new Gson();
-        // Retrieves the entity with matching ID and its corresponding messages property as a JSON string 
+
+        // Retrieves the entity with matching ID and its corresponding messages property as a JSON string
         Room room = Room.fromRoomId(roomID);
         Queue<Message> messages = room.getMessages();
         String jsonMessages = gson.toJson(messages);
         response.setContentType("application/json;");
         response.getWriter().println(jsonMessages);
     }
-    // Update messages in datastore
+
+    // Update messages in datastore
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String message = getParameter(request, "text-input", "");
         long timestamp = System.currentTimeMillis();
-        // TODO: get sender information based on their login    
+        // TODO: get sender information based on their login    
         String sender = request.getParameter("userEmail");
-        // Get room ID from URL request
+        // Get room ID from URL request
         String query = request.getParameter("roomId");
         System.out.println(query);
         long roomID = Long.parseLong(query);
@@ -49,7 +51,7 @@ public class ChatServlet extends HttpServlet {
         Room room = Room.fromRoomId(roomID);
         room.addMessage(chatMessage);
         room.toDatastore();
-        // TODO: Correct redirect
+        // TODO: Correct redirect
         response.sendRedirect("/index.html");
     }
     

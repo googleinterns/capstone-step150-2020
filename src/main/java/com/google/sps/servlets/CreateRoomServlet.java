@@ -32,45 +32,49 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.QueryResultList;
+import java.util.stream.Collectors;
 
+//Tested by end to end testing the creation of the new Room. 
+//This was successful and the room Id was returned to the user
+
+//Servlet that handles the creation of a new Room
 @WebServlet("/create-room")
 public final class CreateRoomServlet extends HttpServlet {
-    public static final DatastoreService DATASTORE = DatastoreServiceFactory.getDatastoreService();
+    private static final String INVITEES_PARAMETER = "Invitees";
+    private static final String PLAYLIST_URL_PARAMETER = "PlaylistUrl";
+    private static final String ERROR_HTML = "<h1>An error occured while creating you room.</h1>";
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        String emails = req.getParameter(INVITEES_PARAMETER).replace(" ", "");
+        List members = Arrays.asList(emails.split(",")).stream().map(Member::createNewMember).collect(Collectors.toList());
 
-        String emails = req.getParameter("Invitees").replace(" ", "");
-        List<Member> members = new ArrayList<Member>();
-        for(String m : Arrays.asList(emails.split(","))){
-            members.add(Member.createNewMember(m));
-        }
         //Requests playlist information from YT api and transforms playlist url to video url list
-        String playlistUrl = req.getParameter("PlaylistUrl");
-        String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+5);
+        String playlistUrl = req.getParameter(PLAYLIST_URL_PARAMETER);
+        String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+ServletUtil.PLAYLIST_QUERY_PARAMETER.length());
         
-        Queue<Video> videos = playlistIdToVideoQueue(playlistId);
-        System.out.println(members);
-        System.out.println(videos);
+        Queue<Video> videos = new LinkedList<Video>();
 
         Room newRoom = Room.createRoom(members, videos, new LinkedList<Message>());
-        Entity roomEntity = Room.toEntity(newRoom);
-        try{
-           Key newRoomKey = DATASTORE.put(roomEntity);
+
+        // Entity roomEntity = Room.toEntity(newRoom);
+        Long newRoomId = newRoom.toDatastore();
+        if(newRoomId != null) {
            res.setContentType("text/html");
-           res.getWriter().println(createHtmlString(newRoomKey.toString()));
+           res.getWriter().println(createHtmlString(newRoomId));
         } 
-        catch(DatastoreFailureException e){
-            System.out.println(e.toString());
+        else {
+            res.setContentType("text/html");
+            res.getWriter().println(ERROR_HTML);
         }
     }
+    
     /**
-      * Communicates with the Youtube Data API to get playlistItem information
+      * Communicates with the Youtube Data API to get playlistItem information and appends up to 15 videos to the room's playlist
       * @param playlistId the string representing the playlistId
-      * @return an arraylist of video Urls (limit is 15)
       */
-    Queue<Video> playlistIdToVideoQueue(String playlistId) throws IOException {
+    public void playlistIdToVideoQueue(String playlistId, Room room) throws IOException {
         //Connect to the YouTube Data API
-        URL url = new URL("https://www.googleapis.com/youtube/v3/playlistItems?key="+ServletUtil.DATA_API_KEY+"&part=contentDetails&playlistId="+playlistId);
+        URL url = new URL(ServletUtil.YT_DATA_API_BASE_URL+ServletUtil.DATA_API_KEY+ServletUtil.YT_DATA_API_PARAMETERS+playlistId);
         HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
         YTDataCon.setRequestMethod("GET");
         //Read the response
@@ -85,13 +89,17 @@ public final class CreateRoomServlet extends HttpServlet {
         //Parse json for the specific data that is necessary
         JsonObject obj = ServletUtil.PARSER.fromJson(content.toString(), JsonObject.class);
         JsonArray VideoInformation = obj.getAsJsonArray("items");
-        Queue<Video> videoUrls = new LinkedList<Video>();
         //Create urls from video IDs
-        for(int i = 0; i < VideoInformation.size() && i < 15; ++i ) {
+        for(int i = 0; i < VideoInformation.size(); ++i) {
             String videoid = VideoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
-            videoUrls.add(Video.createVideo(ServletUtil.YT_BASE_URL + videoid));
+            if(!room.addVideo(Video.createVideo(ServletUtil.YT_BASE_URL + videoid))){
+                break;
+            }
         }
-        return videoUrls;
+    }
+    //Returns the HTML string for with the new Room ID
+    public String createHtmlString(Long key) {
+        return "<center><h2>Congratulations! This is your new Room ID.</h2><br><br><h1>"+key+"</h1></center>";
     }
     public String createHtmlString(String key){
         return "<center><h2>Congratulations! This is your new Room ID.</h2><br><br><h1>"+key+"</h1></center>";
