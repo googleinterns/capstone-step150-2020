@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
-  public static int errorCodeFound = 404;
+  public static int ERROR_CODE_FOUND = 404;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,27 +46,15 @@ public final class VerifyRoomServlet extends HttpServlet {
     // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
     if(currentRoom == null){
-      System.out.println("Not an existing room");
-      response.setStatus(errorCodeFound);
+      System.out.println("VerifyRoomServlet could not find a corresponding room");
+      response.setStatus(ERROR_CODE_FOUND);
       response.sendRedirect(ServletUtil.JOIN_ROOM_PATH);
       // Set type to HTML
     } else {
       Queue<Video> videosOfPlaylist = currentRoom.getVideos();
-      ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
+      ListString urlsOfPlaylist = currentRoom.getVideos().stream().map(Video::getUrl).collect(Collectors.toList());
       String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
       response.getWriter().println(jsonOfUrls);
     }
-  }
-
-  /*
-  * Take the queue of videos associated with the room and transfer it into an array
-  */
-  public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-    ArrayList<String> videoUrls = new ArrayList<>();
-    while(!videosOfPlaylist.isEmpty()){
-      Video currVideo = videosOfPlaylist.remove();
-      videoUrls.add(currVideo.getUrl());
-    }
-    return videoUrls;
   }
 }
