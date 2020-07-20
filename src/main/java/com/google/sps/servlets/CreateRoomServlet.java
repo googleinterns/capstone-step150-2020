@@ -47,16 +47,12 @@ public final class CreateRoomServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String emails = req.getParameter(INVITEES_PARAMETER).replace(" ", "");
         List members = Arrays.asList(emails.split(",")).stream().map(Member::createNewMember).collect(Collectors.toList());
-
         //Requests playlist information from YT api and transforms playlist url to video url list
         String playlistUrl = req.getParameter(PLAYLIST_URL_PARAMETER);
         String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+ServletUtil.PLAYLIST_QUERY_PARAMETER.length());
-        
-        Queue<Video> videos = new LinkedList<Video>();
 
-        Room newRoom = Room.createRoom(members, videos, new LinkedList<Message>());
-
-        // Entity roomEntity = Room.toEntity(newRoom);
+        Room newRoom = Room.createRoom(members);
+        playlistIdToVideoQueue(playlistId, newRoom);
         Long newRoomId = newRoom.toDatastore();
         if(newRoomId != null) {
            res.setContentType("text/html");
@@ -69,39 +65,30 @@ public final class CreateRoomServlet extends HttpServlet {
     }
     
     /**
-      * Communicates with the Youtube Data API to get playlistItem information and appends up to 15 videos to the room's playlist
+      * Communicates with the Youtube Data API to get playlistItem information
       * @param playlistId the string representing the playlistId
+      * @return an arraylist of video Urls (limit is 15)
       */
     public void playlistIdToVideoQueue(String playlistId, Room room) throws IOException {
         //Connect to the YouTube Data API
         URL url = new URL(ServletUtil.YT_DATA_API_BASE_URL+ServletUtil.DATA_API_KEY+ServletUtil.YT_DATA_API_PARAMETERS+playlistId);
-        HttpURLConnection YTDataCon = (HttpURLConnection) url.openConnection();
-        YTDataCon.setRequestMethod("GET");
+        HttpURLConnection youtubeDataConnection = (HttpURLConnection) url.openConnection();
+        youtubeDataConnection.setRequestMethod("GET");
         //Read the response
-        BufferedReader in = new BufferedReader(
-        new InputStreamReader(YTDataCon.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        //Parse json for the specific data that is necessary
-        JsonObject obj = ServletUtil.PARSER.fromJson(content.toString(), JsonObject.class);
-        JsonArray VideoInformation = obj.getAsJsonArray("items");
+        InputStreamReader responseReader = new InputStreamReader(youtubeDataConnection.getInputStream(), "UTF-8");
+        JsonObject response = ServletUtil.PARSER.fromJson(responseReader, JsonObject.class);
+        responseReader.close();
+        JsonArray videoInformation = response.getAsJsonArray("items");
         //Create urls from video IDs
-        for(int i = 0; i < VideoInformation.size(); ++i) {
-            String videoid = VideoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
-            if(!room.addVideo(Video.createVideo(ServletUtil.YT_BASE_URL + videoid))){
+        for(int i = 0; i < videoInformation.size(); ++i) {
+            String videoId = videoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
+            if(!room.addVideo(Video.createVideo(ServletUtil.YT_BASE_URL + videoId))){
                 break;
             }
         }
     }
     //Returns the HTML string for with the new Room ID
     public String createHtmlString(Long key) {
-        return "<center><h2>Congratulations! This is your new Room ID.</h2><br><br><h1>"+key+"</h1></center>";
-    }
-    public String createHtmlString(String key){
         return "<center><h2>Congratulations! This is your new Room ID.</h2><br><br><h1>"+key+"</h1></center>";
     }
 }
