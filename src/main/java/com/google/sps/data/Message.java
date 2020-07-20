@@ -3,7 +3,6 @@ import com.google.appengine.api.datastore.EmbeddedEntity;
 import java.util.Map;
 
 //Message object representing messages sent in the chat of the Room
-
 public class Message{
     private static final String SENDER_PROPERTY = "sender";
     private static final String MESSAGE_PROPERTY = "message";

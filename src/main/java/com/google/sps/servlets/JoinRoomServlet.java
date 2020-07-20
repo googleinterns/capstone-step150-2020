@@ -27,16 +27,15 @@ import javax.servlet.http.HttpServletResponse;
     to the associated private room once ensurred that it's an actual room*/
 @WebServlet("/join-room")
 public final class JoinRoomServlet extends HttpServlet {
-  private String inputtedUserTag = "user-party-link";
   private String currentRoomId = "";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Take in user's private room and store it to global variable
-	currentRoomId = request.getParameter(inputtedUserTag);
+	currentRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
 	response.getWriter().println(currentRoomId);
     // TODO: Create hard-coded hashmap of {Room ID : URL} Hashmap
     // TODO: Print json-ified string to /join-room page for private room to fetch
-	response.sendRedirect(ServletUtil.PRIVATE_ROOM_PATH);
+	response.sendRedirect(ServletUtil.PRIVATE_ROOM_PATH_WITH_QUERY+currentRoomId);
   }
 }
