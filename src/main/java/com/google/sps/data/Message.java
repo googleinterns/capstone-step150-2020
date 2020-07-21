@@ -1,7 +1,6 @@
 package com.google.sps.data;
 import com.google.appengine.api.datastore.EmbeddedEntity;
 import java.util.Map;
-import com.google.appengine.api.datastore.EmbeddedEntity;
 
 //Message object representing messages sent in the chat of the Room
 public class Message{
