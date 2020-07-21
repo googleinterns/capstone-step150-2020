@@ -168,7 +168,7 @@ public class Room {
         this.videos.poll();
     }
 
-    //Rrturns the video object at the head of the queue
+    //Returns the video object at the head of the queue
     public Video getCurrentVideo(){
         return this.videos.peek();
     }

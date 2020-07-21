@@ -70,14 +70,15 @@ public class Video {
     public static EmbeddedEntity toEmbeddedEntity(Video video) {
         EmbeddedEntity videoEntity = new EmbeddedEntity();
         videoEntity.setProperty(URL_PROPERTY, video.getUrl());
-        videoEntity.setProperty(CURRENT_STATE_PROPERTY, (int) video.getCurrentState().getValue());
+        videoEntity.setProperty(CURRENT_STATE_PROPERTY, video.getCurrentState().getValue());
         videoEntity.setProperty(TIMESTAMP_PROPERTY, video.getCurrentTimeStamp());
         return videoEntity;
     }
 
     //Turns an embedded entity into a video object
     public static Video fromEmbeddedEntity(EmbeddedEntity videoEntity) {
-        return new Video((String) videoEntity.getProperty(URL_PROPERTY), VideoState.fromInt(((Long) videoEntity.getProperty(CURRENT_STATE_PROPERTY)).intValue()), (long) videoEntity.getProperty(TIMESTAMP_PROPERTY));
+        Map<String, Object> properties = videoEntity.getProperties();
+        return new Video((String) properties.get(URL_PROPERTY), VideoState.fromInt( ((Long)properties.get(CURRENT_STATE_PROPERTY)).intValue()), (long) properties.get(TIMESTAMP_PROPERTY));
     }
 
     //Enum representing the YT player state

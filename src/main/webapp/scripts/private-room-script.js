@@ -86,12 +86,6 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
-// The API will call this function when the video player is ready.
-function onPlayerReady(event) {
-    document.getElementById('player-div').style.borderColor = '#FF6D00';
-    loadRoomPlaylist();
-}
-
 function stopVideo() {
     youtubePlayer.stopVideo();
 }
@@ -123,6 +117,49 @@ function onStateChange(event) {
     }
     console.log('onStateChange: ' + state);
 }
+
+// Every three seconds you listen to youtube player for any detection of change
+window.setInterval(function(){
+    listenForStateChange();
+}, 3000);
+
+// This function fetches the state of the private room video and
+// plays/pauses it accordingly
+function listenForStateChange(){
+    $(document).ready(function(){
+        const Url = '/state-change';
+        $.get(Url,function(data, status){
+            if(data === "played"){
+                console.log('Group video is on state: playing')
+                playVideo();
+            } else {
+                console.log('Group video is on state: paused')
+                pauseVideo();
+            }
+        })
+    })
+}
+
+// Send the user's state to the servlet every time their state changes
+function updateCurrentState(currentState, currentTime){
+    $(document).ready(function(){
+        $.post(Url,
+        {
+            userState: currentState,
+            timeStamp: currentTime
+        }
+        );
+    })
+    console.log('I am sending the state: ' + currentState)
+}
+
+// The API will call this function when the video player is ready.
+function onPlayerReady(event) {
+    document.getElementById('player-div').style.borderColor = '#FF6D00';
+    loadRoomPlaylist();
+}
+
+/* Chat Room Feature */
 
 // Shows and refreshes the messages shown on the private room page
 async function displayChat() {   
