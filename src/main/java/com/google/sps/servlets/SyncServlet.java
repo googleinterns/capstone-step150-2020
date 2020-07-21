@@ -20,8 +20,11 @@ public final class SyncServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
-        Room updatedRoom = Room.fromId(roomId);
-        
+        Room updatedRoom = Room.fromRoomId(roomId);
+        Video currentVideo = updatedRoom.getCurrentVideo();
+        String responseBody = videoObjectToJsonString(currentVideo);
+        res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
+        res.getWriter().println(responseBody);
     }
 
     @Override
@@ -30,15 +33,27 @@ public final class SyncServlet extends HttpServlet {
         Video.VideoState newState = Video.VideoState.fromInt(Integer.parseInt(req.getParameter(UPDATE_STATE_PARAMETER)));
         long currentVideoTimestamp = Long.parseLong(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
 
-        Room syncRoom; = Room.fromId(roomId);
+        Room syncRoom = Room.fromRoomId(roomId);
 
         if(newState == Video.VideoState.ENDED){
             syncRoom.changeCurrentVideo();
         } else {
             syncRoom.updateCurrentVideoState(newState, currentVideoTimestamp);
         }
-        syncRoom.toDataStore();
+        syncRoom.toDatastore();
         res.setStatus(200);
         
+    }
+
+    //Takes a video in and turns it into a JSON String with the necessary attributes
+    private String videoObjectToJsonString(Video video){
+        StringBuilder jsonString = new StringBuilder();
+        jsonString.append("{\"timestamp\" : \"");
+        jsonString.append(video.getCurrentTimeStamp() + "\" , ");
+        jsonString.append("\"currentUrl\" : \"");
+        jsonString.append(video.getUrl() + "\" , ");
+        jsonString.append("\"currentState\" : \"");
+        jsonString.append(video.getCurrentState()+ "\"}");
+        return jsonString.toString();
     }
 }
