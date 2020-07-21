@@ -15,19 +15,12 @@
 package com.google.sps.servlets;
 
 import com.google.sps.data.*;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.HashMap;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,56 +33,27 @@ import com.google.appengine.api.datastore.Key;
 */
 @WebServlet("/collect-videos")
 public final class CollectVideosServlet extends HttpServlet {
-  private String inputtedUserTag = "user-party-link";
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
 		
-    String currentRoomId = request.getParameter("roomId");
-    // TODO: handle if they inputted a key string that does not exist in datastore
-    Key currentRoomKey = getKeyFromString(currentRoomId);
-    Room currentRoom = Room.fromKey(currentRoomKey);
+    String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
+    long currentRoomId = Long.parseLong(tempStringOfRoomId);
+    // Already verified that the key is in datastore
+    Room currentRoom = Room.fromRoomId(currentRoomId);
 
-    // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
     // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
-    if(currentRoom == null){
-      String jsonOfTempUrl = new Gson().toJson("https://www.youtube.com/embed/Bey4XXJAqS8");
-      response.getWriter().println(jsonOfTempUrl);
-    } else {
-      Queue<Video> videosOfPlaylist = currentRoom.getVideos();
-      ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
-      String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
-      response.getWriter().println(jsonOfUrls);
-    }
+    Queue<Video> videosOfPlaylist = currentRoom.getVideos();
+    List<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
+    String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
+    response.getWriter().println(jsonOfUrls);
   }
 
   /*
-  * Finds the key from the datastore using the String of the ID
+  * Take the queue of videos associated with the room and transfer it into a list
   */
-  public Key getKeyFromString(String roomId) {
-    Query query = new Query(Room.ROOM_ENTITY);
-    PreparedQuery results = datastore.prepare(query);
-    for(Entity currentRoomEntity : results.asIterable()) {
-      Key currentRoomKey = currentRoomEntity.getKey();
-      String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
-      if(roomId.equals(parsedRoomKey)){
-        return currentRoomKey;
-      }
-    }
-    return null;
-  }
-
-  /*
-  * Take the queue of videos associated with the room and transfer it into an array
-  */
-  public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-    ArrayList<String> videoUrls = new ArrayList<>();
-    while(!videosOfPlaylist.isEmpty()){
-      Video currVideo = videosOfPlaylist.remove();
-      videoUrls.add(currVideo.getUrl());
-    }
-    return videoUrls;
+  public List<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
+    return videosOfPlaylist.stream().map(Video::getUrl).collect(Collectors.toList());
   }
 }

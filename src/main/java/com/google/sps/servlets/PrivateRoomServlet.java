@@ -30,7 +30,7 @@ public final class PrivateRoomServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String currentRoomId = request.getParameter(inputtedIdTag);
+    String currentRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
     response.sendRedirect(ServletUtil.REDIRECT_ROOM_PATH_WITH_QUERY+currentRoomId);
   }
 }
