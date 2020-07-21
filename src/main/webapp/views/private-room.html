@@ -5,7 +5,8 @@
         <title>Private Room</title>    
         <link rel="stylesheet" href="../stylesheets/private-room.css">  
     </head>  
-    <script src="/scripts/private-room-script.js"></script>     
+    <script src="/scripts/private-room-script.js"></script>    
+    <script src="/scripts/home_script.js"></script>  
     <body onload="loadPlayerDiv(); displayChat()">    
         <div id="player-div"></div>    
         <div class="chatContainer">    
@@ -16,20 +17,31 @@
                 <ul id = "chat-messages" class="msgList">       
                 </ul>
                 <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>        
-                <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">            
-                    <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />            
-                    <input type="hidden" id="roomId" name="roomId" value="" />            
-                    <script type="text/javascript">                
-                        var id = document.getElementById("roomId");                
-                        id.value = getRoomId(window.location.href);            
-                    </script>            
-                    <input type="hidden" id="userEmail" name="userEmail" value="" />            
-                    <script type="text/javascript">                
-                        var email = document.getElementById("userEmail");                
-                        email.value = window.userEmail;            
-                    </script>            
-                    <input class="subButton" type="submit" value="Send"/>        
-                </form>
+                <div class="submitChat">
+                    <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">            
+                        <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />            
+                        <input type="hidden" id="roomId" name="roomId" value="" />            
+                        <script type="text/javascript">                
+                            var id = document.getElementById("roomId");                
+                            id.value = getRoomId(window.location.href);            
+                        </script>            
+                        <input type="hidden" id="userEmail" name="userEmail" value="" />            
+                        <script type="text/javascript">                
+                            var email = window.localStorage.getItem("userEmail");                
+                            email.value = window.userEmail;            
+                        </script>            
+                        <input class="subButton" type="submit" value="Send" onclick="submitForm()"/>  
+                        <script>  
+                            function submitForm() {
+                                var form = document.getElementById("myForm");
+                                form.submit();
+                                form.reset();
+                                <!-- document.getElementById("text-in").value = '';
+                                return false; -->
+                            }        
+                        </script>       
+                    </form>
+                </div>
             </div>
         </div>
     </body>
