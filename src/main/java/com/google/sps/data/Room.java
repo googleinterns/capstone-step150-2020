@@ -96,6 +96,7 @@ public class Room {
         return new Room(memberList, videoQueue, messageQueue, roomEntity.getKey().getId());
     }
 
+    //Creates a new room object from a list of members
     public static Room createRoom(List<Member> members){
         Queue<Video> videoQueue = new LinkedList<Video>();
         Queue<Message> messageQueue = new LinkedList<Message>();
