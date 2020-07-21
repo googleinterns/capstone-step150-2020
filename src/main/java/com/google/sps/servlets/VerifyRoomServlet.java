@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
-  public static int ERROR_CODE_FOUND = 404;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,11 +41,8 @@ public final class VerifyRoomServlet extends HttpServlet {
 
     String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
-    // TODO: handle if they inputted a key string that does not exist in datastore
     Room currentRoom = Room.fromRoomId(currentRoomId);
-
-    // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
-    // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
+    
     if(currentRoom == null){
       response.getWriter().println(false);
     } else {
