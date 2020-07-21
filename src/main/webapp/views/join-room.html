@@ -4,13 +4,21 @@
     <meta charset="UTF-8">
     <title>Join Youtube Party Room</title>
     <link rel="stylesheet" type="text/css" href="../stylesheets/join-room-style.css">
-  </head>
+    <script src"../scripts/home_script.js"></script>
+  </head onload=authenticate()>
   <body>
     <div id="join-room-box">
+<<<<<<< HEAD
       <form action="/private-room" method="GET">
         <h2>Input your private room link Below!</h2>
         <input type="text" name="roomId">
         <input type="submit"/>
+=======
+      <form action="/join-room" method="GET">
+        <h1>Input your private room link Below!</h1>
+        <input type="text" name="roomId" id="form-text-box">
+        <input type="submit" id="form-submit-btn"/>
+>>>>>>> 5dc10a6f58f7d9932f2987c52af61c03342c1bd7
       </form>
     </div>   
   </body>

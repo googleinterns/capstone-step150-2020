@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.HashMap;
+<<<<<<< HEAD
+=======
+import java.util.stream.Collectors;
+>>>>>>> 5dc10a6f58f7d9932f2987c52af61c03342c1bd7
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,11 +38,16 @@ import javax.servlet.http.HttpServletResponse;
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
+<<<<<<< HEAD
   public static int errorCodeFound = 404;
+=======
+  public static int ERROR_CODE_FOUND = 404;
+>>>>>>> 5dc10a6f58f7d9932f2987c52af61c03342c1bd7
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
+<<<<<<< HEAD
 	String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
     System.out.println(tempStringOfRoomId);
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
@@ -51,15 +60,31 @@ public final class VerifyRoomServlet extends HttpServlet {
     if(currentRoom == null){
       System.out.println("Not an existing room");
       response.setStatus(errorCodeFound);
+=======
+    String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
+    long currentRoomId = Long.parseLong(tempStringOfRoomId);
+    // TODO: handle if they inputted a key string that does not exist in datastore
+    Room currentRoom = Room.fromRoomId(currentRoomId);
+    // If the user sent in a room id not in the datastore, send them a hardcoded youtube video
+    // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
+    if(currentRoom == null){
+      System.out.println("VerifyRoomServlet could not find a corresponding room");
+      response.setStatus(ERROR_CODE_FOUND);
+>>>>>>> 5dc10a6f58f7d9932f2987c52af61c03342c1bd7
       response.sendRedirect(ServletUtil.JOIN_ROOM_PATH);
       // Set type to HTML
     } else {
       Queue<Video> videosOfPlaylist = currentRoom.getVideos();
+<<<<<<< HEAD
       ArrayList<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
+=======
+      List<String> urlsOfPlaylist = currentRoom.getVideos().stream().map(Video::getUrl).collect(Collectors.toList());
+>>>>>>> 5dc10a6f58f7d9932f2987c52af61c03342c1bd7
       String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
       response.getWriter().println(jsonOfUrls);
     }
   }
+<<<<<<< HEAD
 
   /*
   * Take the queue of videos associated with the room and transfer it into an array
@@ -72,4 +97,6 @@ public final class VerifyRoomServlet extends HttpServlet {
     }
     return videoUrls;
   }
+=======
+>>>>>>> 5dc10a6f58f7d9932f2987c52af61c03342c1bd7
 }
