@@ -1,6 +1,7 @@
 
 //Authenticates the user using the authentication api
 async function authenticate(redirectPath){
+<<<<<<< HEAD
     let res = await fetch(`/auth?redirectUrl=${redirectPath}`);
     let contentType = res.headers.get("content-type");
     //Stores the users email
@@ -16,3 +17,21 @@ async function authenticate(redirectPath){
     }
     
 }
+=======
+    if(!window.localStorage.getItem("userEmail")){
+        let res = await fetch(`/auth?redirectUrl=${redirectPath}`);
+        let contentType = res.headers.get("content-type");
+        //Stores the users email
+        if(contentType === "application/json") {
+            let userEmail = await res.json();
+            window.localStorage.setItem("userEmail", userEmail.toString());
+            window.location.href = redirectPath;
+        }
+        //Renders a login button
+        else {
+            let loginHtml = await res.text();
+            document.getElementsByTagName("body")[0].innerHTML = loginHtml;
+        }
+    }
+}
+>>>>>>> master
