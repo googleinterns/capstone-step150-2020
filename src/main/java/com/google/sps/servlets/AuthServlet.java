@@ -15,6 +15,7 @@ public class AuthServlet extends HttpServlet{
     public static final String REDIRECT_URL_PARAMETER = "redirectUrl";
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException{
+        System.out.println("HERERE INSIDE OF TEH SERVELET");
         if(ServletUtil.USER_SERVICE.isUserLoggedIn()){
             String userEmail = ServletUtil.USER_SERVICE.getCurrentUser().getEmail();
             String urlToRedirectToAfterUserLogsOut = "/";
