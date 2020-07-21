@@ -28,8 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
-/** Servlet that takes in the user's room Id and verifies that it
- * exists, then prints the json version of all the urls in playlist
+/** Servlet that takes in the user's room Id and prints the json version of all the urls in playlist
 */
 @WebServlet("/collect-videos")
 public final class CollectVideosServlet extends HttpServlet {
@@ -42,8 +41,6 @@ public final class CollectVideosServlet extends HttpServlet {
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
     // Already verified that the key is in datastore
     Room currentRoom = Room.fromRoomId(currentRoomId);
-
-    // TODO: Redirect to a specific page telling the client that they inputted the wrong room id
     Queue<Video> videosOfPlaylist = currentRoom.getVideos();
     List<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
     String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
@@ -51,7 +48,7 @@ public final class CollectVideosServlet extends HttpServlet {
   }
 
   /*
-  * Take the queue of videos associated with the room and transfer it into a list
+  * Take the queue of videos associated with the room and transfer it into a list of urls
   */
   public List<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
     return videosOfPlaylist.stream().map(Video::getUrl).collect(Collectors.toList());
