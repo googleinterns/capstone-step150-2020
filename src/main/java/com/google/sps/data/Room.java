@@ -21,9 +21,10 @@ import java.util.stream.*;
 import com.google.appengine.api.datastore.KeyFactory;
 
 //Object repsresenting the Room that the chat and video streaming will be in
-//TODO: Restgructure so logic is more split up
+//TODO: Restructure so logic is more split up
 public class Room {
     private static final int MAX_MESSAGES = 10;
+    private static final int MAX_VIDEOS = 15;
     private static final String ROOM_ENTITY = "Room";
     private static final String MEMBERS_PROPERTY = "members";
     private static final String MESSAGES_PROPERTY = "messages";
@@ -32,24 +33,44 @@ public class Room {
     private List<Member> members;
     private Queue<Message> messages;
     private Queue<Video> videos;
+    private Long roomId;
 
     //Room factory function
     public static Room createRoom(List<Member> members, Queue<Video> videos, Queue<Message> messages){
-        return new Room(members, videos, messages);
+        return new Room(members, videos, messages, null);
     }
 
-    // Manipulates the messages property of the room given a room key and a new message to be added
-    public static void addMessagesFromKey(Key roomKey, Message chatMessage) {
+    //Creates a room object from a Datastore Key
+    public static Room fromRoomId(long roomId) {
+        return Room.fromRoomKey(KeyFactory.createKey(ROOM_ENTITY, roomId));
+    }
+
+    //Turns a Room key into a Room object
+    private static Room fromRoomKey(Key roomKey) {
         try {
             Entity roomEntity = datastore.get(roomKey);
-            Room room = Room.fromEntity(roomEntity);
-            room.addMessage(chatMessage);
-
-            roomEntity.setProperty("messages", room.getMessagesAsEntities());
-            datastore.put(roomEntity);
-        } catch (EntityNotFoundException e){
+            Map<String, Object> properties = roomEntity.getProperties();
+            List<Member> memberList = 
+            ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
+            Queue<Video> videoQueue = 
+            ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+            Queue<Message> messageQueue = properties.get(MESSAGES_PROPERTY) != null ?
+            ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList();
+            return new Room(memberList, videoQueue, messageQueue, roomKey.getId());
+        } 
+        catch (EntityNotFoundException e) {
             System.out.println(e.toString());
         }
+        return null;
+    }
+
+    //Turns the Room object into a datastore entity
+    private static Entity toEntity(Room room){
+        Entity newRoom = room.roomId == null ? new Entity(ROOM_ENTITY) : new Entity(ROOM_ENTITY, room.roomId);
+        newRoom.setProperty(MEMBERS_PROPERTY, room.getMembersAsEmbeddedEntities());
+        newRoom.setProperty(VIDEOS_PROPERTY, room.getVideosAsEntities());
+        newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
+        return newRoom;
     }
 
     //Creates a room object from a Datastore Key
@@ -72,25 +93,42 @@ public class Room {
         ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
         Queue<Message> messageQueue = (Queue<Message>) properties.get(MESSAGES_PROPERTY) != null ?
         ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList();
-        return new Room(memberList, videoQueue, messageQueue);
+        return new Room(memberList, videoQueue, messageQueue, roomEntity.getKey().getId());
     }
 
-    //Turns the Room object into a datastore entity
-    public static Entity toEntity(Room room){
-        Entity newRoom = new Entity(ROOM_ENTITY);
-        newRoom.setProperty(MEMBERS_PROPERTY, room.getMembersAsEmbeddedEntities());
-        newRoom.setProperty(VIDEOS_PROPERTY, room.getVideosAsEntities());
-        newRoom.setProperty(MESSAGES_PROPERTY, room.getMessagesAsEntities());
-        return newRoom;
+    public static Room createRoom(List<Member> members){
+        Queue<Video> videoQueue = new LinkedList<Video>();
+        Queue<Message> messageQueue = new LinkedList<Message>();
+        return new Room(members,videoQueue, messageQueue, null);
     }
-    public static Key toDatastore(Room room){
-        Entity newRoom = Room.toEntity(room);
+
+    //Takes a room object, puts it into datastore and returns the resulting entity's key
+    public Long toDatastore(){
+        Entity room = Room.toEntity(this);
         try {
-            return DatastoreServiceFactory.getDatastoreService().put(newRoom);
+            Key key = DatastoreServiceFactory.getDatastoreService().put(room);
+            this.roomId = key.getId();
+            return this.roomId;
         } catch (DatastoreFailureException e){
             System.out.println(e.toString());
         }
         return null;
+    }
+
+    // Helper addMessage function to manipulate the list of messages
+    public void addMessage(Message msg){
+        if(messages.size() >= MAX_MESSAGES) {
+            messages.poll();
+        }
+        messages.add(msg);
+    }
+
+    //Adds a video to the Room's video queue
+    public boolean addVideo(Video video) {
+        if(this.videos.size() < MAX_VIDEOS){
+            return this.videos.add(video);
+        }
+        return false;
     }
 
     //Returns the Room's video url list
@@ -108,43 +146,19 @@ public class Room {
         return new ArrayList<Member>(this.members);
     }
 
-    // Helper addMessage function to manipulate the list of messages
-    public void addMessage(Message msg){
-        if(messages.size() >= MAX_MESSAGES) {
-            messages.poll();
-        }
-        messages.add(msg);
-    }
-
-    //Adds a video to the Room's video queue
-    public void addVideo(String url) {
-        this.videos.add(Video.createVideo(url));
-    }
-
-    /**
-      * Room constructor
-      * @param members a List of Member objects
-      * @param videos an Queue of video objects
-      * @return a new Room object
-      */
-    private Room(List<Member> members, Queue<Video> videos){
-        this.messages = new LinkedList<Message>();
-        this.members = members;
-        this.videos = videos;
-    }
-    
-
     /**
       * Room constructor
       * @param members a List of Member objects
       * @param videos an Queue of video objects
       * @param messages a Queue of message objects
+      * @param id a long representing the Room's datastore id 
       * @return a new Room object
       */
-    private Room(List<Member> members, Queue<Video> videos, Queue<Message> messages) {
+    private Room(List<Member> members, Queue<Video> videos, Queue<Message> messages, Long id) {
         this.members = members;
         this.videos = videos;
         this.messages = messages;
+        this.roomId = id;
     }
 
     //Get all of the members as a list of EmbeddedEntities
