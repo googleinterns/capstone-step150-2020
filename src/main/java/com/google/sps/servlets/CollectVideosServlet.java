@@ -50,7 +50,7 @@ public final class CollectVideosServlet extends HttpServlet {
   /*
   * Take the queue of videos associated with the room and transfer it into a list of urls
   */
-  public List<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
+  public static List<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
     return videosOfPlaylist.stream().map(Video::getUrl).collect(Collectors.toList());
   }
 }
