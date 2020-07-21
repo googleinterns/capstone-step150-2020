@@ -19,6 +19,7 @@ async function loadPlayerDiv(){
 * @return {roomId} room id at end of the url
 */
 function getRoomId(url) {
+    console.log(url);
     var parser = document.createElement('a');
     parser.href = url;
     var query = parser.search.substring(1);
@@ -50,6 +51,7 @@ function extractVideoIds(roomVideoUrls){
     return roomVideoUrls.map(id => id.substring(YT_BASE_URL.length));
 }
 
+// load the playlist of videos to the container
 function loadRoomPlaylist(){
     youtubePlayer.loadPlaylist({playlist: playlistIds});
 }
@@ -161,24 +163,4 @@ function toTime(ms) {
     hrs = hrs ? hrs : 12;    
     var time = checkZero(hrs) + ':' + checkZero(mins)+ ' ' + ampm;    
     return time;
-}
-
-async function displayChat() {
-    let response = await fetch('/chat');
-    let messages = await response.json();
-    const messageElement = document.getElementById('chat-messages');
-    messageElement.innerHTML = '';
-    for (message in messages) {
-      commentElement.appendChild(createParagraph(comments[comment]));
-    }  
-}
-
-function createParagraph(msgJson) {
-    var msg = JSON.parse(msgJson);
-    const paragraph = document.createElement('p');
-    paragraph.innerHTML = '<h4>';
-    paragraph.innerText = msg.sender;
-    paragraph.innerHTML = '</h4>';
-    paragraph.innerText = msg.message;
-    return paragraph;
 }

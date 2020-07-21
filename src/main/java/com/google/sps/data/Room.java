@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.stream.*;
 import com.google.appengine.api.datastore.KeyFactory;
 
-
 //Object repsresenting the Room that the chat and video streaming will be in
 //TODO: Restructure so logic is more split up
 public class Room {

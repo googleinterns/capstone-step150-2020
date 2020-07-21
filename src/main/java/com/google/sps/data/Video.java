@@ -70,7 +70,7 @@ public class Video {
     public static EmbeddedEntity toEmbeddedEntity(Video video) {
         EmbeddedEntity videoEntity = new EmbeddedEntity();
         videoEntity.setProperty(URL_PROPERTY, video.getUrl());
-        videoEntity.setProperty(CURRENT_STATE_PROPERTY, (int) video.getCurrentState().getValue());
+        videoEntity.setProperty(CURRENT_STATE_PROPERTY, video.getCurrentState().getValue());
         videoEntity.setProperty(TIMESTAMP_PROPERTY, video.getCurrentTimeStamp());
         return videoEntity;
     }
