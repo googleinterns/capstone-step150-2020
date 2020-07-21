@@ -2,6 +2,7 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.EmbeddedEntity;
 import java.util.Map;
+import java.util.HashMap;
 
 //Video object representing the videos in the room
 
@@ -9,7 +10,6 @@ public class Video {
     private static final String URL_PROPERTY = "url";
     private static final String CURRENT_STATE_PROPERTY = "currentState";
     private static final String TIMESTAMP_PROPERTY = "currentVideoTimestamp";
-
     private VideoState currentState;
     private long currentVideoTimestamp;
     private String url;
@@ -70,7 +70,7 @@ public class Video {
     public static EmbeddedEntity toEmbeddedEntity(Video video) {
         EmbeddedEntity videoEntity = new EmbeddedEntity();
         videoEntity.setProperty(URL_PROPERTY, video.getUrl());
-        videoEntity.setProperty(CURRENT_STATE_PROPERTY, (int) video.getCurrentState().getValue());
+        videoEntity.setProperty(CURRENT_STATE_PROPERTY, video.getCurrentState().getValue());
         videoEntity.setProperty(TIMESTAMP_PROPERTY, video.getCurrentTimeStamp());
         return videoEntity;
     }
@@ -78,7 +78,7 @@ public class Video {
     //Turns an embedded entity into a video object
     public static Video fromEmbeddedEntity(EmbeddedEntity videoEntity) {
         Map<String, Object> properties = videoEntity.getProperties();
-        return new Video((String) properties.get(URL_PROPERTY), VideoState.fromInt(((Long) properties.get(CURRENT_STATE_PROPERTY)).intValue()), (long) properties.get(TIMESTAMP_PROPERTY));
+        return new Video((String) properties.get(URL_PROPERTY), VideoState.fromInt( ((Long)properties.get(CURRENT_STATE_PROPERTY)).intValue()), (long) properties.get(TIMESTAMP_PROPERTY));
     }
 
     //Enum representing the YT player state
@@ -97,32 +97,28 @@ public class Video {
         CUED(5);
         
         private int value;
+        private static Map<Integer, VideoState> VIDEO_STATE_MAP = new HashMap<Integer, VideoState>();
 
+        //constructor
         private VideoState(int value) {
             this.value = value;
         }
 
+        //Instantiates map
+        static {
+            for (VideoState videoState : VideoState.values()) {
+                VIDEO_STATE_MAP.put(videoState.value, videoState);
+            }
+        }
+
+        //To get int value from VideoState enum
         public int getValue() {
             return this.value;
         }
 
+        //To turn integer into VideoState enum
         public static VideoState fromInt(int val) {
-            switch (val) {
-                case(-1): 
-                    return VideoState.UNSTARTED;
-                case(0): 
-                    return VideoState.ENDED;
-                case(1): 
-                    return VideoState.PLAYING;
-                case(2): 
-                    return VideoState.PAUSED;
-                case(3): 
-                    return VideoState.BUFFERING;
-                case(5): 
-                    return VideoState.CUED;
-                default: 
-                    return null;
-            }
+            return VIDEO_STATE_MAP.get(val);
         }
     };
 }

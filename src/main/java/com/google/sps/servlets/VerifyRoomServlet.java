@@ -15,19 +15,13 @@
 package com.google.sps.servlets;
 
 import com.google.sps.data.*;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,8 +34,7 @@ import com.google.appengine.api.datastore.Key;
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
-  private String inputtedUserTag = "user-party-link";
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  public static int ERROR_CODE_FOUND = 404;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -63,33 +56,5 @@ public final class VerifyRoomServlet extends HttpServlet {
       String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
       response.getWriter().println(jsonOfUrls);
     }
-  }
-
-  /*
-  * Finds the key from the datastore using the String of the ID
-  */
-  public Key getKeyFromString(String roomId) {
-    Query query = new Query(Room.ROOM_ENTITY);
-    PreparedQuery results = datastore.prepare(query);
-    for(Entity currentRoomEntity : results.asIterable()) {
-      Key currentRoomKey = currentRoomEntity.getKey();
-      String parsedRoomKey = currentRoomKey.toString().substring(5,currentRoomKey.toString().length() - 1);
-      if(roomId.equals(parsedRoomKey)){
-        return currentRoomKey;
-      }
-    }
-    return null;
-  }
-
-  /*
-  * Take the queue of videos associated with the room and transfer it into an array
-  */
-  public ArrayList<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-    ArrayList<String> videoUrls = new ArrayList<>();
-    while(!videosOfPlaylist.isEmpty()){
-      Video currVideo = videosOfPlaylist.remove();
-      videoUrls.add(currVideo.getUrl());
-    }
-    return videoUrls;
   }
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <title>Youtube Party</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="../scripts/home_script.js"></script>
+  </head onload="authenticate()">
+  <body>
+    <center>
+      <h2>Create a new Youtube Party</h2>
+      <form action="/room" method="POST">
+        <label for="fname">PlayList URL:</label><br>
+        <input type="text" id="fname" name="fname"><br><br>
+        <label for="lname">Add invitees(email addresses):</label><br>
+        <input type="text" id="lname" name="lname"><br><br>
+        <input type="submit" value="Submit">
+      </form>
+    </center>
+  </body>
+</html>

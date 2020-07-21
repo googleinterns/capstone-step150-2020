@@ -2,17 +2,15 @@ var roomId;
 var playlistUrls;
 var playlistIds;
 var youtubePlayer;
-// TODO: find way to access servletutil.java 's YT_BASE_URL instead of creating my own
 var YT_BASE_URL = "https://www.youtube.com/embed/";
 
-/**
-* Calls the three functions associated with loading the room's iframe
- */
+// Calls the three functions associated with loading the room's iframe
 async function loadPlayerDiv(){
     loadVideo();
     // Get the room id from the private room's url
     await getRoomId(window.location.href);
     await fetchPrivateRoomVideo(roomId);
+    getRoomId_caseTested_expectedResult();
 }
 
 /**
@@ -21,6 +19,7 @@ async function loadPlayerDiv(){
 * @return {roomId} room id at end of the url
 */
 function getRoomId(url) {
+    console.log(url);
     var parser = document.createElement('a');
     parser.href = url;
     var query = parser.search.substring(1);
@@ -42,33 +41,17 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     // Check that the current room id exits, then return playlist of given room
     let roomPromise = await fetch('/verify-room?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
-    let roomVideoUrl = await roomPromise.json();
+    let roomVideoUrls = await roomPromise.json();
     // create an array of all the YT videos' urls
-    playlistUrls = parseJsonOfVideos(roomVideoUrl);
-    playlistIds = extractVideoIds(playlistUrls);
+    playlistIds = extractVideoIds(roomVideoUrls);
 }
 
-/*
-* Takes json of the urls of videos in playlist and puts them in a array of strings of urls
-*/
-function parseJsonOfVideos(jsonOfVideos){
-    var playlistUrls = [];
-    for(i = 0; i < jsonOfVideos.length; i++) {
-        playlistUrls.push(jsonOfVideos[i]);
-    }
-    return playlistUrls;
+// Take the array of urls and create an array of their youtube ids
+function extractVideoIds(roomVideoUrls){
+    return roomVideoUrls.map(id => id.substring(YT_BASE_URL.length));
 }
 
-function extractVideoIds(playlistUrls){
-    var currentPlaylistIds = [];
-    for(i = 0; i < playlistUrls.length; i++) {
-        var currentUrl = playlistUrls[i];
-        var currentRoomId = currentUrl.substring(YT_BASE_URL.length);
-        currentPlaylistIds.push(currentRoomId);
-    }
-    return currentPlaylistIds;
-}
-
+// load the playlist of videos to the container
 function loadRoomPlaylist(){
     youtubePlayer.loadPlaylist({playlist: playlistIds});
 }
@@ -101,6 +84,38 @@ function onYouTubeIframeAPIReady() {
             onStateChange: onStateChange,
         }
     });
+}
+
+function stopVideo() {
+    youtubePlayer.stopVideo();
+}
+
+// Log state changes
+function onStateChange(event) {
+    var state = "undefined";
+    switch (event.data) {
+        case YT.PlayerState.UNSTARTED:
+            state = "unstarted";
+            break;
+        case YT.PlayerState.ENDED:
+            state = "ended";
+            break;
+        case YT.PlayerState.PLAYING:
+            state = "playing";
+            break;
+        case YT.PlayerState.PAUSED:
+            state = "paused";
+            break;
+        case YT.PlayerState.BUFFERING:
+            state = "buffering";
+            break;
+        case YT.PlayerState.CUED:
+            state = "video cued";
+            break;
+        default:
+            state = "unknown (" + event.data + ")";
+    }
+    console.log('onStateChange: ' + state);
 }
 
 // Every three seconds you listen to youtube player for any detection of change
@@ -144,65 +159,45 @@ function onPlayerReady(event) {
     loadRoomPlaylist();
 }
 
-function stopVideo() {
-    youtubePlayer.stopVideo();
+/* Chat Room Feature */
+
+// Shows and refreshes the messages shown on the private room page
+async function displayChat() {   
+    let response = await fetch(`/chat?roomID=${window.roomId}`);
+    let messages = await response.json();    
+    const messageElement = document.getElementById('chat-messages');    
+    messageElement.innerHTML = '';    
+    for (message in messages) {      
+        messageElement.appendChild(createNewMessage(messages[message]));    
+    }      
+    displayChat();
 }
 
-function playVideo() {
-    youtubePlayer.playVideo();
+// Inserts messages as HTML elements
+function createNewMessage(msg) {    
+    const listItem = document.createElement('li');    
+    listItem.innerHTML += 
+    `<div class="msgText">
+        <p>
+            <span class="sender">${msg.sender}: </span><span class="msgBody">${msg.message}</span>
+        </p> 
+        <span class="sub-text"> Sent at  ${toTime(msg.timestamp)}</span>
+    </div>`;    
+    return listItem;
 }
 
-function pauseVideo() {
-    youtubePlayer.pauseVideo();
-}
-
-// Log state changes
-function onStateChange(event) {
-    var state;
-    switch (event.data) {
-        case YT.PlayerState.UNSTARTED:
-            state = -1;
-            break;
-        case YT.PlayerState.ENDED:
-            state = 0;
-            break;
-        case YT.PlayerState.PLAYING:
-            state = 1;
-            break;
-        case YT.PlayerState.PAUSED:
-            state = 2;
-            break;
-        case YT.PlayerState.BUFFERING:
-            state = 3;
-            break;
-        case YT.PlayerState.CUED:
-            state = 5;
-            break;
-        default:
-            state = 6;
-    }
-    console.log('onStateChange: ' + state);
-    var currentTime = youtubePlayer.getCurrentTime();
-    console.log('sending time: ' + currentTime);
-    updateCurrentState(state, currentTime);
-}
-
-async function displayChat() {
-    let response = await fetch('/chat');
-    let messages = await response.json();
-    const messageElement = document.getElementById('chat-messages');
-    messageElement.innerHTML = '';
-    for (message in messages) {
-      commentElement.appendChild(createParagraph(comments[comment]));
-    }  
-}
-
-function createParagraph(msgJson) {
-    var msg = JSON.parse(msgJson);
-    const paragraph = document.createElement('p');
-    paragraph.innerHTML = '<h4>';
-    paragraph.innerText = msg.sender;
-    paragraph.innerHTML = '</h4>';
-    paragraph.innerText = msg.message;
-    return paragraph;
+// Manipulates timestamp value to be displayed in hh:mm(+AM/PM) format 
+function toTime(ms) {    
+    // Adds '0' if necessary for single digit values    
+    function checkZero(n) {        
+        return (n<10 ? '0':'') + n;    
+    }    
+    var date = new Date(ms);    
+    var hrs = date.getHours();    
+    var mins = date.getMinutes();    
+    var ampm = hrs >= 12 ? 'PM' : 'AM';    
+    hrs = hrs % 12;    
+    hrs = hrs ? hrs : 12;    
+    var time = checkZero(hrs) + ':' + checkZero(mins)+ ' ' + ampm;    
+    return time;
 }
