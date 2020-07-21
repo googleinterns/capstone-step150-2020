@@ -53,7 +53,7 @@ public final class SyncServlet extends HttpServlet {
         jsonString.append("\"currentUrl\" : \"");
         jsonString.append(video.getUrl() + "\" , ");
         jsonString.append("\"currentState\" : \"");
-        jsonString.append(video.getCurrentState()+ "\"}");
+        jsonString.append(video.getCurrentState().getValue()+ "\"}");
         return jsonString.toString();
     }
 }

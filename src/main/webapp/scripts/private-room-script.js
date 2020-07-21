@@ -10,7 +10,6 @@ async function loadPlayerDiv(){
     // Get the room id from the private room's url
     await getRoomId(window.location.href);
     await fetchPrivateRoomVideo(roomId);
-    getRoomId_caseTested_expectedResult();
 }
 
 /**
@@ -95,22 +94,22 @@ function onStateChange(event) {
     var state = "undefined";
     switch (event.data) {
         case YT.PlayerState.UNSTARTED:
-            state = "unstarted";
+            state = "-1";
             break;
         case YT.PlayerState.ENDED:
-            state = "ended";
+            state = "0";
             break;
         case YT.PlayerState.PLAYING:
-            state = "playing";
+            state = "1";
             break;
         case YT.PlayerState.PAUSED:
-            state = "paused";
+            state = "2";
             break;
         case YT.PlayerState.BUFFERING:
-            state = "buffering";
+            state = "3";
             break;
         case YT.PlayerState.CUED:
-            state = "video cued";
+            state = "5";
             break;
         default:
             state = "unknown (" + event.data + ")";
@@ -127,7 +126,7 @@ window.setInterval(function(){
 // plays/pauses it accordingly
 function listenForStateChange(){
     $(document).ready(function(){
-        const Url = '/state-change';
+        const Url = '/sync-room';
         $.get(Url,function(data, status){
             if(data === "played"){
                 console.log('Group video is on state: playing')
@@ -157,6 +156,14 @@ function updateCurrentState(currentState, currentTime){
 function onPlayerReady(event) {
     document.getElementById('player-div').style.borderColor = '#FF6D00';
     loadRoomPlaylist();
+}
+
+function playVideo(){
+    youtubePlayer.playVideo();
+}
+
+function pauseVideo(){
+    youtubePlayer.pauseVideo();
 }
 
 /* Chat Room Feature */
