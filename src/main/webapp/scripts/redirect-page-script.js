@@ -2,8 +2,8 @@ var roomId;
 const privateRoomPath = "/views/private-room.html?id=";
 const joinRoomPath = "/views/join-room.html";
 
+// Send inputted room Id to VerifyRoomServlet them redirect them to proper page
 async function verifyRoom() {
-    console.log('in the verify room function');
     roomId = getRoomId(window.location.href);
      // Check that the current room id exits, then return playlist of given room
     let roomPromise = await fetch('/verify-room?roomId='+roomId);
@@ -12,6 +12,8 @@ async function verifyRoom() {
     redirectPage(isRoomIdValid);
 }
 
+// If the room is valid, redirect them to private room page
+// If not valid, send them back to join room page
 function redirectPage(isRoomIdValid){
     if(isRoomIdValid){
         window.location.assign(privateRoomPath+roomId);
