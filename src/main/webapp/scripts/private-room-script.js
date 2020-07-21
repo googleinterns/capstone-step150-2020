@@ -129,7 +129,7 @@ async function displayChat() {
     const messageElement = document.getElementById('chat-messages');    
     messageElement.innerHTML = '';    
     for (message in messages) {      
-        messageElement.appendChild(createNewMessage(message));    
+        messageElement.appendChild(createNewMessage(messages[message]));    
     }      
     displayChat();
 }
@@ -140,9 +140,9 @@ function createNewMessage(msg) {
     listItem.innerHTML += 
     `<div class="msgText">
         <p>
-            <span class="sender">'+${msg.sender}+': </span><span class="msgBody">'+${msg.message}+'</span>
+            <span class="sender">${msg.sender}: </span><span class="msgBody">${msg.message}</span>
         </p> 
-        <span class="sub-text"> Sent at ' + toTime(${msg.timestamp})+ '</span>
+        <span class="sub-text"> Sent at  ${toTime(msg.timestamp)}</span>
     </div>`;    
     return listItem;
 }
