@@ -1,42 +1,36 @@
-<!DOCTYPE html>
-<html>  
-    <head>    
-        <meta charset="UTF-8">    
-        <title>Private Room</title>    
-        <link rel="stylesheet" href="../stylesheets/private-room.css">  
-    </head>  
-    <script src="/scripts/private-room-script.js"></script>     
-    <body onload="loadIframe(); displayChat()">    
-        <div class="videoContainer">        
-            <iframe id="video-tag"                
-                width="640" height="360"                
-                frameborder="0"                
-                style="border: solid 4px #37474F">        
-            </iframe>    
-        </div>    
-        <div class="chatContainer">    
-            <div class="titleContainer">      
-                <label>Chat</label>    
-            </div>    
-            <div class="msgContainer">        
-                <ul id = "chat-messages" class="msgList">                   
+<!DOCTYPE html>
+<html>  
+    <head>    
+        <meta charset="UTF-8">    
+        <title>Private Room</title>    
+        <link rel="stylesheet" href="../stylesheets/private-room.css">  
+    </head>  
+    <script src="/scripts/private-room-script.js"></script>     
+    <body onload="loadPlayerDiv(); displayChat()">    
+        <div id="player-div"></div>    
+        <div class="chatContainer">    
+            <div class="titleContainer">      
+                <label>Chat</label>    
+            </div>    
+            <div class="msgContainer">        
+                <ul id = "chat-messages" class="msgList">       
                 </ul>
-                <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>        
-                <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">            
-                    <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />            
-                    <input type="hidden" id="roomId" name="roomId" value="" />            
-                    <script type="text/javascript">                
-                        var id = document.getElementById("roomId");                
-                        id.value = getRoomId(window.location.href);            
-                    </script>            
-                    <input type="hidden" id="userEmail" name="userEmail" value="" />            
-                    <script type="text/javascript">                
-                        var email = document.getElementById("userEmail");                
-                        email.value = window.userEmail;            
-                    </script>            
-                    <input class="subButton" type="submit" value="Send"/>        
+                <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>        
+                <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">            
+                    <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />            
+                    <input type="hidden" id="roomId" name="roomId" value="" />            
+                    <script type="text/javascript">                
+                        var id = document.getElementById("roomId");                
+                        id.value = getRoomId(window.location.href);            
+                    </script>            
+                    <input type="hidden" id="userEmail" name="userEmail" value="" />            
+                    <script type="text/javascript">                
+                        var email = document.getElementById("userEmail");                
+                        email.value = window.userEmail;            
+                    </script>            
+                    <input class="subButton" type="submit" value="Send"/>        
                 </form>
-            </div>
+            </div>
         </div>
     </body>
 </html>
