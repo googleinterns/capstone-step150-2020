@@ -7,6 +7,7 @@
     </head>  
     <script src="/scripts/private-room-script.js"></script>    
     <script src="/scripts/home_script.js"></script>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <body onload="loadPlayerDiv(); displayChat()">    
         <div id="player-div"></div>    
         <div class="chatContainer">    
@@ -19,25 +20,15 @@
                 <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>        
                 <div class="submitChat">
                     <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">            
-                        <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />            
-                        <input type="hidden" id="roomId" name="roomId" value="" />            
-                        <script type="text/javascript">                
-                            var id = document.getElementById("roomId");                
-                            id.value = getRoomId(window.location.href);            
-                        </script>            
-                        <input type="hidden" id="userEmail" name="userEmail" value="" />            
-                        <script type="text/javascript">                
-                            var email = window.localStorage.getItem("userEmail");                
-                            email.value = window.userEmail;            
-                        </script>            
+                        <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />                    
                         <input class="subButton" type="submit" value="Send" onclick="submitForm()"/>  
                         <script>  
                             function submitForm() {
-                                var form = document.getElementById("myForm");
-                                form.submit();
-                                form.reset();
-                                <!-- document.getElementById("text-in").value = '';
-                                return false; -->
+                                fetch(`/chat?roomId=${window.roomId}&userEmail=${window.localStorage.getItem("userEmail")}&text-input=${document.getElementById("text-in").value}`, {method: 'POST'})
+                                console.log(document.getElementById("text-in").value);
+                                console.log(document.getElementById("text-in").value);
+                                document.getElementById("text-in").value = '';
+                                return false;
                             }        
                         </script>       
                     </form>

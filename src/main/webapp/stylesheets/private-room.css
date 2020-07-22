@@ -24,10 +24,11 @@ p {
 }
 .chatContainer {
     width:350px;
+    max-height:680px;
     border:1px solid #bbb;
-    margin:50px;
+    margin-left:30px;
     float: right;
-    margin-right:50px;
+    margin-right:30px;
 }
 .titleContainer {
     background-color:#fdfdfd;
@@ -42,7 +43,7 @@ p {
 .msgList {
     padding:0;
     list-style:none;
-    max-height:450px;
+    max-height:5750px;
     overflow:auto;
     margin-top:1px;
     margin-bottom:10px;
@@ -80,7 +81,7 @@ p {
 }
 .form-input {
     float:left;
-    width:80%;
+    width:73%;
 }
 /* Video player Styling */
 #player-div{
