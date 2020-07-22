@@ -34,19 +34,27 @@ import javax.servlet.http.HttpServletResponse;
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
-
+  private final String USER_PARAMETER =  "userEmail";
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
-
+    String user = request.getParameter(USER_PARAMETER);
     String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
     Room currentRoom = Room.fromRoomId(currentRoomId);
     
-    if(currentRoom == null){
+    if(currentRoom == null || !isUserOnMemberList(user, currentRoom)){
       response.getWriter().println(false);
     } else {
       response.getWriter().println(true);
     }
+  }
+  public static isUserOnMemberList(String user, Room room){
+    for(member m : Room.getMembers()){
+      if(m.getAlias().compareTo(user) == 0){
+        return true;
+      }
+    }
+    return false;
   }
 }
