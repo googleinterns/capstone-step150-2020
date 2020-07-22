@@ -85,10 +85,6 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
-function stopVideo() {
-    youtubePlayer.stopVideo();
-}
-
 // Log state changes
 function onStateChange(event) {
     var state = "undefined";
@@ -150,6 +146,11 @@ function listenForStateChange(){
     })
 }
 
+function getCurrentVideo(){
+    var currentVideoIndex = youtubePlayer.getPlaylistIndex();
+    return playlistIds[currentVideoIndex];
+}
+
 // Send the user's state to the servlet every time their state changes
 function updateCurrentState(currentState, currentTime){
     console.log(currentState);
@@ -178,6 +179,10 @@ function playVideo(){
 
 function pauseVideo(){
     youtubePlayer.pauseVideo();
+}
+
+function stopVideo() {
+    youtubePlayer.stopVideo();
 }
 
 /* Chat Room Feature */
