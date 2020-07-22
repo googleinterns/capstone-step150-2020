@@ -15,6 +15,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
+<<<<<<< HEAD
     <dependencies>
         <dependency>
             <groupId>com.google.appengine</groupId>
