@@ -122,7 +122,7 @@ function onStateChange(event) {
 // Every three seconds you listen to youtube player for any detection of change
 window.setInterval(function(){
     listenForStateChange();
-}, 3000);
+}, 1000);
 
 // This function fetches the state of the private room video and
 // plays/pauses it accordingly
