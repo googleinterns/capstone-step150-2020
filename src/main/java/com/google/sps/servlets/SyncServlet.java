@@ -42,7 +42,6 @@ public final class SyncServlet extends HttpServlet {
         }
         syncRoom.toDatastore();
         res.setStatus(200);
-        
     }
 
     //Takes a video in and turns it into a JSON String with the necessary attributes

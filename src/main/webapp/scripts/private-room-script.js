@@ -37,7 +37,7 @@ function getRoomId(url) {
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
     // Check that the current room id exits, then return playlist of given room
-    let roomPromise = await fetch('/verify-room?roomId='+roomId);
+    let roomPromise = await fetch('/collect-videos?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
     let roomVideoUrls = await roomPromise.json();
     // create an array of all the YT videos' urls
@@ -114,6 +114,7 @@ function onStateChange(event) {
             state = "unknown (" + event.data + ")";
     }
     console.log('onStateChange: ' + state);
+    updateCurrentState(state);
 }
 
 // Every three seconds you listen to youtube player for any detection of change
@@ -125,22 +126,25 @@ window.setInterval(function(){
 // plays/pauses it accordingly
 function listenForStateChange(){
     $(document).ready(function(){
-        const Url = '/sync-room';
+        const Url = `/sync-room?roomId=${roomId.toString()}`;
         $.get(Url,function(data, status){
-            if(data === "played"){
-                console.log('Group video is on state: playing')
-                playVideo();
-            } else {
-                console.log('Group video is on state: paused')
-                pauseVideo();
-            }
+            console.log(data);
+            // if(data === "played"){
+            //     console.log('Group video is on state: playing')
+            //     playVideo();
+            // } else {
+            //     console.log('Group video is on state: paused')
+            //     pauseVideo();
+            // }
         })
     })
 }
 
 // Send the user's state to the servlet every time their state changes
 function updateCurrentState(currentState, currentTime){
+    console.log(currentState);
     $(document).ready(function(){
+        const Url = `/sync-room?roomId=${roomId.toString()}`;
         $.post(Url,
         {
             userState: currentState,
