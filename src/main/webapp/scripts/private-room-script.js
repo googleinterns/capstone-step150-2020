@@ -2,7 +2,7 @@ var roomId;
 var playlistUrls;
 var playlistIds;
 var youtubePlayer;
-var timeStamp
+var timeStamp;
 var YT_BASE_URL = "https://www.youtube.com/embed/";
 
 // Calls the three functions associated with loading the room's iframe
