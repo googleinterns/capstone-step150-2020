@@ -129,13 +129,15 @@ function listenForStateChange(){
         const Url = `/sync-room?roomId=${roomId.toString()}`;
         $.get(Url,function(data, status){
             console.log(data);
-            // if(data === "played"){
-            //     console.log('Group video is on state: playing')
-            //     playVideo();
-            // } else {
-            //     console.log('Group video is on state: paused')
-            //     pauseVideo();
-            // }
+            if(data.currentState === "1"){
+                console.log('Group video is on state: playing')
+                playVideo();
+            } else if(data.currentState === "2") {
+                console.log('Group video is on state: paused')
+                pauseVideo();
+            } else {
+                console.log("State is not paused nor played. Do nothing.")
+            }
         })
     })
 }
