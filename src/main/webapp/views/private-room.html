@@ -17,18 +17,19 @@
                 </ul>
                 <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>        
                 <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">            
-                        <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />                    
-                        <input class="subButton" type="submit" value="Send" onclick="submitForm()"/>  
-                        <script>  
-                            function submitForm() {
-                                fetch(`/chat?roomId=${window.roomId}&userEmail=${window.localStorage.getItem("userEmail")}&text-input=${document.getElementById("text-in").value}`, {method: 'POST'})
-                                console.log(document.getElementById("text-in").value);
-                                console.log(document.getElementById("text-in").value);
-                                document.getElementById("text-in").value = '';
-                                return false;
-                            }        
-                        </script>       
-                    </form>
+                    <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />                    
+                    <input class="subButton" type="submit" value="Send" onclick="submitForm()"/>  
+                    <script>  
+                        function submitForm() {
+                            fetch(`/chat?roomId=${window.roomId}&userEmail=${window.localStorage.getItem("userEmail")}&text-input=${document.getElementById("text-in").value}`, {method: 'POST'})
+                            console.log(document.getElementById("text-in").value);
+                            console.log(document.getElementById("text-in").value);
+                            document.getElementById("text-in").value = '';
+                            displayChat();
+                            return true;
+                        }        
+                    </script>       
+                </form>
             </div>
         </div>
     </body>
