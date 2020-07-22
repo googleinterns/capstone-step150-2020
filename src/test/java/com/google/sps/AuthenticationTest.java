@@ -44,7 +44,6 @@ public final class AuthenticationTest {
         UserService UserServiceMock = Mockito.mock(UserService.class);
         when(UserServiceMock.isUserLoggedIn()).thenReturn(false);
         when(UserServiceMock.createLoginURL("redirect")).thenReturn("");
-
         String expected = "<center><a href=\"" + "\"><button style=\"background-color: cyan; border-radius:12px;\"><span style=\"color:white;\">Login</span></button/></a></center>";
         String actual = testAuth(UserServiceMock);
 
