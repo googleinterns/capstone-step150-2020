@@ -16,7 +16,7 @@ import com.google.sps.data.*;
 public final class SyncServlet extends HttpServlet {
     private static final String UPDATE_STATE_PARAMETER = "userState";
     private static final String ROOM_ID_PARAMETER = "roomId";
-    private static final String VIDEO_TIMESTAMP_PARAMETER = "TimeStamp";
+    private static final String VIDEO_TIMESTAMP_PARAMETER = "timeStamp";
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
@@ -30,7 +30,9 @@ public final class SyncServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
+        System.out.println(roomId);
         Video.VideoState newState = Video.VideoState.fromInt(Integer.parseInt(req.getParameter(UPDATE_STATE_PARAMETER)));
+        System.out.println(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
         long currentVideoTimestamp = Long.parseLong(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
 
         Room syncRoom = Room.fromRoomId(roomId);

@@ -3,7 +3,7 @@ import com.google.gson.Gson;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-// Util File for Servlet that defines final entities for youtube party
+// Util File for Servlet that defines the paths and other strings
 public class ServletUtil {
     //Path to the private room page
     public static final String PRIVATE_ROOM_PATH = "/views/private-room.html";

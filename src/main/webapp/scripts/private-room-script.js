@@ -114,7 +114,7 @@ function onStateChange(event) {
             state = "unknown (" + event.data + ")";
     }
     console.log('onStateChange: ' + state);
-    updateCurrentState(state);
+    updateCurrentState(state, Math.round(youtubePlayer.getCurrentTime()));
 }
 
 // Every three seconds you listen to youtube player for any detection of change
@@ -143,6 +143,7 @@ function listenForStateChange(){
 // Send the user's state to the servlet every time their state changes
 function updateCurrentState(currentState, currentTime){
     console.log(currentState);
+    console.log(currentTime);
     $(document).ready(function(){
         const Url = `/sync-room?roomId=${roomId.toString()}`;
         $.post(Url,

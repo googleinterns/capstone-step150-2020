@@ -53,7 +53,7 @@ public final class CreateRoomServlet extends HttpServlet {
         String playlistUrl = req.getParameter(PLAYLIST_URL_PARAMETER);
         String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+ServletUtil.PLAYLIST_QUERY_PARAMETER.length());
 
-        Room newRoom = Room.createRoom(members,new LinkedList<Video>(), new LinkedList<Message>());
+        Room newRoom = Room.createRoom(members);
         playlistIdToVideoQueue(playlistId, newRoom);
         Long newRoomId = newRoom.toDatastore();
         if(newRoomId != null) {
