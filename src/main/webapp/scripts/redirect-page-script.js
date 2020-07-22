@@ -4,9 +4,10 @@ const joinRoomPath = "/views/join-room.html";
 
 // Send inputted room Id to VerifyRoomServlet them redirect them to proper page
 async function verifyRoom() {
+    let user = window.localStorage.getItem("userEmail");
     roomId = getRoomId(window.location.href);
      // Check that the current room id exits, then return playlist of given room
-    let roomPromise = await fetch('/verify-room?roomId='+roomId);
+    let roomPromise = await fetch(`/verify-room?roomId=${roomId}&userEmail=${user}`);
     // fetch the json-version of the urls for all the youtube videos
     let isRoomIdValid = await roomPromise.json();
     redirectPage(isRoomIdValid);
