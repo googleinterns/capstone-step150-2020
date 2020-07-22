@@ -146,14 +146,11 @@ public class Room {
     //Get all of the members as a list of EmbeddedEntities
     private List<EmbeddedEntity> getMembersAsEmbeddedEntities() {
         return members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
-<<<<<<< HEAD
     }
 
     //Updates the current video in the room's state
     public void updateCurrentVideoState(Video.VideoState state, long videoTimeStamp){
         this.videos.peek().updateVideoState(state, videoTimeStamp);
-=======
->>>>>>> 13ddec7d6f5b39c055c062cde51f5d38a7950827
     }
 
     //Returns the messages as a list of embedded entities
@@ -165,7 +162,6 @@ public class Room {
     private List<EmbeddedEntity> getVideosAsEntities() {
         return this.videos.stream().map(Video::toEmbeddedEntity).collect(Collectors.toList());
     }
-<<<<<<< HEAD
 
     //Removes the current video from the head of the queue
     public void changeCurrentVideo(){
@@ -176,6 +172,4 @@ public class Room {
     public Video getCurrentVideo(){
         return this.videos.peek();
     }
-=======
->>>>>>> 13ddec7d6f5b39c055c062cde51f5d38a7950827
 }
