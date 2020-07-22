@@ -108,19 +108,6 @@ public class Room {
         }
         return false;
     }
-<<<<<<< HEAD
-    /**
-      * Room constructor
-      * @param members a List of Member objects
-      * @param videos an Queue of video objects
-      * @return a new Room object
-      */
-
-    private Room(List<Member> members, Queue<Video> videos, Queue<Message> messages) {
-        this.messages = new LinkedList<Message>();
-        this.members = members;
-        this.videos = videos;
-=======
 
     //Returns the Room's video url list
     public Queue<Video> getVideos() {
@@ -135,7 +122,6 @@ public class Room {
     //Returns the Room's members
     public List<Member> getMembers() {
         return new ArrayList<Member>(this.members);
->>>>>>> ac1621e5b3308651665089d1612e4b2fead075fc
     }
 
     /**
