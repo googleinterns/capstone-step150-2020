@@ -49,8 +49,14 @@ public final class VerifyRoomServlet extends HttpServlet {
       response.getWriter().println(true);
     }
   }
-  public static isUserOnMemberList(String user, Room room){
-    for(member m : Room.getMembers()){
+  /**
+   * Determines if the user trying to join the Room is on the Room's member list
+   * @param user a string representing the email of the user that is trying to join
+   * @param room the Room that the user is trying to join
+   * @return a boolean 
+  */
+  public static Boolean isUserOnMemberList(String user, Room room){
+    for(Member m : room.getMembers()){
       if(m.getAlias().compareTo(user) == 0){
         return true;
       }
