@@ -30,7 +30,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that takes in the user's room Id and prints whether or not it exists
+/** 
+  Servlet that takes in the user's room Id and prints whether or not it exists
+  If so, it also checks if the user that is trying to join is on the Room's member list
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
@@ -49,6 +51,7 @@ public final class VerifyRoomServlet extends HttpServlet {
       response.getWriter().println(true);
     }
   }
+
   /**
    * Determines if the user trying to join the Room is on the Room's member list
    * @param user a string representing the email of the user that is trying to join

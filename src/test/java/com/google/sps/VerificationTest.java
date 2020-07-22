@@ -14,6 +14,7 @@ import com.google.sps.servlets.*;
 import java.util.*;
 import java.lang.Long;
 
+//Tests user Verification Logic
 @RunWith(JUnit4.class)
 public final class VerificationTest {
 
@@ -27,13 +28,13 @@ public final class VerificationTest {
         members.add(Member.createNewMember("rossjohnson@google.com"));
         Room room = Room.createRoom(members);
 
-       //Setup of user
-       String user = "rossjohnson@google.com";
-       
-       Boolean expected = true;
-       Boolean actual = VerifyRoomServlet.isUserOnMemberList(user, room);
+        //Setup of user
+        String user = "rossjohnson@google.com";
 
-       Assert.assertEquals(expected, actual);
+        Boolean expected = true;
+        Boolean actual = VerifyRoomServlet.isUserOnMemberList(user, room);
+
+        Assert.assertEquals(expected, actual);
    }
 
    @Test
@@ -45,12 +46,12 @@ public final class VerificationTest {
         members.add(Member.createNewMember("@google.com"));
         Room room = Room.createRoom(members);
 
-       //Setup of user
-       String user = "rossjohnson@google.com";
+        //Setup of user
+        String user = "rossjohnson@google.com";
 
-       Boolean expected = false;
-       Boolean actual = VerifyRoomServlet.isUserOnMemberList(user, room);
+        Boolean expected = false;
+        Boolean actual = VerifyRoomServlet.isUserOnMemberList(user, room);
 
-       Assert.assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
    }
 }
