@@ -79,6 +79,13 @@ public class Room {
         return newRoom;
     }
 
+    //Creates a new room object from a list of members
+    public static Room createRoom(List<Member> members){
+        Queue<Video> videoQueue = new LinkedList<Video>();
+        Queue<Message> messageQueue = new LinkedList<Message>();
+        return new Room(members,videoQueue, messageQueue, null);
+    }
+
     //Takes a room object, puts it into datastore and returns the resulting entity's key
     public Long toDatastore(){
         Entity room = Room.toEntity(this);
@@ -90,21 +97,6 @@ public class Room {
             System.out.println(e.toString());
         }
         return null;
-    }
-
-    //Returns the Room's video url list
-    public Queue<Video> getVideos() {
-        return new LinkedList<Video>(this.videos);
-    }
-
-    //Returns the Room's message list
-    public Queue<Message> getMessages(){
-        return new LinkedList<Message>(this.messages);
-    }
-
-    //Returns the Room's members
-    public List<Member> getMembers() {
-        return new ArrayList<Member>(this.members);
     }
 
     // Helper addMessage function to manipulate the list of messages
@@ -123,16 +115,19 @@ public class Room {
         return false;
     }
 
-    /**
-      * Room constructor
-      * @param members a List of Member objects
-      * @param videos an Queue of video objects
-      * @return a new Room object
-      */
-    private Room(List<Member> members, Queue<Video> videos){
-        this.messages = new LinkedList<Message>();
-        this.members = members;
-        this.videos = videos;
+    //Returns the Room's video url list
+    public Queue<Video> getVideos() {
+        return new LinkedList<Video>(this.videos);
+    }
+
+    //Returns the Room's message list
+    public Queue<Message> getMessages(){
+        return new LinkedList<Message>(this.messages);
+    }
+
+    //Returns the Room's members
+    public List<Member> getMembers() {
+        return new ArrayList<Member>(this.members);
     }
 
     /**
@@ -140,6 +135,7 @@ public class Room {
       * @param members a List of Member objects
       * @param videos an Queue of video objects
       * @param messages a Queue of message objects
+      * @param id a long representing the Room's datastore id 
       * @return a new Room object
       */
     private Room(List<Member> members, Queue<Video> videos, Queue<Message> messages, Long id) {
