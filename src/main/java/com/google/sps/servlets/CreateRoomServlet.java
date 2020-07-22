@@ -73,7 +73,7 @@ public final class CreateRoomServlet extends HttpServlet {
       */
     public void playlistIdToVideoQueue(String playlistId, Room room) throws IOException {
         //Connect to the YouTube Data API
-        URL url = new URL(ServletUtil.YT_DATA_API_BASE_URL+ServletUtil.DATA_API_KEY+ServletUtil.YT_DATA_API_PARAMETERS+playlistId);
+        URL url = new URL(ServletUtil.YT_DATA_API_BASE_URL+ProtectedServletUtil.DATA_API_KEY+ServletUtil.YT_DATA_API_PARAMETERS+playlistId);
         HttpURLConnection youtubeDataConnection = (HttpURLConnection) url.openConnection();
         youtubeDataConnection.setRequestMethod("GET");
         //Read the response

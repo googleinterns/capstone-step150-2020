@@ -2,6 +2,7 @@ var roomId;
 var playlistUrls;
 var playlistIds;
 var youtubePlayer;
+var timeStamp
 var YT_BASE_URL = "https://www.youtube.com/embed/";
 
 // Calls the three functions associated with loading the room's iframe
@@ -114,13 +115,14 @@ function onStateChange(event) {
             state = "unknown (" + event.data + ")";
     }
     console.log('onStateChange: ' + state);
-    updateCurrentState(state, Math.round(youtubePlayer.getCurrentTime()));
+    timeStamp = Math.round(youtubePlayer.getCurrentTime());
+    updateCurrentState(state, timeStamp);
 }
 
 // Every three seconds you listen to youtube player for any detection of change
 window.setInterval(function(){
     listenForStateChange();
-}, 3000);
+}, 1000);
 
 // This function fetches the state of the private room video and
 // plays/pauses it accordingly
@@ -129,6 +131,12 @@ function listenForStateChange(){
         const Url = `/sync-room?roomId=${roomId.toString()}`;
         $.get(Url,function(data, status){
             console.log(data);
+            // Change timestamp to match group timestamp
+            if(timeStamp + 2 < data.timestamp || timeStamp - 2 > data.timestamp){
+                console.log('Seeking to ' + data.timestamp)
+                youtubePlayer.seekTo(data.timestamp);
+            }
+            // Change state to match group state
             if(data.currentState === "1"){
                 console.log('Group video is on state: playing')
                 playVideo();
