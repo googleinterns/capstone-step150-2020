@@ -10,13 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.sps.data.*;
 
-/** Servlet that takes in the user's inputted Room ID and directs them
-    to the associated private room once ensurred that it's an actual room*/
+/** Servlet that Synchronizes the video's state and timestamp */
 @WebServlet("/sync-room")
 public final class SyncServlet extends HttpServlet {
     private static final String UPDATE_STATE_PARAMETER = "userState";
     private static final String ROOM_ID_PARAMETER = "roomId";
-    private static final String VIDEO_TIMESTAMP_PARAMETER = "TimeStamp";
+    private static final String VIDEO_TIMESTAMP_PARAMETER = "timeStamp";
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
@@ -46,12 +45,12 @@ public final class SyncServlet extends HttpServlet {
     }
 
     //Takes a video in and turns it into a JSON String with the necessary attributes
-    private String videoObjectToJsonString(Video video){
+    public static String videoObjectToJsonString(Video video){
         StringBuilder jsonString = new StringBuilder();
         jsonString.append("{\"timestamp\" : \"");
-        jsonString.append(video.getCurrentTimeStamp() + "\" , ");
+        jsonString.append(video.getCurrentTimeStamp() + "\", ");
         jsonString.append("\"currentUrl\" : \"");
-        jsonString.append(video.getUrl() + "\" , ");
+        jsonString.append(video.getUrl() + "\", ");
         jsonString.append("\"currentState\" : \"");
         jsonString.append(video.getCurrentState().getValue() + "\"}");
         return jsonString.toString();
