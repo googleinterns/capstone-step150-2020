@@ -28,12 +28,10 @@ public class ChatServlet extends HttpServlet {
 
     // Retrieve messages from datastore  
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {    
-        String query = request.getParameter(ROOM_QUERY);    
-        long roomID = Long.parseLong(query);    
-        Gson gson = new Gson();
-        // Retrieves the entity with matching ID and its corresponding messages property as a JSON string    
-        Room room = Room.fromRoomId(roomID);       
-        String jsonMessages = gson.toJson(room.getMessages());          
+        String roomIdQuery = request.getParameter(ROOM_QUERY);       
+        Gson gson = ServletUtil.PARSER;
+        // Retrieves the entity with matching ID and its corresponding messages property as a JSON string          
+        String jsonMessages = gson.toJson(Room.fromRoomId(Long.parseLong(roomIdQuery)).getMessages());          
         response.setContentType("application/json;");    
         response.getWriter().println(jsonMessages);  
     }   
@@ -45,11 +43,10 @@ public class ChatServlet extends HttpServlet {
         // TODO: get sender information based on their login    
         String sender = request.getParameter(EMAIL_QUERY); 
         // Get room ID from URL request    
-        String query = request.getParameter(ROOM_QUERY);    
-        System.out.println(query);    
-        long roomID = Long.parseLong(query);
+        String roomIdQuery = request.getParameter(ROOM_QUERY);       
         Message chatMessage = Message.createNewMessage(sender, message, timestamp);
-        Room room = Room.fromRoomId(roomID);
+
+        Room room = Room.fromRoomId(Long.parseLong(roomIdQuery));
         room.addMessage(chatMessage);
         room.toDatastore();          
         // TODO: Correct redirect    
