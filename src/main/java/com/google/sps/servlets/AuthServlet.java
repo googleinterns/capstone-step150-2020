@@ -22,13 +22,10 @@ public class AuthServlet extends HttpServlet{
         String urlToRedirectToAfterUserLogsIn = req.getParameter(REDIRECT_URL_PARAMETER);
         String responseBody = getResponseBody(isUserLoggedIn, urlToRedirectToAfterUserLogsIn, ServletUtil.USER_SERVICE);
         if(isUserLoggedIn){
-            String userEmail = ServletUtil.USER_SERVICE.getCurrentUser().getEmail();
-            String logoutUrl = ServletUtil.USER_SERVICE.createLogoutURL(URL_TO_REDIRECT_AFTER_LOG_OUT);
             res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
             res.getWriter().println(ServletUtil.PARSER.toJson(responseBody));  
         }
         else{
-            String loginUrl = ServletUtil.USER_SERVICE.createLoginURL(urlToRedirectToAfterUserLogsIn);
             res.setContentType(ServletUtil.HTML_CONTENT_TYPE);
             res.getWriter().println(responseBody);
         }
@@ -41,7 +38,6 @@ public class AuthServlet extends HttpServlet{
     public static String getResponseBody(Boolean loggedin, String redirectUrl, UserService userService){
         if(loggedin){
             String userEmail = userService.getCurrentUser().getEmail();
-            String logoutUrl = userService.createLogoutURL(URL_TO_REDIRECT_AFTER_LOG_OUT);
             return userEmail; 
         }
         else{
