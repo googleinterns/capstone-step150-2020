@@ -18,6 +18,7 @@ public final class SendVideoInfoTest {
         Video video = Video.createVideo("www.RossJohnson.com");
 
         String expected = "{\"timestamp\" : \"0\", \"currentUrl\" : \"www.RossJohnson.com\", \"currentState\" : \"-1\"}";
+        
         String actual = SyncServlet.videoObjectToJsonString(video);
         
         Assert.assertEquals(expected, actual);
