@@ -79,13 +79,6 @@ public class Room {
         return newRoom;
     }
 
-    //Creates a new room object from a list of members
-    public static Room createRoom(List<Member> members){
-        Queue<Video> videoQueue = new LinkedList<Video>();
-        Queue<Message> messageQueue = new LinkedList<Message>();
-        return new Room(members,videoQueue, messageQueue, null);
-    }
-
     //Takes a room object, puts it into datastore and returns the resulting entity's key
     public Long toDatastore(){
         Entity room = Room.toEntity(this);
