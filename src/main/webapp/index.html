@@ -7,22 +7,23 @@
     <script src="./scripts/home_script.js"></script>
 </head>
   <body>
+      
     <section id="banner" data-video="images/banner">
         <div class="inner">
             <header>
-                <h1>This is YoutubeParty</h1>
-                <p>Morbi eu purus eget urna interdum dignissim sed consectetur augue<br />
-                vivamus vitae libero in nulla iaculis eleifend non sit amet nulla.</p>
+                <img src="../media/youtube-party-logo1.jpg">
+                <br>
             </header>
             <div id="buttons-row">
-                <button class="home-button" id="create_button" onclick="authenticate('./views/create-room.html')">
-                    <span style="color:white;">Create a Party</span>
+                <button aria-label="Create a Room" class="home-button" id="create_button" onclick="authenticate('./views/create-room.html')">
+                    <span>Create a Party</span>
                 </button>
-                <button class="home-button" id="join_button" onclick="authenticate('./views/join-room.html')">
-                    <span style="color:white;">Join a Party</span>
+                <button aria-label="Join a Room" class="home-button" id="join_button" onclick="authenticate('./views/join-room.html')">
+                    <span>Join a Party</span>
                 </button>
             </div>
         </div>
+        <div id="base-row"></div>
     </section>
   </body>
 </html> 

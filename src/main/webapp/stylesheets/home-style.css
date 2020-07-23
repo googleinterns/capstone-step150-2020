@@ -5,7 +5,7 @@
     align-items: center;
     display: flex;
     justify-content: center;
-    background-image: url("../media/white-bg-2.png");
+    /* background-image: url("../media/white-bg-2.png"); */
     background-position: center;
     background-size: 100%;
     background-repeat: no-repeat;
@@ -59,6 +59,10 @@
     top: 0;
     width: 100%;
     z-index: 1;
+}
+
+img {
+    margin-bottom: 5%;
 }
 
 @media screen and (max-width: 1280px) {
@@ -116,31 +120,28 @@ body.is-loading #banner:before {
 
 #buttons-row {
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    justify-content: center;
     width: 400px;
     height: 300px;
     margin: auto;
 }
 
 .home-button {
-    font-family: 'Noto Sans', sans-serif;
+    background-color: #f2f2f2;
+    border: 1px solid #f2f2f2;
+    border-radius: 4px;
+    color: #5F6368;
+    font-family: arial,sans-serif;
+    font-size: 14px;
+    margin: 11px 4px;
+    padding: 0 16px;
+    line-height: 27px;
+    height: 36px;
+    min-width: 54px;
+    text-align: center;
     cursor: pointer;
-    box-shadow: -1px 3px 3px 0 rgba(80, 80, 80, .2);
-    width: 155px;
-    height: 50px;
-    padding: 17px;
-    border: none;
-    border-radius: 30px;
-    margin: 0 10px 40px;
-    color: #fff;
-    font-weight: bold;
-    flex: 0 0 auto;
-    transition: all 0.3s ease;
-    background: #CB4A46;
 }
 
 .home-button:hover {
-  width: 160px;
-  box-shadow: -1px 6px 10px 0 rgba(120, 60, 20, .2);
+  border-color: black;
 }
