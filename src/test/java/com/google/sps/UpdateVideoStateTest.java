@@ -20,10 +20,9 @@ public final class UpdateVideoStateTest {
         Queue<Video> videos = new LinkedList<Video>();
         videos.add(Video.createVideo("This is a url"));
         Room room = Room.createRoom(new LinkedList(),videos, new LinkedList());
+        long expected = newTimestamp;
 
         room.updateCurrentVideoState(newState, newTimestamp);
-
-        long expected = newTimestamp;
         long actual = room.getVideos().peek().getCurrentTimeStamp();
 
         Assert.assertEquals(expected, actual);
@@ -35,11 +34,10 @@ public final class UpdateVideoStateTest {
         Video.VideoState newState = Video.VideoState.PLAYING;
         Queue<Video> videos = new LinkedList<Video>();
         videos.add(Video.createVideo("This is a url"));
-        Room room = Room.createRoom(new LinkedList(),videos, new LinkedList());
+        Room room = Room.createRoom(new LinkedList(), videos, new LinkedList());
+        Video.VideoState expected = newState;
 
         room.updateCurrentVideoState(newState, newTimestamp);
-
-        Video.VideoState expected = newState;
         Video.VideoState actual = room.getVideos().peek().getCurrentState();
         
         Assert.assertEquals(expected, actual);

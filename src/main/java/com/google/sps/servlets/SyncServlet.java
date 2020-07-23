@@ -29,19 +29,19 @@ public final class SyncServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
-        Video.VideoState newState = Video.VideoState.fromInt(Integer.parseInt(req.getParameter(UPDATE_STATE_PARAMETER)));
-        long currentVideoTimestamp = Long.parseLong(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
-
         Room syncRoom = Room.fromRoomId(roomId);
-
+        Video.VideoState newState = Video.VideoState.fromInt(Integer.parseInt(req.getParameter(UPDATE_STATE_PARAMETER)));
         if(newState == Video.VideoState.ENDED){
             syncRoom.changeCurrentVideo();
-        } else {
+        } 
+        else {
+            long currentVideoTimestamp = Long.parseLong(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
             syncRoom.updateCurrentVideoState(newState, currentVideoTimestamp);
         }
+
         syncRoom.toDatastore();
+
         res.setStatus(200);
-        
     }
 
     //Takes a video in and turns it into a JSON String with the necessary attributes
