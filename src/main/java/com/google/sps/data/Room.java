@@ -35,17 +35,6 @@ public class Room {
     private Queue<Video> videos;
     private Long roomId;
 
-    //Room factory function
-    public static Room createRoom(List<Member> members, Queue<Video> videos, Queue<Message> messages){
-        return new Room(members, videos, messages, null);
-    }
-
-    public static Room createRoom(List<Member> members){
-        Queue<Video> videoQueue = new LinkedList<Video>();
-        Queue<Message> messageQueue = new LinkedList<Message>();
-        return new Room(members,videoQueue, messageQueue, null);
-    }
-
     //Creates a room object from a Datastore Key
     public static Room fromRoomId(long roomId) {
         return Room.fromRoomKey(KeyFactory.createKey(ROOM_ENTITY, roomId));
@@ -136,6 +125,18 @@ public class Room {
         this.videos = videos;
         this.messages = messages;
         this.roomId = id;
+    }
+
+    /**
+      * Room constructor
+      * @param members a List of Member objects
+      * @return a new Room object
+      */
+    public Room(List<Member> members) {
+        this.members = members;
+        this.videos = new LinkedList<Video>();
+        this.messages = new LinkedList<Message>();
+        this.roomId = null;
     }
 
     //Get all of the members as a list of EmbeddedEntities
