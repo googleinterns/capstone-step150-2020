@@ -19,9 +19,8 @@ public final class SyncServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
-        Room updatedRoom = Room.fromRoomId(roomId);
-        Video currentVideo = updatedRoom.getCurrentVideo();
-        String responseBody = videoObjectToJsonString(currentVideo);
+        Room syncRoom = Room.fromRoomId(roomId);
+        String responseBody = roomToVideoJson(syncRoom);
         res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
         res.getWriter().println(responseBody);
     }
@@ -44,15 +43,8 @@ public final class SyncServlet extends HttpServlet {
         res.setStatus(200);
     }
 
-    //Takes a video in and turns it into a JSON String with the necessary attributes
-    public static String videoObjectToJsonString(Video video){
-        StringBuilder jsonString = new StringBuilder();
-        jsonString.append("{\"timestamp\" : \"");
-        jsonString.append(video.getCurrentTimeStamp() + "\", ");
-        jsonString.append("\"currentUrl\" : \"");
-        jsonString.append(video.getUrl() + "\", ");
-        jsonString.append("\"currentState\" : \"");
-        jsonString.append(video.getCurrentState().getValue() + "\"}");
-        return jsonString.toString();
+    //Takes a Room in and turns it's current video into a JSON String with the necessary attributes
+    public static String roomToVideoJson(Room room){
+        return ServletUtil.PARSER.toJson(room.getCurrentVideo());
     }
 }

@@ -15,10 +15,11 @@ public final class SendVideoInfoTest {
     
     @Test
     public void testCorrectVideoStringOutput(){
-        Video video = Video.createVideo("www.RossJohnson.com");
-        String expected = "{\"timestamp\" : \"0\", \"currentUrl\" : \"www.RossJohnson.com\", \"currentState\" : \"-1\"}";
+        Room testRoom = Mockito.mock(Room.class);
+        when(testRoom.getCurrentVideo()).thenReturn(Video.createVideo("www.RossJohnson.com"));
+        String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"url\":\"www.RossJohnson.com\"}";
         
-        String actual = SyncServlet.videoObjectToJsonString(video);
+        String actual = SyncServlet.roomToVideoJson(testRoom);
         
         Assert.assertEquals(expected, actual);
     }
