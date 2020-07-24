@@ -18,18 +18,16 @@
                 </ul>
                 <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>        
                 <form action="/chat" id="myForm" method="POST" name="myForm" target="hiddenFrame">            
-                    <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />            
-                    <input type="hidden" id="roomId" name="roomId" value="" />            
-                    <script type="text/javascript">                
-                        var id = document.getElementById("roomId");                
-                        id.value = getRoomId(window.location.href);            
-                    </script>            
-                    <input type="hidden" id="userEmail" name="userEmail" value="" />            
-                    <script type="text/javascript">                
-                        var email = document.getElementById("userEmail");                
-                        email.value = window.userEmail;            
-                    </script>            
-                    <input class="subButton" type="submit" value="Send"/>        
+                    <input id="text-in" name="text-input" class="form-input" type="text" placeholder="Start typing..." />                    
+                    <input class="subButton" type="submit" value="Send" onclick="submitForm()"/>  
+                    <script>  
+                        function submitForm() {
+                            fetch(`/chat?roomId=${window.roomId}&userEmail=${window.localStorage.getItem("userEmail")}&text-input=${document.getElementById("text-in").value}`, {method: 'POST'})
+                            document.getElementById("text-in").value = '';
+                            displayChat();
+                            return true;
+                        }        
+                    </script>       
                 </form>
             </div>
         </div>
