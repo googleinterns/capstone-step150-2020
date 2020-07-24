@@ -47,9 +47,9 @@ public final class VerifyRoomServlet extends HttpServlet {
     
     if(currentRoom == null || !isUserOnMemberList(user, currentRoom)){
       response.getWriter().println(false);
-    } else {
-      response.getWriter().println(true);
+      return;
     }
+    response.getWriter().println(true);
   }
 
   /**

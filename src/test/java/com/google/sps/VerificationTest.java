@@ -21,37 +21,28 @@ public final class VerificationTest {
    @Test
    public void userIsaMember(){
         //Setup of Room
-        List<Member> members = new LinkedList<Member>();
-        members.add(Member.createNewMember("RJ"));
-        members.add(Member.createNewMember("RMJ"));
-        members.add(Member.createNewMember("@google.com"));
-        members.add(Member.createNewMember("rossjohnson@google.com"));
+        List<Member> members = new LinkedList<Member>(Arrays.asList(Member.createNewMember("RJ"), Member.createNewMember("RMJ"), Member.createNewMember("@google.com"), Member.createNewMember("rossjohnson@google.com")));
         Room room = Room.createRoom(members);
 
         //Setup of user
         String user = "rossjohnson@google.com";
 
-        Boolean expected = true;
         Boolean actual = VerifyRoomServlet.isUserOnMemberList(user, room);
 
-        Assert.assertEquals(expected, actual);
+        Assert.assertTrue(actual);
    }
 
    @Test
    public void userIsNotAMember(){
         //Setup of Room
-        List<Member> members = new LinkedList<Member>();
-        members.add(Member.createNewMember("RJ"));
-        members.add(Member.createNewMember("RMJ"));
-        members.add(Member.createNewMember("@google.com"));
+        List<Member> members = new LinkedList<Member>(Arrays.asList(Member.createNewMember("RJ"), Member.createNewMember("RMJ"), Member.createNewMember("@google.com")));
         Room room = Room.createRoom(members);
 
         //Setup of user
         String user = "rossjohnson@google.com";
 
-        Boolean expected = false;
         Boolean actual = VerifyRoomServlet.isUserOnMemberList(user, room);
 
-        Assert.assertEquals(expected, actual);
+        Assert.assertFalse(actual);
    }
 }
