@@ -2,7 +2,11 @@ var roomId;
 var playlistUrls;
 var playlistIds;
 var youtubePlayer;
-var playerTimeStamp
+var playerTimeStamp;
+const setWaitTime = 1000;
+const allowedSecondsOfDiscrepancy = 2;
+const PLAYER_STATE_PLAYED = "1";
+const PLAYER_STATE_PAUSED = "2";
 var YT_BASE_URL = "https://www.youtube.com/embed/";
 
 // Calls the three functions associated with loading the room's iframe
@@ -87,30 +91,7 @@ function onYouTubeIframeAPIReady() {
 
 // Log state changes
 function onStateChange(event) {
-    var state = "undefined";
-    switch (event.data) {
-        case YT.PlayerState.UNSTARTED:
-            state = "-1";
-            break;
-        case YT.PlayerState.ENDED:
-            state = "0";
-            break;
-        case YT.PlayerState.PLAYING:
-            state = "1";
-            break;
-        case YT.PlayerState.PAUSED:
-            state = "2";
-            break;
-        case YT.PlayerState.BUFFERING:
-            state = "3";
-            break;
-        case YT.PlayerState.CUED:
-            state = "5";
-            break;
-        default:
-            state = "unknown (" + event.data + ")";
-    }
-    console.log('onStateChange: ' + state);
+    var state = event.data
     playerTimeStamp = Math.round(youtubePlayer.getCurrentTime());
     updateCurrentState(state, playerTimeStamp);
 }
@@ -118,7 +99,7 @@ function onStateChange(event) {
 // Every three seconds you listen to youtube player for any detection of change
 window.setInterval(function(){
     listenForStateChange();
-}, 1000);
+}, setWaitTime);
 
 // This function fetches the state of the private room video and
 // plays/pauses it accordingly
@@ -127,14 +108,14 @@ async function listenForStateChange(){
     // fetch the json-version of the urls for all the youtube videos
     let privateRoomData = await privateRoomDataPromise.json();
     // Change timestamp to match group timestamp if client is not within two seconds of room
-    if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= 2){
+    if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= allowedSecondsOfDiscrepancy){
         console.log('Seeking to ' + privateRoomData.timestamp)
         youtubePlayer.seekTo(privateRoomData.timestamp);
     }
     // Change state to match group state
-    if(privateRoomData.currentState === "1"){
+    if(privateRoomData.currentState === PLAYER_STATE_PLAYED){
         playVideo();
-    } else if(privateRoomData.currentState === "2") {
+    } else if(privateRoomData.currentState === PLAYER_STATE_PAUSED) {
         pauseVideo();
     }
 }
