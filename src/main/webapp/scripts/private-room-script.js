@@ -127,7 +127,7 @@ function listenForStateChange(){
         $.get(`/sync-room?roomId=${roomId.toString()}`,function(data, status){
             console.log(data);
             // Change timestamp to match group timestamp if client is not within two seconds of room
-            if(Math.abs(playerTimestamp - data.timestamp) >= 2){
+            if(Math.abs(playerTimeStamp - data.timestamp) >= 2){
                 console.log('Seeking to ' + data.timestamp)
                 youtubePlayer.seekTo(data.timestamp);
             }
@@ -146,15 +146,6 @@ function updateCurrentState(currentState, currentTime){
     console.log(currentState);
     console.log(currentTime);
     fetch(`/sync-room?roomId=${roomId.toString()}&userState=${currentState}&timeStamp=${currentTime}`,{method:'POST'})
-    // fetch(`/chat?roomId=${window.roomId}&userEmail=${window.localStorage.getItem("userEmail")}&text-input=${document.getElementById("text-in").value}`, {method: 'POST'})
-    // $(document).ready(function(){
-    //     $.post(`/sync-room?roomId=${roomId.toString()}`,
-    //     {
-    //         userState: currentState,
-    //         timeStamp: currentTime
-    //     }
-    //     );
-    // })
     console.log('I am sending the state: ' + currentState)
 }
 
