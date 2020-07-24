@@ -85,10 +85,6 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
-function stopVideo() {
-    youtubePlayer.stopVideo();
-}
-
 // Log state changes
 function onStateChange(event) {
     var state = "undefined";
@@ -137,13 +133,9 @@ function listenForStateChange(){
             }
             // Change state to match group state
             if(data.currentState === "1"){
-                console.log('Group video is on state: playing')
                 playVideo();
             } else if(data.currentState === "2") {
-                console.log('Group video is on state: paused')
                 pauseVideo();
-            } else {
-                console.log("State is not paused nor played. Do nothing.")
             }
         })
     })
@@ -178,6 +170,10 @@ function playVideo(){
 
 function pauseVideo(){
     youtubePlayer.pauseVideo();
+}
+
+function stopVideo() {
+    youtubePlayer.stopVideo();
 }
 
 /* Chat Room Feature */
