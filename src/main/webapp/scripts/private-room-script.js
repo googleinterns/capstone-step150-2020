@@ -2,7 +2,7 @@ var roomId;
 var playlistUrls;
 var playlistIds;
 var youtubePlayer;
-var timeStamp
+var playerTimeStamp
 var YT_BASE_URL = "https://www.youtube.com/embed/";
 
 // Calls the three functions associated with loading the room's iframe
@@ -115,8 +115,8 @@ function onStateChange(event) {
             state = "unknown (" + event.data + ")";
     }
     console.log('onStateChange: ' + state);
-    timeStamp = Math.round(youtubePlayer.getCurrentTime());
-    updateCurrentState(state, timeStamp);
+    playerTimeStamp = Math.round(youtubePlayer.getCurrentTime());
+    updateCurrentState(state, playerTimeStamp);
 }
 
 // Every three seconds you listen to youtube player for any detection of change
@@ -128,11 +128,10 @@ window.setInterval(function(){
 // plays/pauses it accordingly
 function listenForStateChange(){
     $(document).ready(function(){
-        const Url = `/sync-room?roomId=${roomId.toString()}`;
-        $.get(Url,function(data, status){
+        $.get(`/sync-room?roomId=${roomId.toString()}`,function(data, status){
             console.log(data);
-            // Change timestamp to match group timestamp
-            if(timeStamp + 2 < data.timestamp || timeStamp - 2 > data.timestamp){
+            // Change timestamp to match group timestamp if client is not within two seconds of room
+            if(Math.abs(playerTimestamp - data.timestamp) >= 2){
                 console.log('Seeking to ' + data.timestamp)
                 youtubePlayer.seekTo(data.timestamp);
             }
@@ -154,15 +153,16 @@ function listenForStateChange(){
 function updateCurrentState(currentState, currentTime){
     console.log(currentState);
     console.log(currentTime);
-    $(document).ready(function(){
-        const Url = `/sync-room?roomId=${roomId.toString()}`;
-        $.post(Url,
-        {
-            userState: currentState,
-            timeStamp: currentTime
-        }
-        );
-    })
+    fetch(`/sync-room?roomId=${roomId.toString()}&userState=${currentState}&timeStamp=${currentTime}`,{method:'POST'})
+    // fetch(`/chat?roomId=${window.roomId}&userEmail=${window.localStorage.getItem("userEmail")}&text-input=${document.getElementById("text-in").value}`, {method: 'POST'})
+    // $(document).ready(function(){
+    //     $.post(`/sync-room?roomId=${roomId.toString()}`,
+    //     {
+    //         userState: currentState,
+    //         timeStamp: currentTime
+    //     }
+    //     );
+    // })
     console.log('I am sending the state: ' + currentState)
 }
 
