@@ -122,23 +122,21 @@ window.setInterval(function(){
 
 // This function fetches the state of the private room video and
 // plays/pauses it accordingly
-function listenForStateChange(){
-    $(document).ready(function(){
-        $.get(`/sync-room?roomId=${roomId.toString()}`,function(data, status){
-            console.log(data);
-            // Change timestamp to match group timestamp if client is not within two seconds of room
-            if(Math.abs(playerTimeStamp - data.timestamp) >= 2){
-                console.log('Seeking to ' + data.timestamp)
-                youtubePlayer.seekTo(data.timestamp);
-            }
-            // Change state to match group state
-            if(data.currentState === "1"){
-                playVideo();
-            } else if(data.currentState === "2") {
-                pauseVideo();
-            }
-        })
-    })
+async function listenForStateChange(){
+    let privateRoomDataPromise = await fetch('/sync-room?roomId='+roomId);
+    // fetch the json-version of the urls for all the youtube videos
+    let privateRoomData = await privateRoomDataPromise.json();
+    // Change timestamp to match group timestamp if client is not within two seconds of room
+    if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= 2){
+        console.log('Seeking to ' + privateRoomData.timestamp)
+        youtubePlayer.seekTo(privateRoomData.timestamp);
+    }
+    // Change state to match group state
+    if(privateRoomData.currentState === "1"){
+        playVideo();
+    } else if(privateRoomData.currentState === "2") {
+        pauseVideo();
+    }
 }
 
 // Send the user's state to the servlet every time their state changes
