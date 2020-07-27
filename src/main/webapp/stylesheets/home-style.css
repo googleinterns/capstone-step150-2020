@@ -33,7 +33,6 @@ body{
 #banner:before {
     transition: opacity 3s ease;
     transition-delay: 1.25s;
-    content: '';
     display: block;
     height: 100%;
     left: 0;
