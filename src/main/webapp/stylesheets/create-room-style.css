@@ -8,7 +8,6 @@ body{
     height: 100vh !important;  
 }
 
-
 img{
     height: 55px;
     width: 300px;
@@ -42,7 +41,6 @@ a {
 
 .menu li {
   list-style: none;
-  /* display: inline-block; */
 }
 
 .menu li a {
@@ -67,12 +65,15 @@ a {
     margin: auto;
     border-radius: 10px;
 }
+
 h1{
     font-size: 2em;
 }
+
 label{
     font-size: 1.5em;
 }
+
 .input-text{
     border: 2px solid #456879;
     border-radius: 20px;
@@ -80,6 +81,7 @@ label{
     font-size: 30px;
     width: 40vh;
 }
+
 #form-submit-btn{
     background: #CB4A46;
     padding: 12px 35px;
