@@ -3,19 +3,32 @@
   <head>
     <meta charset="UTF-8">
     <title>Youtube Party</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../stylesheets/create-room-style.css">
     <script src="../scripts/home_script.js"></script>
   </head onload="authenticate()">
   <body>
-    <center>
-      <h2>Create a new Youtube Party</h2>
+      <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+            <img src="../media/youtube-party-logo1.jpg">
+            </div>
+            <ul class="menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="join-room.html">Join Room</a></li>
+            </ul>
+        </div>
+    </nav>
+    <br>
+    <br>
+    <div id="form-box">
+      <h1>Create a new Youtube Party</h1>
       <form action="/room" method="POST">
         <label for="fname">PlayList URL:</label><br>
-        <input type="text" id="fname" name="fname"><br><br>
+        <input class="input-text" type="text" id="fname" name="fname"><br><br>
         <label for="lname">Add invitees(email addresses):</label><br>
-        <input type="text" id="lname" name="lname"><br><br>
-        <input type="submit" value="Submit">
+        <input class="input-text" type="text" id="lname" name="lname"><br><br>
+        <input id="form-submit-btn" type="submit" value="Submit">
       </form>
-    </center>
+    </div>
   </body>
 </html>
