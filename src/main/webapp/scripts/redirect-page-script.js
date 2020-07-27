@@ -1,4 +1,3 @@
-var roomId;
 const privateRoomPath = "/views/private-room.html?id=";
 const joinRoomPath = "/views/join-room.html";
 

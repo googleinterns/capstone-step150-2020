@@ -16,25 +16,26 @@ import java.lang.Long;
 
 @RunWith(JUnit4.class)
 public final class CollectVideosTest {
+    private static final String videoUrl1 = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+    private static final String videoUrl2 = "https://www.youtube.com/watch?v=nhPcn-2iHJ4";
+    private static final String videoUrl3 = "https://www.youtube.com/watch?v=gqDRFD5qOx8";
 
     @Test
     public void TestExtractVideoUrls(){
         // Create test Video objects
-        Video testVideo1 = Video.createVideo("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-        Video testVideo2 = Video.createVideo("https://www.youtube.com/watch?v=nhPcn-2iHJ4");
-        Video testVideo3 = Video.createVideo("https://www.youtube.com/watch?v=gqDRFD5qOx8");
-
+        Video testVideo1 = Video.createVideo(videoUrl1);
+        Video testVideo2 = Video.createVideo(videoUrl2);
+        Video testVideo3 = Video.createVideo(videoUrl3);
         //Add videos to queue for testing
         Queue<Video> testVideoQueue = new LinkedList<Video>();
         testVideoQueue.add(testVideo1);
         testVideoQueue.add(testVideo2);
         testVideoQueue.add(testVideo3);
-
         // Add video urls to expected list of urls
         List<String> expectedList = new ArrayList<>();
-        expectedList.add("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-        expectedList.add("https://www.youtube.com/watch?v=nhPcn-2iHJ4");
-        expectedList.add("https://www.youtube.com/watch?v=gqDRFD5qOx8");
+        expectedList.add(videoUrl1);
+        expectedList.add(videoUrl2);
+        expectedList.add(videoUrl3);
 
         List<String> actualList = CollectVideosServlet.extractVideoUrls(testVideoQueue);
 
