@@ -3,8 +3,8 @@ var playlistUrls;
 var playlistIds;
 var youtubePlayer;
 var playerTimeStamp;
-const setWaitTime = 1000;
-const allowedSecondsOfDiscrepancy = 2;
+const STATE_LISTENER_TIMER_MS = 1000;
+const PLAYER_SECONDS_DISCREPANCY = 2;
 const PLAYER_STATE_PLAYED = "1";
 const PLAYER_STATE_PAUSED = "2";
 var YT_BASE_URL = "https://www.youtube.com/embed/";
@@ -99,7 +99,7 @@ function onStateChange(event) {
 // Every three seconds you listen to youtube player for any detection of change
 window.setInterval(function(){
     listenForStateChange();
-}, setWaitTime);
+}, STATE_LISTENER_TIMER_MS);
 
 // This function fetches the state of the private room video and
 // plays/pauses it accordingly
@@ -108,8 +108,7 @@ async function listenForStateChange(){
     // fetch the json-version of the urls for all the youtube videos
     let privateRoomData = await privateRoomDataPromise.json();
     // Change timestamp to match group timestamp if client is not within two seconds of room
-    if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= allowedSecondsOfDiscrepancy){
-        console.log('Seeking to ' + privateRoomData.timestamp)
+    if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= PLAYER_SECONDS_DISCREPANCY){
         youtubePlayer.seekTo(privateRoomData.timestamp);
     }
     // Change state to match group state
@@ -122,10 +121,7 @@ async function listenForStateChange(){
 
 // Send the user's state to the servlet every time their state changes
 function updateCurrentState(currentState, currentTime){
-    console.log(currentState);
-    console.log(currentTime);
     fetch(`/sync-room?roomId=${roomId.toString()}&userState=${currentState}&timeStamp=${currentTime}`,{method:'POST'})
-    console.log('I am sending the state: ' + currentState)
 }
 
 // The API will call this function when the video player is ready.
