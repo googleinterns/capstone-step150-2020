@@ -153,18 +153,4 @@ public class Room {
     private List<EmbeddedEntity> getVideosAsEntities() {
         return this.videos.stream().map(Video::toEmbeddedEntity).collect(Collectors.toList());
     }
-
-    //Updates the current video in the room's state
-    public void updateCurrentVideoState(Video.VideoState state, long videoTimeStamp){
-        this.videos.peek().updateVideoState(state, videoTimeStamp);
-    }
-    //Removes the current video from the head of the queue
-    public void changeCurrentVideo(){
-        this.videos.poll();
-    }
-
-    //Returns the video object at the head of the queue
-    public Video getCurrentVideo(){
-        return this.videos.peek();
-    }
 }
