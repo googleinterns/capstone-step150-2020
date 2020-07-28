@@ -189,7 +189,7 @@ function stopVideo() {
 
 // Shows and refreshes the messages shown on the private room page
 async function displayChat() {   
-    let response = await fetch(`/chat?roomID=${window.roomId}`);
+    let response = await fetch(`/chat?roomId=${window.roomId}`);
     let messages = await response.json();    
     const messageElement = document.getElementById('chat-messages');    
     messageElement.innerHTML = '';    
