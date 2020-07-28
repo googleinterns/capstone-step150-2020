@@ -28,7 +28,7 @@ import org.owasp.html.PolicyFactory;
 @WebServlet("/chat")
 public class ChatServlet extends HttpServlet {
     private static final String REDIRECT_HTML = "/index.html";
-    private static final String ROOM_QUERY = "roomID";
+    private static final String ROOM_QUERY = "roomId";
     private static final String EMAIL_QUERY = "userEmail";
     public static final PolicyFactory POLICY_DEFINITION = new HtmlPolicyBuilder().toFactory();
 
