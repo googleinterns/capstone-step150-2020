@@ -57,11 +57,6 @@ public final class VerifyRoomServlet extends HttpServlet {
    * @return a boolean 
   */
   public static Boolean isUserOnMemberList(String user, Room room){
-    for(Member m : room.getMembers()){
-      if(m.getAlias().compareTo(user) == STRINGS_EQUAL){
-        return true;
-      }
-    }
-    return false;
+    return room.getMembers().stream().anyMatch(member -> member.getAlias().equalsIgnoreCase(user));
   }
 }

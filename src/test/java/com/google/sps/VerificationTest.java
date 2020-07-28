@@ -21,7 +21,7 @@ public final class VerificationTest {
    @Test
    public void userIsaMember(){
         //Setup of Room
-        List<Member> members = new LinkedList<Member>(Arrays.asList(Member.createNewMember("RJ"), Member.createNewMember("RMJ"), Member.createNewMember("@google.com"), Member.createNewMember("rossjohnson@google.com")));
+        List<Member> members = Arrays.asList(Member.createNewMember("RJ"), Member.createNewMember("RMJ"), Member.createNewMember("@google.com"), Member.createNewMember("rossjohnson@google.com"));
         Room room = Room.createRoom(members);
 
         //Setup of user
@@ -35,7 +35,7 @@ public final class VerificationTest {
    @Test
    public void userIsNotAMember(){
         //Setup of Room
-        List<Member> members = new LinkedList<Member>(Arrays.asList(Member.createNewMember("RJ"), Member.createNewMember("RMJ"), Member.createNewMember("@google.com")));
+        List<Member> members = Arrays.asList(Member.createNewMember("RJ"), Member.createNewMember("RMJ"), Member.createNewMember("@google.com"));
         Room room = Room.createRoom(members);
 
         //Setup of user
