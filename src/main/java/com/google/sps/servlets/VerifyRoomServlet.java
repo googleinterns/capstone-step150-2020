@@ -36,7 +36,8 @@ import javax.servlet.http.HttpServletResponse;
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
-  private final String USER_PARAMETER =  "userEmail";
+  private static final String USER_PARAMETER =  "userEmail";
+  private static final int STRINGS_EQUAL = 0;
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
@@ -45,11 +46,8 @@ public final class VerifyRoomServlet extends HttpServlet {
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
     Room currentRoom = Room.fromRoomId(currentRoomId);
     
-    if(currentRoom == null || !isUserOnMemberList(user, currentRoom)){
-      response.getWriter().println(false);
-      return;
-    }
-    response.getWriter().println(true);
+    response.getWriter().println(currentRoom == null || !isUserOnMemberList(user, currentRoom));
+
   }
 
   /**
@@ -60,7 +58,7 @@ public final class VerifyRoomServlet extends HttpServlet {
   */
   public static Boolean isUserOnMemberList(String user, Room room){
     for(Member m : room.getMembers()){
-      if(m.getAlias().compareTo(user) == 0){
+      if(m.getAlias().compareTo(user) == STRINGS_EQUAL){
         return true;
       }
     }
