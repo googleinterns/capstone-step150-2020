@@ -18,6 +18,7 @@ body{
     position: relative;
     text-align: center;
     overflow: hidden;
+    margin-top: 150px;
 }
 
 #banner h1 {
@@ -33,7 +34,6 @@ body{
 #banner:before {
     transition: opacity 3s ease;
     transition-delay: 1.25s;
-    content: '';
     display: block;
     height: 100%;
     left: 0;
