@@ -1,6 +1,6 @@
 package com.google.sps;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -22,7 +22,7 @@ public final class SyncServletTest {
     
     private static final String UPDATE_STATE_PARAMETER = "userState";
     private static final String VIDEO_TIMESTAMP_PARAMETER = "timeStamp";
-
+    private static long testTimestamp = 50;
     @Test
     public void testCorrectVideoStringOutput(){
         Room testRoom = new Room(new LinkedList<Member>());
@@ -31,37 +31,35 @@ public final class SyncServletTest {
         
         String actual = SyncServlet.roomToVideoJson(testRoom);
         
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void testVideoUpdateTimeStamp(){
-        long newTimestamp = 50;
         Video.VideoState newState = Video.VideoState.PLAYING;
         Queue<Video> videos = new LinkedList<Video>();
         videos.add(Video.createVideo("This is a url"));
         Room room = Room.createRoom(new LinkedList(),videos, new LinkedList());
-        long expected = newTimestamp;
-
-        room.updateCurrentVideoState(newState, newTimestamp);
+        long expected = testTimestamp;
+        room.updateCurrentVideoState(newState, testTimestamp);
         long actual = room.getVideos().peek().getCurrentTimeStamp();
 
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void testVideoUpdateState(){
-        long newTimestamp = 50;
+        
         Video.VideoState newState = Video.VideoState.PLAYING;
         Queue<Video> videos = new LinkedList<Video>();
         videos.add(Video.createVideo("This is a url"));
         Room room = Room.createRoom(new LinkedList(), videos, new LinkedList());
         Video.VideoState expected = newState;
 
-        room.updateCurrentVideoState(newState, newTimestamp);
+        room.updateCurrentVideoState(newState, testTimestamp);
         Video.VideoState actual = room.getVideos().peek().getCurrentState();
         
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -77,10 +75,10 @@ public final class SyncServletTest {
         room2.addVideo(Video.createVideo("www.Johnson.com"));
         when(req.getParameter(UPDATE_STATE_PARAMETER)).thenReturn("0");
 
-        String expected = SyncServlet.roomToVideoJson(room2);
+        String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"url\":\"www.Johnson.com\"}";
         String actual = syncServletPost(req, res, room);
 
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -98,10 +96,11 @@ public final class SyncServletTest {
         when(req.getParameter(UPDATE_STATE_PARAMETER)).thenReturn("2");
         when(req.getParameter(VIDEO_TIMESTAMP_PARAMETER)).thenReturn("1234");
 
-        String expected = SyncServlet.roomToVideoJson(room2);
+        String expected = "{\"currentState\":\"PAUSED\",\"currentVideoTimestamp\":1234,\"url\":\"www.Ross.com\"}";
+        System.out.println(expected);
         String actual = syncServletPost(req, res, room);
 
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     private String syncServletPost(HttpServletRequest req, HttpServletResponse res, Room room){
