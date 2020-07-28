@@ -1,13 +1,18 @@
+const STATE_LISTENER_TIMER_MS = 1000;
+const PLAYER_SECONDS_DISCREPANCY = 2;
+const PLAYER_STATE_UNSTARTED = "-1"
+const PLAYER_STATE_ENDED = "0";
+const PLAYER_STATE_PLAYED = "1";
+const PLAYER_STATE_PAUSED = "2";
+const PLAYER_STATE_BUFFERING = "3";
+const PLAYER_STATE_VIDEO_CUED = "5";
+const YT_BASE_URL = "https://www.youtube.com/embed/";
+const SYNC_PATH_WITH_QUERY_PARAM = '/sync-room?roomId=';
 var roomId;
 var playlistUrls;
 var playlistIds;
 var youtubePlayer;
 var playerTimeStamp;
-const STATE_LISTENER_TIMER_MS = 1000;
-const PLAYER_SECONDS_DISCREPANCY = 2;
-const PLAYER_STATE_PLAYED = "1";
-const PLAYER_STATE_PAUSED = "2";
-var YT_BASE_URL = "https://www.youtube.com/embed/";
 
 // Calls the three functions associated with loading the room's iframe
 async function loadPlayerDiv(){
@@ -104,7 +109,7 @@ window.setInterval(function(){
 // This function fetches the state of the private room video and
 // plays/pauses it accordingly
 async function listenForStateChange(){
-    let privateRoomDataPromise = await fetch('/sync-room?roomId='+roomId);
+    let privateRoomDataPromise = await fetch(SYNC_PATH_WITH_QUERY_PARAM+roomId);
     // fetch the json-version of the urls for all the youtube videos
     let privateRoomData = await privateRoomDataPromise.json();
     // Change timestamp to match group timestamp if client is not within two seconds of room
@@ -112,10 +117,22 @@ async function listenForStateChange(){
         youtubePlayer.seekTo(privateRoomData.timestamp);
     }
     // Change state to match group state
-    if(privateRoomData.currentState === PLAYER_STATE_PLAYED){
+    if(privateRoomData.currentState === PLAYER_STATE_UNSTARTED) {
+        console.log('Video is Unstarted');
+    } else if(privateRoomData.currentState === PLAYER_STATE_ENDED) {
+        console.log('Video has Ended');
+    } else if(privateRoomData.currentState === PLAYER_STATE_PLAYED){
+        console.log('Video is Playing');
         playVideo();
     } else if(privateRoomData.currentState === PLAYER_STATE_PAUSED) {
+        console.log('Video is Paused');
         pauseVideo();
+    } else if(privateRoomData.currentState === PLAYER_STATE_BUFFERING) {
+        console.log('Video is Buffering');
+    } else if(privateRoomData.currentState === PLAYER_STATE_VIDEO_CUED) {
+        console.log('Video is Cued');
+    } else {
+        console.log('Unknown State');
     }
 }
 
