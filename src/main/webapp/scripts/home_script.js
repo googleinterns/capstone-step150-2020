@@ -16,6 +16,7 @@ async function authenticate(redirectPath){
         }
     }
     else {
+        //Checks if the path after the period in the relative path is in the url
         if(!window.location.href.includes(redirectPath.substring(1))) {
             window.location.href = redirectPath;
         }

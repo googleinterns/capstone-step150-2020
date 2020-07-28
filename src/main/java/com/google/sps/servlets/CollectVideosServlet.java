@@ -15,38 +15,42 @@
 package com.google.sps.servlets;
 
 import com.google.sps.data.*;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.datastore.Key;
 
-/** Servlet that takes in the user's room Id and prints whether or not it exists
+/** Servlet that takes in the user's room Id and prints the json version of all the urls in playlist
 */
-@WebServlet("/verify-room")
-public final class VerifyRoomServlet extends HttpServlet {
+@WebServlet("/collect-videos")
+public final class CollectVideosServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
-
+		
     String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
+    // Already verified that the key is in datastore
     Room currentRoom = Room.fromRoomId(currentRoomId);
-    
-    if(currentRoom == null){
-      response.getWriter().println(false);
-    } else {
-      response.getWriter().println(true);
-    }
+    Queue<Video> videosOfPlaylist = currentRoom.getVideos();
+    List<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
+    String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
+    response.getWriter().println(jsonOfUrls);
+  }
+
+  /*
+  * Take the queue of videos associated with the room and transfer it into a list of urls
+  */
+  public static List<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
+    return videosOfPlaylist.stream().map(Video::getUrl).collect(Collectors.toList());
   }
 }

@@ -36,13 +36,13 @@ public class AuthServlet extends HttpServlet{
     }
 
     public static String getResponseBody(Boolean loggedin, String redirectUrl, UserService userService){
-        if(loggedin){
-            String userEmail = userService.getCurrentUser().getEmail();
-            return userEmail; 
-        }
-        else{
-            String loginUrl = userService.createLoginURL(redirectUrl);
-            return "<center><a href=\"" + loginUrl + "\"><button style=\"background-color: cyan; border-radius:12px;\"><span style=\"color:white;\">Login</span></button/></a></center>";
-        }
+        if(loggedin) return userService.getCurrentUser().getEmail();
+
+        String loginUrl = userService.createLoginURL(redirectUrl);
+        StringBuilder builder = new StringBuilder();
+        builder.add("<center><a href=\"");
+        builder.add(loginUrl);
+        builder.add("\"><button style=\"background-color: cyan; border-radius:12px;\"><span style=\"color:white;\">Login</span></button/></a></center>");
+        return builder.toString();
     }
 }
