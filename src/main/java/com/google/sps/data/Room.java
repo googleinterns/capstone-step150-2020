@@ -128,10 +128,7 @@ public class Room {
       * @return a new Room object
       */
     public Room(List<Member> members) {
-        this.members = members;
-        this.videos = new LinkedList<Video>();
-        this.messages = new LinkedList<Message>();
-        this.roomId = null;
+        new Room(members, new LinkedList<Video>(), new LinkedList<Message>(), null);
     }
 
     //Get all of the members as a list of EmbeddedEntities
