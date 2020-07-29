@@ -123,10 +123,10 @@ async function listenForStateChange(){
         console.log('Video has Ended');
     } else if(privateRoomData.currentState === PLAYER_STATE_PLAYED){
         console.log('Video is Playing');
-        playVideo();
+        youtubePlayer.playVideo();
     } else if(privateRoomData.currentState === PLAYER_STATE_PAUSED) {
         console.log('Video is Paused');
-        pauseVideo();
+        youtubePlayer.pauseVideo();
     } else if(privateRoomData.currentState === PLAYER_STATE_BUFFERING) {
         console.log('Video is Buffering');
     } else if(privateRoomData.currentState === PLAYER_STATE_VIDEO_CUED) {
@@ -145,18 +145,6 @@ function updateCurrentState(currentState, currentTime){
 function onPlayerReady(event) {
     document.getElementById('player-div').style.borderColor = '#FF6D00';
     loadRoomPlaylist();
-}
-
-function playVideo(){
-    youtubePlayer.playVideo();
-}
-
-function pauseVideo(){
-    youtubePlayer.pauseVideo();
-}
-
-function stopVideo() {
-    youtubePlayer.stopVideo();
 }
 
 /* Chat Room Feature */
