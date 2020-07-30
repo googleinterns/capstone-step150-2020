@@ -38,7 +38,7 @@ public class AuthServlet extends HttpServlet{
         StringBuilder builder = new StringBuilder();
         builder.append("<center><a href=\"");
         builder.append(loginUrl);
-        builder.append("\"><button style=\"background-color: cyan; border-radius:12px;\"><span style=\"color:white;\">Login</span></button/></a></center>");
+        builder.append("\"><button id= \"loginbutton\">Login</button/></a></center>");
         return builder.toString();
     }
 }
