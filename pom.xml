@@ -22,6 +22,7 @@
     <artifactId>appengine-api-1.0-sdk</artifactId>
     <version>1.9.59</version>
     </dependency>
+<<<<<<< HEAD
     <dependency>
       <groupId>javax.servlet</groupId>
     	<artifactId>javax.servlet-api</artifactId>
@@ -45,7 +46,12 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
+    <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+    <artifactId>owasp-java-html-sanitizer</artifactId>
+    <version>20180219.1</version>
+  </dependency>
+</dependencies>
+
   <build>
     <plugins>
       <!-- Provides `mvn package appengine:run` for local testing
