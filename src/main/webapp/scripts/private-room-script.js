@@ -52,7 +52,7 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     // fetch the json-version of the urls for all the youtube videos
     let privateRoom = await roomPromise.json();
     // play video of where private room is at
-    currentVideoId = privateRoom.Id;
+    currentVideoId = privateRoom.Url.substring(YT_BASE_URL.length())
 }
 
 // load the playlist of videos to the container
