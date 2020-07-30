@@ -42,15 +42,7 @@ public final class CollectVideosServlet extends HttpServlet {
     // Already verified that the key is in datastore
     Room currentRoom = Room.fromRoomId(currentRoomId);
     Queue<Video> videosOfPlaylist = currentRoom.getVideos();
-    List<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
-    String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
+    String jsonOfUrls = new Gson().toJson(videosOfPlaylist.peek());
     response.getWriter().println(jsonOfUrls);
-  }
-
-  /*
-  * Take the queue of videos associated with the room and transfer it into a list of urls
-  */
-  public static List<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-    return videosOfPlaylist.stream().map(Video::getUrl).collect(Collectors.toList());
   }
 }

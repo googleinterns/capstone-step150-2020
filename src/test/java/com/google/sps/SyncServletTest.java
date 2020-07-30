@@ -27,7 +27,7 @@ public final class SyncServletTest {
     public void testCorrectVideoStringOutput(){
         Room testRoom = new Room(new LinkedList<Member>());
         testRoom.addVideo(Video.createVideo("www.RossJohnson.com"));
-        String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"url\":\"www.RossJohnson.com\"}";
+        String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"id\":\"www.RossJohnson.com\"}";
         
         String actual = SyncServlet.roomToVideoJson(testRoom);
         
@@ -75,7 +75,7 @@ public final class SyncServletTest {
         room2.addVideo(Video.createVideo("www.Johnson.com"));
         when(req.getParameter(UPDATE_STATE_PARAMETER)).thenReturn("0");
 
-        String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"url\":\"www.Johnson.com\"}";
+        String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"id\":\"www.Johnson.com\"}";
         String actual = syncServletPost(req, res, room);
 
         assertEquals(expected, actual);
@@ -96,7 +96,7 @@ public final class SyncServletTest {
         when(req.getParameter(UPDATE_STATE_PARAMETER)).thenReturn("2");
         when(req.getParameter(VIDEO_TIMESTAMP_PARAMETER)).thenReturn("1234");
 
-        String expected = "{\"currentState\":\"PAUSED\",\"currentVideoTimestamp\":1234,\"url\":\"www.Ross.com\"}";
+        String expected = "{\"currentState\":\"PAUSED\",\"currentVideoTimestamp\":1234,\"id\":\"www.Ross.com\"}";
         System.out.println(expected);
         String actual = syncServletPost(req, res, room);
 

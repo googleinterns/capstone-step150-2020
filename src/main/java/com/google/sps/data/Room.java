@@ -110,7 +110,7 @@ public class Room {
         return false;
     }
 
-    //Returns the Room's video url list
+    //Returns the Room's video id list
     public Queue<Video> getVideos() {
         return new LinkedList<Video>(this.videos);
     }
