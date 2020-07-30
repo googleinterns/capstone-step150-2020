@@ -30,23 +30,33 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that takes in the user's room Id and prints whether or not it exists
+/** 
+  Servlet that takes in the user's room Id and prints whether or not it exists
+  If so, it also checks if the user that is trying to join is on the Room's member list
 */
 @WebServlet("/verify-room")
 public final class VerifyRoomServlet extends HttpServlet {
-
+  private static final String USER_PARAMETER =  "userEmail";
+  private static final int STRINGS_EQUAL = 0;
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
-
+    String user = request.getParameter(USER_PARAMETER);
     String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
     Room currentRoom = Room.fromRoomId(currentRoomId);
     
-    if(currentRoom == null){
-      response.getWriter().println(false);
-    } else {
-      response.getWriter().println(true);
-    }
+    response.getWriter().println(currentRoom != null && isUserOnMemberList(user, currentRoom));
+
+  }
+
+  /**
+   * Determines if the user trying to join the Room is on the Room's member list
+   * @param user a string representing the email of the user that is trying to join
+   * @param room the Room that the user is trying to join
+   * @return a boolean 
+  */
+  public static Boolean isUserOnMemberList(String user, Room room){
+    return room.getMembers().stream().anyMatch(member -> member.getAlias().equalsIgnoreCase(user));
   }
 }
