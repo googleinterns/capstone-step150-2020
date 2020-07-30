@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>Youtube Party</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../stylesheets/create-room-style.css">
     <script src="../scripts/home_script.js"></script>
-  </head onload="authenticate()">
-  <body>
-    <center>
-      <h2>Create a new Youtube Party</h2>
-      <form action="/room" method="POST">
-        <label for="fname">PlayList URL:</label><br>
-        <input type="text" id="fname" name="fname"><br><br>
-        <label for="lname">Add invitees(email addresses):</label><br>
-        <input type="text" id="lname" name="lname"><br><br>
-        <input type="submit" value="Submit">
-      </form>
-    </center>
-  </body>
+</head onload="authenticate()">
+<body>
+	<nav class="navbar">
+    	<div class="container">
+        	<div class="logo">
+            	<img src="../media/YT-logo.jpg">
+            </div>
+            <ul class="menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="join-room.html">Join Room</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div id="form-box">
+    	<h1>Create a new Youtube Party</h1>
+    	<form action="/create-room" method="POST">
+        	<label for="fname">PlayList URL:</label><br>
+        	<input aria-label="Url of Playlist" class="input-text" type="text" id="fname" name="fname"><br><br>
+        	<label for="lname">Add invitees(email addresses):</label><br>
+        	<input aria-label="List of Invitees" class="input-text" type="text" id="lname" name="lname"><br><br>
+        	<input id="form-submit-btn" type="submit" value="Submit">
+		</form>
+    </div>
+</body>
 </html>
