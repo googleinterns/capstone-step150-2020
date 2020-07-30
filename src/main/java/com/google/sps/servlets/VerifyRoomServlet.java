@@ -29,7 +29,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.appengine.api.datastore.Key;
+
 
 /** 
   Servlet that takes in the user's room Id and prints whether or not it exists
@@ -46,7 +46,7 @@ public final class VerifyRoomServlet extends HttpServlet {
     String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
     Room currentRoom = Room.fromRoomId(currentRoomId);
-    System.out.println(isUserOnMemberList(user, currentRoom));
+
     response.getWriter().println(currentRoom != null && isUserOnMemberList(user, currentRoom));
 
   }

@@ -74,10 +74,11 @@ public class Room {
     }
 
     //Creates a new room object from a list of members
-    public static Room createRoom(List<Member> members){
-        Queue<Video> videoQueue = new LinkedList<Video>();
-        Queue<Message> messageQueue = new LinkedList<Message>();
-        return new Room(members,videoQueue, messageQueue, null);
+    public Room(List<Member> members){
+        this.videos =  new LinkedList<Video>();
+        this.messages = new LinkedList<Message>();
+        this.roomId = null;
+        this.members = members;
     }
 
     //Takes a room object, puts it into datastore and returns the resulting entity's key
@@ -109,7 +110,7 @@ public class Room {
         return false;
     }
 
-    //Returns the Room's video url list
+    //Returns the Room's video id list
     public Queue<Video> getVideos() {
         return new LinkedList<Video>(this.videos);
     }
