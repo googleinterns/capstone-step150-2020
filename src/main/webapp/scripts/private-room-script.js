@@ -1,9 +1,19 @@
+const STATE_LISTENER_TIMER_MS = 1000;
+const PLAYER_SECONDS_DISCREPANCY = 2;
+const PLAYER_STATE_UNSTARTED = "-1"
+const PLAYER_STATE_ENDED = "0";
+const PLAYER_STATE_PLAYED = "1";
+const PLAYER_STATE_PAUSED = "2";
+const PLAYER_STATE_BUFFERING = "3";
+const PLAYER_STATE_VIDEO_CUED = "5";
+const YT_BASE_URL = "https://www.youtube.com/embed/";
+const SYNC_PATH_WITH_QUERY_PARAM = '/sync-room?roomId=';
 var roomId;
 var playlistUrls;
 var playlistIds;
 var youtubePlayer;
-var timeStamp
-var YT_BASE_URL = "https://www.youtube.com/embed/";
+var playerTimeStamp;
+var currentVideoId;
 
 // Calls the three functions associated with loading the room's iframe
 async function loadPlayerDiv(){
@@ -38,21 +48,21 @@ function getRoomId(url) {
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
     // Check that the current room id exits, then return playlist of given room
-    let roomPromise = await fetch('/collect-videos?roomId='+roomId);
+    let roomPromise = await fetch('/collect-video?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
-    let roomVideoUrls = await roomPromise.json();
-    // create an array of all the YT videos' urls
-    playlistIds = extractVideoIds(roomVideoUrls);
-}
-
-// Take the array of urls and create an array of their youtube ids
-function extractVideoIds(roomVideoUrls){
-    return roomVideoUrls.map(id => id.substring(YT_BASE_URL.length));
+    let privateRoom = await roomPromise.json();
+    // play video of where private room is at
+    currentVideoId = privateRoom.Id;
+    loadRoomVideo(currentVideoId, privateRoom.timestamp);
 }
 
 // load the playlist of videos to the container
 function loadRoomPlaylist(){
     youtubePlayer.loadPlaylist({playlist: playlistIds});
+}
+
+function loadRoomVideo(currentVideoId, startSeconds){
+    youtubePlayer.loadVideoById(currentVideoId, startSeconds);
 }
 
 // This code loads the IFrame Player API code asynchronously.
@@ -87,63 +97,50 @@ function onYouTubeIframeAPIReady() {
 
 // Log state changes
 function onStateChange(event) {
-    var state = "undefined";
-    switch (event.data) {
-        case YT.PlayerState.UNSTARTED:
-            state = "-1";
-            break;
-        case YT.PlayerState.ENDED:
-            state = "0";
-            break;
-        case YT.PlayerState.PLAYING:
-            state = "1";
-            break;
-        case YT.PlayerState.PAUSED:
-            state = "2";
-            break;
-        case YT.PlayerState.BUFFERING:
-            state = "3";
-            break;
-        case YT.PlayerState.CUED:
-            state = "5";
-            break;
-        default:
-            state = "unknown (" + event.data + ")";
-    }
-    console.log('onStateChange: ' + state);
-    timeStamp = Math.round(youtubePlayer.getCurrentTime());
-    updateCurrentState(state, timeStamp);
+    var state = event.data
+    playerTimeStamp = Math.round(youtubePlayer.getCurrentTime());
+    updateCurrentState(state, playerTimeStamp);
 }
 
 // Every three seconds you listen to youtube player for any detection of change
 window.setInterval(function(){
     listenForStateChange();
-}, 1000);
+}, STATE_LISTENER_TIMER_MS);
 
 // This function fetches the state of the private room video and
 // plays/pauses it accordingly
-function listenForStateChange(){
-    $(document).ready(function(){
-        const Url = `/sync-room?roomId=${roomId.toString()}`;
-        $.get(Url,function(data, status){
-            console.log(data);
-            // Change timestamp to match group timestamp
-            if(timeStamp + 2 < data.timestamp || timeStamp - 2 > data.timestamp){
-                console.log('Seeking to ' + data.timestamp)
-                youtubePlayer.seekTo(data.timestamp);
-            }
-            // Change state to match group state
-            if(data.currentState === "1"){
-                console.log('Group video is on state: playing')
-                playVideo();
-            } else if(data.currentState === "2") {
-                console.log('Group video is on state: paused')
-                pauseVideo();
-            } else {
-                console.log("State is not paused nor played. Do nothing.")
-            }
-        })
-    })
+async function listenForStateChange(){
+    let privateRoomDataPromise = await fetch(SYNC_PATH_WITH_QUERY_PARAM+roomId);
+    // fetch the json-version of the urls for all the youtube videos
+    let privateRoomData = await privateRoomDataPromise.json();
+    // Change timestamp to match group timestamp if client is not within two seconds of room
+    if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= PLAYER_SECONDS_DISCREPANCY){
+        youtubePlayer.seekTo(privateRoomData.timestamp);
+    }
+    // When the video is done, the servlet sends back the next videos id
+    // This will not match the currentVideoId, so you must update the current
+    // video to match that of the private rooms video
+    if(privateRoomData.Id !== currentVideoId){
+        loadRoomVideo(privateRoomData.Id, privateRoomData.timestamp);
+    }
+    // Change state to match group state
+    if(privateRoomData.currentState === PLAYER_STATE_UNSTARTED) {
+        console.log('Video is Unstarted');
+    } else if(privateRoomData.currentState === PLAYER_STATE_ENDED) {
+        console.log('Video has Ended');
+    } else if(privateRoomData.currentState === PLAYER_STATE_PLAYED){
+        console.log('Video is Playing');
+        youtubePlayer.playVideo();
+    } else if(privateRoomData.currentState === PLAYER_STATE_PAUSED) {
+        console.log('Video is Paused');
+        youtubePlayer.pauseVideo();
+    } else if(privateRoomData.currentState === PLAYER_STATE_BUFFERING) {
+        console.log('Video is Buffering');
+    } else if(privateRoomData.currentState === PLAYER_STATE_VIDEO_CUED) {
+        console.log('Video is Cued');
+    } else {
+        console.log('Unknown State');
+    }
 }
 
 function getCurrentVideo(){
@@ -153,36 +150,14 @@ function getCurrentVideo(){
 
 // Send the user's state to the servlet every time their state changes
 function updateCurrentState(currentState, currentTime){
-    console.log(currentState);
-    console.log(currentTime);
-    $(document).ready(function(){
-        const Url = `/sync-room?roomId=${roomId.toString()}`;
-        $.post(Url,
-        {
-            userState: currentState,
-            timeStamp: currentTime
-        }
-        );
-    })
-    console.log('I am sending the state: ' + currentState)
+    fetch(`/sync-room?roomId=${roomId.toString()}&userState=${currentState}&timeStamp=${currentTime}`,{method:'POST'})
 }
 
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
     document.getElementById('player-div').style.borderColor = '#FF6D00';
-    loadRoomPlaylist();
-}
-
-function playVideo(){
-    youtubePlayer.playVideo();
-}
-
-function pauseVideo(){
-    youtubePlayer.pauseVideo();
-}
-
-function stopVideo() {
-    youtubePlayer.stopVideo();
+    console.log('In the on player ready function');
+    loadRoomVideo(playlistIds[0], 0);
 }
 
 /* Chat Room Feature */
