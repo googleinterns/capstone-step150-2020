@@ -70,13 +70,10 @@ public final class SyncServletTest {
         Room room = new Room(new LinkedList<Member>());
         room.addVideo(Video.createVideo("www.Ross.com"));
         room.addVideo(Video.createVideo("www.Johnson.com"));
-        //Room to have the expected properties when we test
-        Room room2 = new Room(new LinkedList<Member>());
-        room2.addVideo(Video.createVideo("www.Johnson.com"));
-        when(req.getParameter(UPDATE_STATE_PARAMETER)).thenReturn("0");
-
         String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"id\":\"www.Johnson.com\"}";
-        String actual = syncServletPost(req, res, room);
+        
+        SyncServlet.updateRoomVideos(room, Video.VideoState.ENDED, 0);
+        String actual = SyncServlet.roomToVideoJson(room);
 
         assertEquals(expected, actual);
     }
@@ -90,29 +87,11 @@ public final class SyncServletTest {
         room.addVideo(Video.createVideo("www.Ross.com"));
         room.addVideo(Video.createVideo("www.Johnson.com"));
         //Room to have the expected properties when we test
-        Room room2 = new Room(new LinkedList<Member>());
-        room2.addVideo(Video.createVideo("www.Ross.com"));
-        room2.updateCurrentVideoState(Video.VideoState.PAUSED,1234);
-        when(req.getParameter(UPDATE_STATE_PARAMETER)).thenReturn("2");
-        when(req.getParameter(VIDEO_TIMESTAMP_PARAMETER)).thenReturn("1234");
-
         String expected = "{\"currentState\":\"PAUSED\",\"currentVideoTimestamp\":1234,\"id\":\"www.Ross.com\"}";
-        System.out.println(expected);
-        String actual = syncServletPost(req, res, room);
+        
+        SyncServlet.updateRoomVideos(room, Video.VideoState.PAUSED, 1234);
+        String actual = SyncServlet.roomToVideoJson(room);
 
         assertEquals(expected, actual);
-    }
-
-    private String syncServletPost(HttpServletRequest req, HttpServletResponse res, Room room){
-        Video.VideoState newState = Video.VideoState.fromInt(Integer.parseInt(req.getParameter(UPDATE_STATE_PARAMETER)));
-        if(newState == Video.VideoState.ENDED){
-            room.changeCurrentVideo();
-        } 
-        else {
-            long currentVideoTimestamp = Long.parseLong(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
-            room.updateCurrentVideoState(newState, currentVideoTimestamp);
-        }
-
-        return SyncServlet.roomToVideoJson(room);
     }
 }
