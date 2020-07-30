@@ -30,8 +30,8 @@ import com.google.appengine.api.datastore.Key;
 
 /** Servlet that takes in the user's room Id and prints the json version of all the urls in playlist
 */
-@WebServlet("/collect-videos")
-public final class CollectVideosServlet extends HttpServlet {
+@WebServlet("/collect-video")
+public final class CollectVideoServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

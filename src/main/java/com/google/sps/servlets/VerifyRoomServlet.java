@@ -45,7 +45,7 @@ public final class VerifyRoomServlet extends HttpServlet {
     String tempStringOfRoomId = request.getParameter(ServletUtil.INPUTTED_ID_TAG);
     long currentRoomId = Long.parseLong(tempStringOfRoomId);
     Room currentRoom = Room.fromRoomId(currentRoomId);
-1
+
     response.getWriter().println(currentRoom != null && isUserOnMemberList(user, currentRoom));
   }
 
