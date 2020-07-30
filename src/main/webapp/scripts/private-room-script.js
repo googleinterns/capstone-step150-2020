@@ -53,7 +53,6 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     let privateRoom = await roomPromise.json();
     // play video of where private room is at
     currentVideoId = privateRoom.Id;
-    loadRoomVideo(currentVideoId, privateRoom.timestamp);
 }
 
 // load the playlist of videos to the container
@@ -63,6 +62,13 @@ function loadRoomPlaylist(){
 
 function loadRoomVideo(currentVideoId, startSeconds){
     youtubePlayer.loadVideoById(currentVideoId, startSeconds);
+}
+
+// The API will call this function when the video player is ready.
+function onPlayerReady(event) {
+    document.getElementById('player-div').style.borderColor = '#FF6D00';
+    console.log('In the on player ready function');
+    loadRoomVideo(currentVideoId, 0);
 }
 
 // This code loads the IFrame Player API code asynchronously.
@@ -146,13 +152,6 @@ async function listenForStateChange(){
 // Send the user's state to the servlet every time their state changes
 function updateCurrentState(currentState, currentTime){
     fetch(`/sync-room?roomId=${roomId.toString()}&userState=${currentState}&timeStamp=${currentTime}`,{method:'POST'})
-}
-
-// The API will call this function when the video player is ready.
-function onPlayerReady(event) {
-    document.getElementById('player-div').style.borderColor = '#FF6D00';
-    console.log('In the on player ready function');
-    loadRoomVideo(playlistIds[0], 0);
 }
 
 /* Chat Room Feature */
