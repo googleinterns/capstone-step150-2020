@@ -19,12 +19,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.owasp.html.Handler;
+import org.owasp.html.HtmlPolicyBuilder;
+import org.owasp.html.HtmlSanitizer;
+import org.owasp.html.HtmlStreamRenderer;
+import org.owasp.html.PolicyFactory;
 
 @WebServlet("/chat")
 public class ChatServlet extends HttpServlet {
     private static final String REDIRECT_HTML = "/index.html";
-    private static final String ROOM_QUERY = "roomID";
+    private static final String ROOM_QUERY = "roomId";
     private static final String EMAIL_QUERY = "userEmail";
+    public static final PolicyFactory POLICY_DEFINITION = new HtmlPolicyBuilder().toFactory();
 
     // Retrieve messages from datastore  
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {    
@@ -43,8 +49,9 @@ public class ChatServlet extends HttpServlet {
         // TODO: get sender information based on their login    
         String sender = request.getParameter(EMAIL_QUERY); 
         // Get room ID from URL request    
-        String roomIdQuery = request.getParameter(ROOM_QUERY);       
-        Message chatMessage = Message.createNewMessage(sender, message, timestamp);
+        String roomIdQuery = request.getParameter(ROOM_QUERY);   
+        String sanitizedMessage = POLICY_DEFINITION.sanitize(message);    
+        Message chatMessage = Message.createNewMessage(sender, sanitizedMessage, timestamp);
 
         Room room = Room.fromRoomId(Long.parseLong(roomIdQuery));
         room.addMessage(chatMessage);
