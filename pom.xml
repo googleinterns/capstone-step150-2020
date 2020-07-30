@@ -15,6 +15,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
+<<<<<<< HEAD
 
 <dependencies>
   <dependency>
@@ -50,12 +51,7 @@
         <artifactId>owasp-java-html-sanitizer</artifactId>
         <version>20180219.1</version>
     </dependency>
-    <dependency>
-    <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
-    <artifactId>owasp-java-html-sanitizer</artifactId>
-    <version>20180219.1</version>
-  </dependency>
-</dependencies>
+     </dependencies>
 
   <build>
     <plugins>

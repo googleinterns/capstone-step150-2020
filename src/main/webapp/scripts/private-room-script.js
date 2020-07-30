@@ -13,6 +13,7 @@ var playlistUrls;
 var playlistIds;
 var youtubePlayer;
 var playerTimeStamp;
+var currentVideoId;
 
 // Calls the three functions associated with loading the room's iframe
 async function loadPlayerDiv(){
@@ -47,21 +48,21 @@ function getRoomId(url) {
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
     // Check that the current room id exits, then return playlist of given room
-    let roomPromise = await fetch('/collect-videos?roomId='+roomId);
+    let roomPromise = await fetch('/collect-video?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
-    let roomVideoUrls = await roomPromise.json();
-    // create an array of all the YT videos' urls
-    playlistIds = extractVideoIds(roomVideoUrls);
-}
-
-// Take the array of urls and create an array of their youtube ids
-function extractVideoIds(roomVideoUrls){
-    return roomVideoUrls.map(id => id.substring(YT_BASE_URL.length));
+    let privateRoom = await roomPromise.json();
+    // play video of where private room is at
+    currentVideoId = privateRoom.Id;
+    loadRoomVideo(currentVideoId, privateRoom.timestamp);
 }
 
 // load the playlist of videos to the container
 function loadRoomPlaylist(){
     youtubePlayer.loadPlaylist({playlist: playlistIds});
+}
+
+function loadRoomVideo(currentVideoId, startSeconds){
+    youtubePlayer.loadVideoById(currentVideoId, startSeconds);
 }
 
 // This code loads the IFrame Player API code asynchronously.
@@ -116,6 +117,12 @@ async function listenForStateChange(){
     if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= PLAYER_SECONDS_DISCREPANCY){
         youtubePlayer.seekTo(privateRoomData.timestamp);
     }
+    // When the video is done, the servlet sends back the next videos id
+    // This will not match the currentVideoId, so you must update the current
+    // video to match that of the private rooms video
+    if(privateRoomData.Id !== currentVideoId){
+        loadRoomVideo(privateRoomData.Id, privateRoomData.timestamp);
+    }
     // Change state to match group state
     if(privateRoomData.currentState === PLAYER_STATE_UNSTARTED) {
         console.log('Video is Unstarted');
@@ -149,7 +156,8 @@ function updateCurrentState(currentState, currentTime){
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
     document.getElementById('player-div').style.borderColor = '#FF6D00';
-    loadRoomPlaylist();
+    console.log('In the on player ready function');
+    loadRoomVideo(playlistIds[0], 0);
 }
 
 /* Chat Room Feature */
