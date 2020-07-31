@@ -13,7 +13,7 @@ import java.io.IOException;
 public final class DeleteRoomServlet extends HttpServlet{
     private static final String ROOM_PARAMETER = "roomId";
 
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException{
+    public void doDelete(HttpServletRequest req, HttpServletResponse res) throws IOException{
         Long roomId = Long.parseLong(req.getParameter(ROOM_PARAMETER));
         Room.deleteRoomFromId(roomId);
         res.setStatus(200);
