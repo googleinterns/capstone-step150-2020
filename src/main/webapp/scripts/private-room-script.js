@@ -1,5 +1,5 @@
-const STATE_LISTENER_TIMER_MS = 3000;
-const PLAYER_SECONDS_DISCREPANCY = 4;
+const STATE_LISTENER_TIMER_MS = 1000;
+const PLAYER_SECONDS_DISCREPANCY = 2;
 const PLAYER_STATE_UNSTARTED = "UNSTARTED"
 const PLAYER_STATE_ENDED = "ENDED";
 const PLAYER_STATE_PLAYED = "PLAYING";
@@ -53,16 +53,11 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     currentVideoId = privateRoom.id;
 }
 
-// Load the current video of the private room from the specified start time
-function loadRoomVideo(currentVideoId, startSeconds){
-    youtubePlayer.loadVideoById(currentVideoId, startSeconds);
-}
-
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
     document.getElementById('player-div').style.borderColor = '#FF6D00';
     console.log('In the on player ready function');
-    loadRoomVideo(currentVideoId, 0);
+    youtubePlayer.loadVideoById(currentVideoId, 0);
 }
 
 // This code loads the IFrame Player API code asynchronously.
@@ -97,7 +92,6 @@ function onYouTubeIframeAPIReady() {
 
 // Log state changes and update the servlet with those changes
 function onStateChange(event) {
-    console.log("My state has changed!!!");
     var state = event.data
     playerTimeStamp = Math.round(youtubePlayer.getCurrentTime());
     updateCurrentState(state, playerTimeStamp);
@@ -118,17 +112,16 @@ async function listenForStateChange(){
     }
     // fetch the json-version of the urls for all the youtube videos
     let privateRoomData = await privateRoomDataPromise.json();
-    console.log(privateRoomData);
     // Change timestamp to match group timestamp if client is not within two seconds of room
     if(Math.abs(playerTimeStamp - privateRoomData.currentVideoTimestamp) >= PLAYER_SECONDS_DISCREPANCY){
-        youtubePlayer.seekTo(privateRoomData.timestamp);
+        youtubePlayer.seekTo(privateRoomData.currentVideoTimestamp);
     }
     // When the video is done, the servlet sends back the next videos id
     // This will not match the currentVideoId, so you must update the current
     // video to match that of the private rooms video
     if(privateRoomData.id !== currentVideoId){
         currentVideoId = privateRoomData.id;
-        loadRoomVideo(privateRoomData.id, privateRoomData.timestamp);
+        youtubePlayer.loadVideoById(privateRoomData.id, privateRoomData.timestamp);
     }
     // Change state to match group state
     if(privateRoomData.currentState === PLAYER_STATE_UNSTARTED) {
