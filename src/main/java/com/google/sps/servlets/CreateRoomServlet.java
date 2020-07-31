@@ -81,6 +81,7 @@ public final class CreateRoomServlet extends HttpServlet {
         JsonObject response = ServletUtil.PARSER.fromJson(responseReader, JsonObject.class);
         responseReader.close();
         JsonArray videoInformation = response.getAsJsonArray("items");
+        System.out.println("VIDEO INFORMATION SIZE IS " + videoInformation.size());
         //Create urls from video IDs
         for(int i = 0; i < videoInformation.size(); ++i) {
             String videoId = videoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
