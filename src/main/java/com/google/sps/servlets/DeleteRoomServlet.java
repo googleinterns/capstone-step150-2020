@@ -10,9 +10,9 @@ import java.io.IOException;
 
 @WebServlet("/delete-room")
 public final class DeleteRoomServlet extends HttpServlet{
-
+    private static final String ROOM_PARAMETER = "roomId";
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException{
-        Long roomId = Long.parseLong(req.getParameter("roomId"));
+        Long roomId = Long.parseLong(req.getParameter(ROOM_PARAMETER));
         Room.deleteRoomFromId(roomId);
         res.setStatus(200);
     }
