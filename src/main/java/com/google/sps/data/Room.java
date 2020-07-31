@@ -52,8 +52,8 @@ public class Room {
             Map<String, Object> properties = roomEntity.getProperties();
             List<Member> memberList = 
             ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
-            Queue<Video> videoQueue = 
-            ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+            Queue<Video> videoQueue = properties.get(VIDEOS_PROPERTY) != null ?
+            ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : null;
             Queue<Message> messageQueue = properties.get(MESSAGES_PROPERTY) != null ?
             ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList();
             return new Room(memberList, videoQueue, messageQueue, roomKey.getId());
@@ -112,6 +112,8 @@ public class Room {
 
     //Returns the Room's video id list
     public Queue<Video> getVideos() {
+        if(this.videos == null || this.videos.isEmpty()) 
+            return null;
         return new LinkedList<Video>(this.videos);
     }
 
