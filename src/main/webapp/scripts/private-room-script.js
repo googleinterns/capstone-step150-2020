@@ -1,11 +1,11 @@
 const STATE_LISTENER_TIMER_MS = 1000;
 const PLAYER_SECONDS_DISCREPANCY = 2;
-const PLAYER_STATE_UNSTARTED = "-1"
-const PLAYER_STATE_ENDED = "0";
-const PLAYER_STATE_PLAYED = "1";
-const PLAYER_STATE_PAUSED = "2";
-const PLAYER_STATE_BUFFERING = "3";
-const PLAYER_STATE_VIDEO_CUED = "5";
+const PLAYER_STATE_UNSTARTED = "UNSTARTED"
+const PLAYER_STATE_ENDED = "ENDED";
+const PLAYER_STATE_PLAYED = "PLAYING";
+const PLAYER_STATE_PAUSED = "PAUSED";
+const PLAYER_STATE_BUFFERING = "BUFFERING";
+const PLAYER_STATE_VIDEO_CUED = "CUED";
 const YT_BASE_URL = "https://www.youtube.com/embed/";
 const SYNC_PATH_WITH_QUERY_PARAM = '/sync-room?roomId=';
 var roomId;
@@ -51,8 +51,9 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     let roomPromise = await fetch('/collect-video?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
     let privateRoom = await roomPromise.json();
+    console.log(privateRoom);
     // play video of where private room is at
-    currentVideoId = privateRoom.Url.substring(YT_BASE_URL.length())
+    currentVideoId = privateRoom.id;
 }
 
 // load the playlist of videos to the container
@@ -126,8 +127,13 @@ async function listenForStateChange(){
     // When the video is done, the servlet sends back the next videos id
     // This will not match the currentVideoId, so you must update the current
     // video to match that of the private rooms video
-    if(privateRoomData.Id !== currentVideoId){
-        loadRoomVideo(privateRoomData.Id, privateRoomData.timestamp);
+    console.log(privateRoomData);
+    console.log("OUTSIDE THE IF STATEMENT");
+    if(privateRoomData.id !== currentVideoId){
+        console.log(privateRoomData);
+        console.log(currentVideoId);
+        console.log("About to play the next video");
+        loadRoomVideo(privateRoomData.id, privateRoomData.timestamp);
     }
     // Change state to match group state
     if(privateRoomData.currentState === PLAYER_STATE_UNSTARTED) {
@@ -147,6 +153,11 @@ async function listenForStateChange(){
     } else {
         console.log('Unknown State');
     }
+}
+
+function getCurrentVideo(){
+    var currentVideoIndex = youtubePlayer.getPlaylistIndex();
+    return playlistIds[currentVideoIndex];
 }
 
 // Send the user's state to the servlet every time their state changes
