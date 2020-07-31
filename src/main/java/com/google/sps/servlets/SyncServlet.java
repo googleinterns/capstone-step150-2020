@@ -20,6 +20,11 @@ public final class SyncServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
         Room syncRoom = Room.fromRoomId(roomId);
+
+        if(syncRoom.getVideos() == null || syncRoom.getVideos().isEmpty){
+            res.setStatus(410);
+            return;
+        }
         String responseBody = roomToVideoJson(syncRoom);
         res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
         res.getWriter().println(responseBody);
