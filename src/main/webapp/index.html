@@ -6,23 +6,21 @@
     <link rel="stylesheet" href="stylesheets/home-style.css">
     <script src="./scripts/home_script.js"></script>
 </head>
-  <body>
-    <section id="banner" data-video="images/banner">
-        <div class="inner">
-            <header>
-                <h1>This is YoutubeParty</h1>
-                <p>Morbi eu purus eget urna interdum dignissim sed consectetur augue<br />
-                vivamus vitae libero in nulla iaculis eleifend non sit amet nulla.</p>
-            </header>
-            <div id="buttons-row">
-                <button class="home-button" id="create_button" onclick="authenticate('./views/create-room.html')">
-                    <span style="color:white;">Create a Party</span>
-                </button>
-                <button class="home-button" id="join_button" onclick="authenticate('./views/join-room.html')">
-                    <span style="color:white;">Join a Party</span>
-                </button>
-            </div>
+<body>
+    <div id="banner">
+        <header>
+            <h1>This is YoutubeParty</h1>
+            <p>A shared video consumption platform, that enables users to view <br />
+            YouTube videos at the same time, while chatting in real-time.</p>
+        </header>
+        <div id="buttons-row">
+            <button  aria-label="Create Youtube Party" class="home-button" id="create_button" onclick="authenticate('./views/create-room.html')">
+                <span style="color:white;">Create a Party</span>
+            </button>
+            <button aria-label="Join Youtube Party room" class="home-button" id="join_button" onclick="authenticate('./views/join-room.html')">
+                <span style="color:white;">Join a Party</span>
+            </button>
         </div>
-    </section>
-  </body>
+    </div>
+</body>
 </html> 

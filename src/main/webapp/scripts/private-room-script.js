@@ -1,11 +1,11 @@
 const STATE_LISTENER_TIMER_MS = 1000;
 const PLAYER_SECONDS_DISCREPANCY = 2;
-const PLAYER_STATE_UNSTARTED = "-1"
-const PLAYER_STATE_ENDED = "0";
-const PLAYER_STATE_PLAYED = "1";
-const PLAYER_STATE_PAUSED = "2";
-const PLAYER_STATE_BUFFERING = "3";
-const PLAYER_STATE_VIDEO_CUED = "5";
+const PLAYER_STATE_UNSTARTED = "UNSTARTED"
+const PLAYER_STATE_ENDED = "ENDED";
+const PLAYER_STATE_PLAYED = "PLAYING";
+const PLAYER_STATE_PAUSED = "PAUSED";
+const PLAYER_STATE_BUFFERING = "BUFFERING";
+const PLAYER_STATE_VIDEO_CUED = "CUED";
 const YT_BASE_URL = "https://www.youtube.com/embed/";
 const SYNC_PATH_WITH_QUERY_PARAM = '/sync-room?roomId=';
 var roomId;
@@ -13,6 +13,7 @@ var playlistUrls;
 var playlistIds;
 var youtubePlayer;
 var playerTimeStamp;
+var currentVideoId;
 
 // Calls the three functions associated with loading the room's iframe
 async function loadPlayerDiv(){
@@ -40,28 +41,23 @@ function getRoomId(url) {
 }
 
 /**
-* Take in currentRoomId and create a global array of youtube video urls and 
-* a global array of the video ids of the playlist
+* Take in currentRoomId and fetch the current video the private room is on
 * @param {currentRoomId} String Holds the room Id of the the user's room
-* @return {roomVideoUrl} The Url of the video to be displayed for the room
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
     // Check that the current room id exits, then return playlist of given room
-    let roomPromise = await fetch('/collect-videos?roomId='+roomId);
+    let roomPromise = await fetch('/collect-video?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
-    let roomVideoUrls = await roomPromise.json();
-    // create an array of all the YT videos' urls
-    playlistIds = extractVideoIds(roomVideoUrls);
+    let privateRoom = await roomPromise.json();
+    // play video of where private room is at
+    currentVideoId = privateRoom.id;
 }
 
-// Take the array of urls and create an array of their youtube ids
-function extractVideoIds(roomVideoUrls){
-    return roomVideoUrls.map(id => id.substring(YT_BASE_URL.length));
-}
-
-// load the playlist of videos to the container
-function loadRoomPlaylist(){
-    youtubePlayer.loadPlaylist({playlist: playlistIds});
+// The API will call this function when the video player is ready.
+function onPlayerReady(event) {
+    document.getElementById('player-div').style.borderColor = '#FF6D00';
+    console.log('In the on player ready function');
+    youtubePlayer.loadVideoById(currentVideoId, 0);
 }
 
 // This code loads the IFrame Player API code asynchronously.
@@ -94,7 +90,7 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
-// Log state changes
+// Log state changes and update the servlet with those changes
 function onStateChange(event) {
     var state = event.data
     playerTimeStamp = Math.round(youtubePlayer.getCurrentTime());
@@ -106,15 +102,26 @@ window.setInterval(function(){
     listenForStateChange();
 }, STATE_LISTENER_TIMER_MS);
 
-// This function fetches the state of the private room video and
-// plays/pauses it accordingly
+// This function fetches the information of the private room and adjusts
+// the time, video id, and state of their personal player accordingly
 async function listenForStateChange(){
     let privateRoomDataPromise = await fetch(SYNC_PATH_WITH_QUERY_PARAM+roomId);
+    if(privateRoomDataPromise.status === 410){
+        fetch(`/delete-room?roomId=${roomId.toString()}`,{method:'DELETE'})
+        redirectPage(false);
+    }
     // fetch the json-version of the urls for all the youtube videos
     let privateRoomData = await privateRoomDataPromise.json();
     // Change timestamp to match group timestamp if client is not within two seconds of room
-    if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= PLAYER_SECONDS_DISCREPANCY){
-        youtubePlayer.seekTo(privateRoomData.timestamp);
+    if(Math.abs(playerTimeStamp - privateRoomData.currentVideoTimestamp) >= PLAYER_SECONDS_DISCREPANCY){
+        youtubePlayer.seekTo(privateRoomData.currentVideoTimestamp);
+    }
+    // When the video is done, the servlet sends back the next videos id
+    // This will not match the currentVideoId, so you must update the current
+    // video to match that of the private rooms video
+    if(privateRoomData.id !== currentVideoId){
+        currentVideoId = privateRoomData.id;
+        youtubePlayer.loadVideoById(privateRoomData.id, privateRoomData.timestamp);
     }
     // Change state to match group state
     if(privateRoomData.currentState === PLAYER_STATE_UNSTARTED) {
@@ -136,15 +143,14 @@ async function listenForStateChange(){
     }
 }
 
+function getCurrentVideo(){
+    var currentVideoIndex = youtubePlayer.getPlaylistIndex();
+    return playlistIds[currentVideoIndex];
+}
+
 // Send the user's state to the servlet every time their state changes
 function updateCurrentState(currentState, currentTime){
     fetch(`/sync-room?roomId=${roomId.toString()}&userState=${currentState}&timeStamp=${currentTime}`,{method:'POST'})
-}
-
-// The API will call this function when the video player is ready.
-function onPlayerReady(event) {
-    document.getElementById('player-div').style.borderColor = '#FF6D00';
-    loadRoomPlaylist();
 }
 
 /* Chat Room Feature */
