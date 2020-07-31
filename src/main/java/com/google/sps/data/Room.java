@@ -54,6 +54,12 @@ public class Room {
         return null;
     }
 
+    //Deletes a room object from datastore when given it's id
+    public static void deleteRoomFromId(Long roomId) {
+        Key roomKey = KeyFactory.createKey(ROOM_ENTITY, roomId);
+        datastore.delete(roomKey);
+    }
+
     //Turns the Room object into a datastore entity
     private static Entity toEntity(Room room){
         Entity newRoom = room.roomId == null ? new Entity(ROOM_ENTITY) : new Entity(ROOM_ENTITY, room.roomId);
