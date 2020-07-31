@@ -1,5 +1,5 @@
-const STATE_LISTENER_TIMER_MS = 1000;
-const PLAYER_SECONDS_DISCREPANCY = 2;
+const STATE_LISTENER_TIMER_MS = 3000;
+const PLAYER_SECONDS_DISCREPANCY = 4;
 const PLAYER_STATE_UNSTARTED = "UNSTARTED"
 const PLAYER_STATE_ENDED = "ENDED";
 const PLAYER_STATE_PLAYED = "PLAYING";
@@ -97,6 +97,7 @@ function onYouTubeIframeAPIReady() {
 
 // Log state changes and update the servlet with those changes
 function onStateChange(event) {
+    console.log("My state has changed!!!");
     var state = event.data
     playerTimeStamp = Math.round(youtubePlayer.getCurrentTime());
     updateCurrentState(state, playerTimeStamp);
@@ -117,8 +118,9 @@ async function listenForStateChange(){
     }
     // fetch the json-version of the urls for all the youtube videos
     let privateRoomData = await privateRoomDataPromise.json();
+    console.log(privateRoomData);
     // Change timestamp to match group timestamp if client is not within two seconds of room
-    if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= PLAYER_SECONDS_DISCREPANCY){
+    if(Math.abs(playerTimeStamp - privateRoomData.currentVideoTimestamp) >= PLAYER_SECONDS_DISCREPANCY){
         youtubePlayer.seekTo(privateRoomData.timestamp);
     }
     // When the video is done, the servlet sends back the next videos id
