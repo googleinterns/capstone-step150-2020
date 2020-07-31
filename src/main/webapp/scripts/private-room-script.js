@@ -41,10 +41,8 @@ function getRoomId(url) {
 }
 
 /**
-* Take in currentRoomId and create a global array of youtube video urls and 
-* a global array of the video ids of the playlist
+* Take in currentRoomId and fetch the current video the private room is on
 * @param {currentRoomId} String Holds the room Id of the the user's room
-* @return {roomVideoUrl} The Url of the video to be displayed for the room
  */
 async function fetchPrivateRoomVideo(currentRoomId) {
     // Check that the current room id exits, then return playlist of given room
@@ -55,11 +53,7 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     currentVideoId = privateRoom.id;
 }
 
-// load the playlist of videos to the container
-function loadRoomPlaylist(){
-    youtubePlayer.loadPlaylist({playlist: playlistIds});
-}
-
+// Load the current video of the private room from the specified start time
 function loadRoomVideo(currentVideoId, startSeconds){
     youtubePlayer.loadVideoById(currentVideoId, startSeconds);
 }
@@ -101,7 +95,7 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
-// Log state changes
+// Log state changes and update the servlet with those changes
 function onStateChange(event) {
     var state = event.data
     playerTimeStamp = Math.round(youtubePlayer.getCurrentTime());
@@ -113,8 +107,8 @@ window.setInterval(function(){
     listenForStateChange();
 }, STATE_LISTENER_TIMER_MS);
 
-// This function fetches the state of the private room video and
-// plays/pauses it accordingly
+// This function fetches the information of the private room and adjusts
+// the time, video id, and state of their personal player accordingly
 async function listenForStateChange(){
     let privateRoomDataPromise = await fetch(SYNC_PATH_WITH_QUERY_PARAM+roomId);
     // fetch the json-version of the urls for all the youtube videos
