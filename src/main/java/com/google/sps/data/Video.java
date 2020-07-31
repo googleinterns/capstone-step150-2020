@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.HashMap;
 
 //Video object representing the videos in the room
-
 public class Video {
     private static final String URL_PROPERTY = "url";
     private static final String CURRENT_STATE_PROPERTY = "currentState";

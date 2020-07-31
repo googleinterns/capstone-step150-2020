@@ -1,0 +1,101 @@
+body{
+    background-image: url("../media/white-bg-2.png");
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    border-top: 0;
+    min-height: 100vh;
+    height: 100vh !important;  
+}
+
+img{
+    height: 70px;
+    width: 300px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.navbar {
+  height: 70px;
+  box-shadow: 0 10px 50px hsl(0, 0%, 90%);
+  background-color: white;
+  
+}
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.menu {
+  float: right;
+  display:flex;
+  justify-content: flex-end;
+  width:30%;
+}
+
+.menu li {
+  list-style: none;
+}
+
+.menu li a {
+  padding: 10px 30px;
+  color: hsl(0, 0%, 60%);
+  float: left;
+  transition: color .3s ease-in-out;
+}
+
+.menu li a:hover {
+  color: hsl(0, 0%, 30%);
+  transition: color .5s ease-in-out;
+} 
+
+#form-box{
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    opacity: 95%;
+    box-shadow: 0 10px 50px hsl(0, 0%, 90%);
+    width: 50vw;
+    margin: auto;
+    border-radius: 25px;
+    margin-top: 130px;
+}
+
+h1{
+    font-size: 2em;
+}
+
+label{
+    font-size: 1.5em;
+}
+
+.input-text{
+    border: 2px solid #456879;
+    border-radius: 20px;
+    height: 40px;
+    font-size: 30px;
+    width: 40vh;
+}
+
+#form-submit-btn{
+    background: #CB4A46;
+    padding: 12px 35px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.5s;
+    height: 40px;
+    margin-left: 10px;
+}
+
+#form-submit-btn:hover{
+    opacity:.55;
+}
