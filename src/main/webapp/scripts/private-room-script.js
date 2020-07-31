@@ -111,6 +111,10 @@ window.setInterval(function(){
 // the time, video id, and state of their personal player accordingly
 async function listenForStateChange(){
     let privateRoomDataPromise = await fetch(SYNC_PATH_WITH_QUERY_PARAM+roomId);
+    if(privateRoomDataPromise.status === 410){
+        fetch(`/delete-room?roomId=${roomId.toString()}`,{method:'DELETE'})
+        redirectPage(false);
+    }
     // fetch the json-version of the urls for all the youtube videos
     let privateRoomData = await privateRoomDataPromise.json();
     // Change timestamp to match group timestamp if client is not within two seconds of room
@@ -142,6 +146,11 @@ async function listenForStateChange(){
     } else {
         console.log('Unknown State');
     }
+}
+
+function getCurrentVideo(){
+    var currentVideoIndex = youtubePlayer.getPlaylistIndex();
+    return playlistIds[currentVideoIndex];
 }
 
 // Send the user's state to the servlet every time their state changes
