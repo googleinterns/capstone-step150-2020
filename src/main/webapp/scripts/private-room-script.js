@@ -51,7 +51,6 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     let roomPromise = await fetch('/collect-video?roomId='+roomId);
     // fetch the json-version of the urls for all the youtube videos
     let privateRoom = await roomPromise.json();
-    console.log(privateRoom);
     // play video of where private room is at
     currentVideoId = privateRoom.id;
 }
@@ -127,12 +126,8 @@ async function listenForStateChange(){
     // When the video is done, the servlet sends back the next videos id
     // This will not match the currentVideoId, so you must update the current
     // video to match that of the private rooms video
-    console.log(privateRoomData);
-    console.log("OUTSIDE THE IF STATEMENT");
     if(privateRoomData.id !== currentVideoId){
-        console.log(privateRoomData);
-        console.log(currentVideoId);
-        console.log("About to play the next video");
+        currentVideoId = privateRoomData.id;
         loadRoomVideo(privateRoomData.id, privateRoomData.timestamp);
     }
     // Change state to match group state
