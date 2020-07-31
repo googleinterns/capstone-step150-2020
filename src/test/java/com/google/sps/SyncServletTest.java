@@ -24,7 +24,7 @@ public final class SyncServletTest {
     private static final String VIDEO_TIMESTAMP_PARAMETER = "timeStamp";
     private static long testTimestamp = 50;
     @Test
-    public void testCorrectVideoStringOutput(){
+    public void testCorrectVideoStringOutput() {
         Room testRoom = new Room(new LinkedList<Member>());
         testRoom.addVideo(Video.createVideo("www.RossJohnson.com"));
         String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"id\":\"www.RossJohnson.com\"}";
@@ -35,12 +35,13 @@ public final class SyncServletTest {
     }
 
     @Test
-    public void testVideoUpdateTimeStamp(){
+    public void testVideoUpdateTimeStamp() {
         Video.VideoState newState = Video.VideoState.PLAYING;
         Queue<Video> videos = new LinkedList<Video>();
         videos.add(Video.createVideo("This is a url"));
-        Room room = Room.createRoom(new LinkedList(),videos, new LinkedList());
+        Room room = Room.createRoom(new LinkedList(), videos, new LinkedList());
         long expected = testTimestamp;
+        
         room.updateCurrentVideoState(newState, testTimestamp);
         long actual = room.getVideos().peek().getCurrentTimeStamp();
 
@@ -48,8 +49,7 @@ public final class SyncServletTest {
     }
 
     @Test
-    public void testVideoUpdateState(){
-        
+    public void testVideoUpdateState() {
         Video.VideoState newState = Video.VideoState.PLAYING;
         Queue<Video> videos = new LinkedList<Video>();
         videos.add(Video.createVideo("This is a url"));
@@ -63,7 +63,7 @@ public final class SyncServletTest {
     }
 
     @Test
-    public void testVideoSyncWithVideoEnded(){
+    public void testVideoSyncWithVideoEnded() {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
         //Room that is being passed through the helper function
@@ -79,7 +79,7 @@ public final class SyncServletTest {
     }
 
     @Test
-    public void testVideoSyncWithVideoOngoing(){
+    public void testVideoSyncWithVideoOngoing() {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
         //Room that is being passed through the helper function
