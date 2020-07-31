@@ -113,8 +113,8 @@ async function listenForStateChange(){
     // fetch the json-version of the urls for all the youtube videos
     let privateRoomData = await privateRoomDataPromise.json();
     // Change timestamp to match group timestamp if client is not within two seconds of room
-    if(Math.abs(playerTimeStamp - privateRoomData.timestamp) >= PLAYER_SECONDS_DISCREPANCY){
-        youtubePlayer.seekTo(privateRoomData.timestamp);
+    if(Math.abs(playerTimeStamp - privateRoomData.currentVideoTimestamp) >= PLAYER_SECONDS_DISCREPANCY){
+        youtubePlayer.seekTo(privateRoomData.currentVideoTimestamp);
     }
     // When the video is done, the servlet sends back the next videos id
     // This will not match the currentVideoId, so you must update the current
