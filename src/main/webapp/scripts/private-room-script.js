@@ -53,16 +53,11 @@ async function fetchPrivateRoomVideo(currentRoomId) {
     currentVideoId = privateRoom.id;
 }
 
-// Load the current video of the private room from the specified start time
-function loadRoomVideo(currentVideoId, startSeconds){
-    youtubePlayer.loadVideoById(currentVideoId, startSeconds);
-}
-
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
     document.getElementById('player-div').style.borderColor = '#FF6D00';
     console.log('In the on player ready function');
-    loadRoomVideo(currentVideoId, 0);
+    youtubePlayer.loadVideoById(currentVideoId, 0);
 }
 
 // This code loads the IFrame Player API code asynchronously.
@@ -126,7 +121,7 @@ async function listenForStateChange(){
     // video to match that of the private rooms video
     if(privateRoomData.id !== currentVideoId){
         currentVideoId = privateRoomData.id;
-        loadRoomVideo(privateRoomData.id, privateRoomData.timestamp);
+        youtubePlayer.loadVideoById(privateRoomData.id, privateRoomData.timestamp);
     }
     // Change state to match group state
     if(privateRoomData.currentState === PLAYER_STATE_UNSTARTED) {
