@@ -29,7 +29,7 @@ public final class SyncServletTest {
         testRoom.addVideo(Video.createVideo("www.RossJohnson.com"));
         String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"id\":\"www.RossJohnson.com\"}";
         
-        String actual = SyncServlet.roomToVideoJson(testRoom);
+        String actual = SyncServlet.doGetHelper(testRoom);
         
         assertEquals(expected, actual);
     }
@@ -37,9 +37,8 @@ public final class SyncServletTest {
     @Test
     public void testVideoUpdateTimeStamp() {
         Video.VideoState newState = Video.VideoState.PLAYING;
-        Queue<Video> videos = new LinkedList<Video>();
-        videos.add(Video.createVideo("This is a url"));
-        Room room = Room.createRoom(new LinkedList(), videos, new LinkedList());
+        Room room = new Room(new LinkedList());
+        room.addVideo(Video.createVideo("This is a url"));
         long expected = testTimestamp;
         
         room.updateCurrentVideoState(newState, testTimestamp);
@@ -51,9 +50,8 @@ public final class SyncServletTest {
     @Test
     public void testVideoUpdateState() {
         Video.VideoState newState = Video.VideoState.PLAYING;
-        Queue<Video> videos = new LinkedList<Video>();
-        videos.add(Video.createVideo("This is a url"));
-        Room room = Room.createRoom(new LinkedList(), videos, new LinkedList());
+        Room room = new Room(new LinkedList());
+        room.addVideo(Video.createVideo("This is a url"));
         Video.VideoState expected = newState;
 
         room.updateCurrentVideoState(newState, testTimestamp);
@@ -91,6 +89,16 @@ public final class SyncServletTest {
         
         SyncServlet.updateRoomVideos(room, Video.VideoState.PAUSED, 1234);
         String actual = SyncServlet.roomToVideoJson(room);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testVideoQueueEmpty(){
+        Room room = new Room(new LinkedList<Member>());
+        String expected = "410";
+
+        String actual = SyncServlet.doGetHelper(room);
 
         assertEquals(expected, actual);
     }

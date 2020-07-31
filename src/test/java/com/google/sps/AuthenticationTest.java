@@ -61,7 +61,7 @@ public final class AuthenticationTest {
         when(UserServiceMock.createLoginURL("/redirect")).thenReturn("");
         setFinalStatic(ServletUtil.class.getField("USER_SERVICE"), UserServiceMock);
         //Expected result
-        String expected = "<center><a href=\"" + "\"><button style=\"background-color: cyan; border-radius:12px;\"><span style=\"color:white;\">Login</span></button/></a></center>";
+        String expected = "<center><a href=\"" + "\"><button id= \"loginbutton\">Login</button/></a></center>";
         
         //Execution
         new AuthServlet().doGet(req, res);

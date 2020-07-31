@@ -20,14 +20,15 @@ public final class SyncServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
         Room syncRoom = Room.fromRoomId(roomId);
-
-        if(syncRoom == null || syncRoom.getVideos().isEmpty()){
-            res.setStatus(410);
-            return;
+        String responseBody = doGetHelper(syncRoom);
+        try {
+            int status = Integer.parseInt(responseBody);
+            res.setStatus(status);
+        } catch (NumberFormatException e){
+            res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
+            res.getWriter().println(responseBody);
         }
-        String responseBody = roomToVideoJson(syncRoom);
-        res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
-        res.getWriter().println(responseBody);
+        
     }
 
     @Override
@@ -56,5 +57,13 @@ public final class SyncServlet extends HttpServlet {
         else {
             room.updateCurrentVideoState(newState, currentVideoTimestamp);
         }
+    }
+
+    //Helper function for get requests
+    public static String doGetHelper(Room room){
+        if(room == null || room.getVideos().isEmpty()){
+            return "410";
+        }
+        return roomToVideoJson(room);
     }
 }
