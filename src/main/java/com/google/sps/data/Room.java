@@ -45,6 +45,12 @@ public class Room {
         return Room.fromRoomKey(KeyFactory.createKey(ROOM_ENTITY, roomId));
     }
 
+    //Deletes a room object from datastore when given it's id
+    public static void deleteRoomFromId(Long roomId) {
+        Key roomKey = KeyFactory.createKey(ROOM_ENTITY, roomId);
+        datastore.delete(roomKey);
+    }
+
     //Turns a Room key into a Room object
     private static Room fromRoomKey(Key roomKey) {
         try {
