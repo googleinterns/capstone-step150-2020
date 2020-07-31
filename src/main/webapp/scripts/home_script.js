@@ -14,12 +14,7 @@ async function authenticate(redirectPath){
             let loginHtml = await res.text();
             document.getElementsByTagName("body")[0].innerHTML = loginHtml;
         }
-    }else{
-        if(!window.location.href.includes(redirectPath.substring(1))){
-            window.location.href = redirectPath;
-        }
-    }
-    else {
+    } else {
         //Checks if the path after the period in the relative path is in the url
         if(!window.location.href.includes(redirectPath.substring(1))) {
             window.location.href = redirectPath;

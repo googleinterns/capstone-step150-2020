@@ -48,8 +48,8 @@ public class Room {
             Map<String, Object> properties = roomEntity.getProperties();
             List<Member> memberList = 
             ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
-            Queue<Video> videoQueue = 
-            ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+            Queue<Video> videoQueue = properties.get(VIDEOS_PROPERTY) != null ?
+            ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : null;
             Queue<Message> messageQueue = properties.get(MESSAGES_PROPERTY) != null ?
             ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList();
             return new Room(memberList, videoQueue, messageQueue, roomId);
@@ -63,7 +63,11 @@ public class Room {
     //Deletes a room object from datastore when given it's id
     public static void deleteRoomFromId(Long roomId) {
         Key roomKey = KeyFactory.createKey(ROOM_ENTITY, roomId);
-        datastore.delete(roomKey);
+        try {
+            datastore.delete(roomKey);
+        } catch(DatastoreFailureException e){
+            System.out.println(e);
+        }
     }
 
     //Turns the Room object into a datastore entity
@@ -106,7 +110,7 @@ public class Room {
 
     //Returns the Room's video id list
     public Queue<Video> getVideos() {
-        return new LinkedList<Video>(this.videos);
+        return this.videos == null || this.videos.isEmpty() ? null : new LinkedList<Video>(this.videos);
     }
 
     //Returns the Room's message list
@@ -140,7 +144,7 @@ public class Room {
       * @return a new Room object
       */
     public Room(List<Member> members) {
-        new Room(members, new LinkedList<Video>(), new LinkedList<Message>(), null);
+       this(members, new LinkedList<Video>(), new LinkedList<Message>(), null);
     }
 
     //Get all of the members as a list of EmbeddedEntities
