@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+//Servlet to handle room deletion
 @WebServlet("/delete-room")
 public final class DeleteRoomServlet extends HttpServlet{
     private static final String ROOM_PARAMETER = "roomId";
+
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException{
         Long roomId = Long.parseLong(req.getParameter(ROOM_PARAMETER));
         Room.deleteRoomFromId(roomId);
