@@ -24,7 +24,7 @@ public final class SyncServletTest {
     private static final String VIDEO_TIMESTAMP_PARAMETER = "timeStamp";
     private static long testTimestamp = 50;
     @Test
-    public void testCorrectVideoStringOutput() {
+    public void testdoGetHelper_VideoStringOutput() {
         Room testRoom = new Room(new LinkedList<Member>());
         testRoom.addVideo(Video.createVideo("www.RossJohnson.com"));
         String expected = "{\"currentState\":\"UNSTARTED\",\"currentVideoTimestamp\":0,\"id\":\"www.RossJohnson.com\"}";
@@ -35,7 +35,7 @@ public final class SyncServletTest {
     }
 
     @Test
-    public void testVideoUpdateTimeStamp() {
+    public void testupdateCurrentVideoState_UpdateVideoTimeStamp() {
         Video.VideoState newState = Video.VideoState.PLAYING;
         Room room = new Room(new LinkedList());
         room.addVideo(Video.createVideo("This is a url"));
@@ -48,7 +48,7 @@ public final class SyncServletTest {
     }
 
     @Test
-    public void testVideoUpdateState() {
+    public void testupdateCurrentVideoState_UpdateVideoState() {
         Video.VideoState newState = Video.VideoState.PLAYING;
         Room room = new Room(new LinkedList());
         room.addVideo(Video.createVideo("This is a url"));
@@ -61,9 +61,7 @@ public final class SyncServletTest {
     }
 
     @Test
-    public void testVideoSyncWithVideoEnded() {
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
+    public void testUpdateRoomVideos_WithVideoEnded() {
         //Room that is being passed through the helper function
         Room room = new Room(new LinkedList<Member>());
         room.addVideo(Video.createVideo("www.Ross.com"));
@@ -77,9 +75,20 @@ public final class SyncServletTest {
     }
 
     @Test
-    public void testVideoSyncWithVideoOngoing() {
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
+    public void testUpdateRoomVideos_StatusCode(){
+        //Room that is being passed through the helper function
+        Room room = new Room(new LinkedList<Member>());
+        room.addVideo(Video.createVideo("www.Ross.com"));
+        room.addVideo(Video.createVideo("www.Johnson.com"));
+        int expected = 200;
+        
+        int actual = SyncServlet.updateRoomVideos(room, Video.VideoState.ENDED, 0);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testUpdateRoomVideos_WithVideoOngoing() {
         //Room that is being passed through the helper function
         Room room = new Room(new LinkedList<Member>());
         room.addVideo(Video.createVideo("www.Ross.com"));
@@ -94,7 +103,7 @@ public final class SyncServletTest {
     }
 
     @Test
-    public void testVideoQueueEmpty(){
+    public void testdoGetHelper_WithVideoQueueEmpty(){
         Room room = new Room(new LinkedList<Member>());
         String expected = "410";
 

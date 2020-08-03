@@ -28,7 +28,6 @@ public final class SyncServlet extends HttpServlet {
             res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
             res.getWriter().println(responseBody);
         }
-        
     }
 
     @Override
@@ -37,11 +36,11 @@ public final class SyncServlet extends HttpServlet {
         Room syncRoom = Room.fromRoomId(roomId);
         Video.VideoState newState = Video.VideoState.fromInt(Integer.parseInt(req.getParameter(UPDATE_STATE_PARAMETER)));
         long currentVideoTimestamp = Long.parseLong(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
-        updateRoomVideos(syncRoom, newState, currentVideoTimestamp);
+        int statusCode = updateRoomVideos(syncRoom, newState, currentVideoTimestamp);
 
         syncRoom.toDatastore();
 
-        res.setStatus(200);
+        res.setStatus(statusCode);
     }
 
     //Takes a Room in and turns its current video into a JSON String with the necessary attributes
@@ -50,13 +49,14 @@ public final class SyncServlet extends HttpServlet {
     }
 
     //Updates the videos the videos queue in the room depending on the newState parameter
-    public static void updateRoomVideos(Room room, Video.VideoState newState, long currentVideoTimestamp){
+    public static Integer updateRoomVideos(Room room, Video.VideoState newState, long currentVideoTimestamp){
         if(newState == Video.VideoState.ENDED){
             room.changeCurrentVideo();
         } 
         else {
             room.updateCurrentVideoState(newState, currentVideoTimestamp);
         }
+        return 200;
     }
 
     //Helper function for get requests
