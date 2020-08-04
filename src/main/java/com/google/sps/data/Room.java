@@ -42,8 +42,8 @@ public class Room {
             Map<String, Object> properties = roomEntity.getProperties();
             List<Member> memberList = 
             ((ArrayList<EmbeddedEntity>) properties.get(MEMBERS_PROPERTY)).stream().map(Member::fromEmbeddedEntity).collect(Collectors.toCollection(ArrayList::new));
-            Queue<Video> videoQueue = 
-            ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new));
+            Queue<Video> videoQueue = properties.get(VIDEOS_PROPERTY) != null ?
+            ((ArrayList<EmbeddedEntity>) properties.get(VIDEOS_PROPERTY)).stream().map(Video::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : null;
             Queue<Message> messageQueue = properties.get(MESSAGES_PROPERTY) != null ?
             ((ArrayList<EmbeddedEntity>) properties.get(MESSAGES_PROPERTY)).stream().map(Message::fromEmbeddedEntity).collect(Collectors.toCollection(LinkedList::new)) : new LinkedList();
             return new Room(memberList, videoQueue, messageQueue, roomId);
@@ -98,8 +98,11 @@ public class Room {
         return false;
     }
 
-    //Returns the Room's video url list
+    //Returns the Room's video id list
     public Queue<Video> getVideos() {
+        if(this.videos == null){
+            this.videos = new LinkedList<Video>();
+        }
         return new LinkedList<Video>(this.videos);
     }
 
@@ -134,12 +137,17 @@ public class Room {
       * @return a new Room object
       */
     public Room(List<Member> members) {
-        new Room(members, new LinkedList<Video>(), new LinkedList<Message>(), null);
+        this(members, new LinkedList<Video>(), new LinkedList<Message>(), null);
     }
 
     //Get all of the members as a list of EmbeddedEntities
     private List<EmbeddedEntity> getMembersAsEmbeddedEntities() {
         return members.stream().map(Member::toEmbeddedEntity).collect(Collectors.toList());
+    }
+
+    //Updates the current video in the room's state
+    public void updateCurrentVideoState(Video.VideoState state, long videoTimeStamp){
+        this.videos.peek().updateVideoState(state, videoTimeStamp);
     }
 
     //Returns the messages as a list of embedded entities
@@ -150,5 +158,15 @@ public class Room {
     //Returns a queue of embedded entities
     private List<EmbeddedEntity> getVideosAsEntities() {
         return this.videos.stream().map(Video::toEmbeddedEntity).collect(Collectors.toList());
+    }
+
+    //Removes the current video from the head of the queue
+    public void changeCurrentVideo(){
+        this.videos.poll();
+    }
+
+    //Rrturns the video object at the head of the queue
+    public Video getCurrentVideo(){
+        return this.videos.peek();
     }
 }

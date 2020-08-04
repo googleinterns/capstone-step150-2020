@@ -82,7 +82,7 @@ public final class CreateRoomServlet extends HttpServlet {
         //Create urls from video IDs
         for(int i = 0; i < videoInformation.size(); ++i) {
             String videoId = videoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
-            if(!room.addVideo(Video.createVideo(ServletUtil.YT_BASE_URL + videoId))){
+            if(!room.addVideo(Video.createVideo(videoId))){
                 break;
             }
         }
