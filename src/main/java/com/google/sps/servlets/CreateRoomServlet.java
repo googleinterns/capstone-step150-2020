@@ -53,7 +53,7 @@ public final class CreateRoomServlet extends HttpServlet {
         String playlistUrl = req.getParameter(PLAYLIST_URL_PARAMETER);
         String playlistId = playlistUrl.substring(playlistUrl.indexOf(ServletUtil.PLAYLIST_QUERY_PARAMETER)+ServletUtil.PLAYLIST_QUERY_PARAMETER.length());
 
-        Room newRoom = Room.createRoom(members);
+        Room newRoom = new Room(members);
         playlistIdToVideoQueue(playlistId, newRoom);
         Long newRoomId = newRoom.toDatastore();
         if(newRoomId != null) {
@@ -73,7 +73,7 @@ public final class CreateRoomServlet extends HttpServlet {
       */
     public void playlistIdToVideoQueue(String playlistId, Room room) throws IOException {
         //Connect to the YouTube Data API
-        URL url = new URL(ServletUtil.YT_DATA_API_BASE_URL+System.getenv("DATA_API_KEY")+ServletUtil.YT_DATA_API_PARAMETERS+playlistId);
+        URL url = new URL(ServletUtil.YT_DATA_API_BASE_URL+ProtectedServletUtil.DATA_API_KEY+ServletUtil.YT_DATA_API_PARAMETERS+playlistId);
         HttpURLConnection youtubeDataConnection = (HttpURLConnection) url.openConnection();
         youtubeDataConnection.setRequestMethod("GET");
         //Read the response
@@ -81,10 +81,11 @@ public final class CreateRoomServlet extends HttpServlet {
         JsonObject response = ServletUtil.PARSER.fromJson(responseReader, JsonObject.class);
         responseReader.close();
         JsonArray videoInformation = response.getAsJsonArray("items");
+        System.out.println("VIDEO INFORMATION SIZE IS " + videoInformation.size());
         //Create urls from video IDs
         for(int i = 0; i < videoInformation.size(); ++i) {
             String videoId = videoInformation.get(i).getAsJsonObject().getAsJsonObject("contentDetails").get("videoId").getAsString();
-            if(!room.addVideo(Video.createVideo(ServletUtil.YT_BASE_URL + videoId))){
+            if(!room.addVideo(Video.createVideo(videoId))){
                 break;
             }
         }

@@ -19,8 +19,6 @@ public class ServletUtil {
     public static final String ROOM_ENTITY = "Room";
     //Gson parser
     public static final Gson PARSER = new Gson();
-    //Base url for youtube embed videos
-    public static final String YT_BASE_URL = "https://www.youtube.com/embed/";
     //The query parameter for the Youtube playlist id
     public static final String PLAYLIST_QUERY_PARAMETER = "list=";
     //String reresenting the json content type
@@ -32,5 +30,5 @@ public class ServletUtil {
     //String representing the base Url youtube data api endpoint
     public static final String YT_DATA_API_BASE_URL = "https://www.googleapis.com/youtube/v3/playlistItems?key=";
     //String representing the parameters of the Youtube data api endpoint
-    public static final String YT_DATA_API_PARAMETERS = "&part=contentDetails&playlistId=";
+    public static final String YT_DATA_API_PARAMETERS = "&maxResults=15&part=contentDetails&playlistId=";
 }

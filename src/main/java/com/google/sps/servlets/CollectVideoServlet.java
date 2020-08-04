@@ -28,11 +28,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
-/** Servlet that takes in the user's room Id and prints the json version of all the urls in playlist
+/** Servlet that takes in the user's room Id and prints the json version of the head of the video queue
 */
-@WebServlet("/collect-videos")
-public final class CollectVideosServlet extends HttpServlet {
-
+@WebServlet("/collect-video")
+public final class CollectVideoServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("application/json");
@@ -42,15 +41,7 @@ public final class CollectVideosServlet extends HttpServlet {
     // Already verified that the key is in datastore
     Room currentRoom = Room.fromRoomId(currentRoomId);
     Queue<Video> videosOfPlaylist = currentRoom.getVideos();
-    List<String> urlsOfPlaylist = extractVideoUrls(videosOfPlaylist);
-    String jsonOfUrls = new Gson().toJson(urlsOfPlaylist);
+    String jsonOfUrls = new Gson().toJson(videosOfPlaylist.peek());
     response.getWriter().println(jsonOfUrls);
-  }
-
-  /*
-  * Take the queue of videos associated with the room and transfer it into a list of urls
-  */
-  public static List<String> extractVideoUrls(Queue<Video> videosOfPlaylist){
-    return videosOfPlaylist.stream().map(Video::getUrl).collect(Collectors.toList());
   }
 }

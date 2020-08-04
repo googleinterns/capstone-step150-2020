@@ -18,6 +18,7 @@ body{
     position: relative;
     text-align: center;
     overflow: hidden;
+    margin-top: 150px;
 }
 
 #banner h1 {
@@ -78,7 +79,21 @@ body.is-loading #banner:before {
     box-shadow: -1px 6px 10px 0 rgba(120, 60, 20, .2);
 }
 
-.home-button:focus{
+#loginbutton {
+    font-family: 'Noto Sans', sans-serif;
+    cursor: pointer;
+    box-shadow: -1px 3px 3px 0 rgba(80, 80, 80, .2);
+    width: 10vw;
+    height: 10vh;
+    padding: 17px;
     border: none;
-    outline: none;
+    border-radius: 30px;
+    margin: 0 10px 40px;
+    color: #fff;
+    font-weight: bold;
+    flex: 0 0 auto;
+    transition: all 0.3s ease;
+    background: #CB4A46;
+    margin-top: 150px;
+    font-size: 27px;
 }

@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.sps.data.*;
 
-/** Servlet that takes in the user's inputted Room ID and directs them
-    to the associated private room once ensurred that it's an actual room*/
+/** Servlet that Synchronizes the video's state and timestamp */
 @WebServlet("/sync-room")
 public final class SyncServlet extends HttpServlet {
     private static final String UPDATE_STATE_PARAMETER = "userState";
@@ -20,9 +19,13 @@ public final class SyncServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
-        Room updatedRoom = Room.fromRoomId(roomId);
-        Video currentVideo = updatedRoom.getCurrentVideo();
-        String responseBody = videoObjectToJsonString(currentVideo);
+        Room syncRoom = Room.fromRoomId(roomId);
+
+        if(syncRoom == null || syncRoom.getVideos() == null || syncRoom.getVideos().isEmpty()){
+            res.setStatus(410);
+            return;
+        }
+        String responseBody = roomToVideoJson(syncRoom);
         res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
         res.getWriter().println(responseBody);
     }
@@ -30,29 +33,28 @@ public final class SyncServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         long roomId = Long.parseLong(req.getParameter(ROOM_ID_PARAMETER));
+        Room syncRoom = Room.fromRoomId(roomId);
         Video.VideoState newState = Video.VideoState.fromInt(Integer.parseInt(req.getParameter(UPDATE_STATE_PARAMETER)));
         long currentVideoTimestamp = Long.parseLong(req.getParameter(VIDEO_TIMESTAMP_PARAMETER));
+        updateRoomVideos(syncRoom, newState, currentVideoTimestamp);
 
-        Room syncRoom = Room.fromRoomId(roomId);
-
-        if(newState == Video.VideoState.ENDED){
-            syncRoom.changeCurrentVideo();
-        } else {
-            syncRoom.updateCurrentVideoState(newState, currentVideoTimestamp);
-        }
         syncRoom.toDatastore();
+
         res.setStatus(200);
     }
 
-    //Takes a video in and turns it into a JSON String with the necessary attributes
-    private String videoObjectToJsonString(Video video){
-        StringBuilder jsonString = new StringBuilder();
-        jsonString.append("{\"timestamp\" : \"");
-        jsonString.append(video.getCurrentTimeStamp() + "\" , ");
-        jsonString.append("\"currentUrl\" : \"");
-        jsonString.append(video.getUrl() + "\" , ");
-        jsonString.append("\"currentState\" : \"");
-        jsonString.append(video.getCurrentState().getValue() + "\"}");
-        return jsonString.toString();
+    //Takes a Room in and turns its current video into a JSON String with the necessary attributes
+    public static String roomToVideoJson(Room room){
+        return ServletUtil.PARSER.toJson(room.getCurrentVideo());
+    }
+
+    //Updates the videos the videos queue in the room depending on the newState parameter
+    public static void updateRoomVideos(Room room, Video.VideoState newState, long currentVideoTimestamp){
+        if(newState == Video.VideoState.ENDED){
+            room.changeCurrentVideo();
+        } 
+        else {
+            room.updateCurrentVideoState(newState, currentVideoTimestamp);
+        }
     }
 }

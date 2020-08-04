@@ -22,7 +22,7 @@ public final class VerificationTest {
    public void userIsaMember(){
         //Setup of Room
         List<Member> members = Arrays.asList(Member.createNewMember("RJ"), Member.createNewMember("RMJ"), Member.createNewMember("@google.com"), Member.createNewMember("rossjohnson@google.com"));
-        Room room = Room.createRoom(members);
+        Room room = new Room(members);
 
         //Setup of user
         String user = "rossjohnson@google.com";
@@ -36,7 +36,7 @@ public final class VerificationTest {
    public void userIsNotAMember(){
         //Setup of Room
         List<Member> members = Arrays.asList(Member.createNewMember("RJ"), Member.createNewMember("RMJ"), Member.createNewMember("@google.com"));
-        Room room = Room.createRoom(members);
+        Room room = new Room(members);
 
         //Setup of user
         String user = "rossjohnson@google.com";
