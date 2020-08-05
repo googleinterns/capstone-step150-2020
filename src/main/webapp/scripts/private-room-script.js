@@ -107,7 +107,8 @@ window.setInterval(function(){
 async function listenForStateChange(){
     let privateRoomDataPromise = await fetch(SYNC_PATH_WITH_QUERY_PARAM+roomId);
     if(privateRoomDataPromise.status === 410){
-        fetch(`/delete-room?roomId=${roomId.toString()}`,{method:'DELETE'})
+        fetch(`/delete-room?roomId=${roomId.toString()}`,{method:'DELETE'});
+        console.log("inside the 410 error");
         redirectPage(false);
     }
     // fetch the json-version of the urls for all the youtube videos
