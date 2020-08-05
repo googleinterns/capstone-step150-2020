@@ -95,4 +95,5 @@ body.is-loading #banner:before {
     transition: all 0.3s ease;
     background: #CB4A46;
     margin-top: 150px;
+    font-size: 27px;
 }

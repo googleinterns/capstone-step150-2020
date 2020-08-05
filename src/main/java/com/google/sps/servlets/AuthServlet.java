@@ -12,21 +12,33 @@ import com.google.appengine.api.users.UserServiceFactory;
 //Servlet to authenticate users before they create or join a Room
 @WebServlet("/auth")
 public class AuthServlet extends HttpServlet{
-    public static final String REDIRECT_URL_PARAMETER = "redirectUrl";
+    private static final String REDIRECT_URL_PARAMETER = "redirectUrl";
+    
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException{
-        if(ServletUtil.USER_SERVICE.isUserLoggedIn()){
-            String userEmail = ServletUtil.USER_SERVICE.getCurrentUser().getEmail();
-            String urlToRedirectToAfterUserLogsOut = "/";
-            String logoutUrl = ServletUtil.USER_SERVICE.createLogoutURL(urlToRedirectToAfterUserLogsOut);
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+
+        Boolean isUserLoggedIn = ServletUtil.USER_SERVICE.isUserLoggedIn();
+        String urlToRedirectToAfterUserLogsIn = req.getParameter(REDIRECT_URL_PARAMETER);
+        String responseBody = getResponseBody(isUserLoggedIn, urlToRedirectToAfterUserLogsIn, ServletUtil.USER_SERVICE);
+        if(isUserLoggedIn){
             res.setContentType(ServletUtil.JSON_CONTENT_TYPE);
-            res.getWriter().println(ServletUtil.PARSER.toJson(userEmail));  
+            res.getWriter().println(ServletUtil.PARSER.toJson(responseBody));  
         }
         else{
-            String urlToRedirectToAfterUserLogsIn = req.getParameter(REDIRECT_URL_PARAMETER);
-            String loginUrl = ServletUtil.USER_SERVICE.createLoginURL(urlToRedirectToAfterUserLogsIn);
             res.setContentType(ServletUtil.HTML_CONTENT_TYPE);
-            res.getWriter().println("<center><a href=\"" + loginUrl + "\"><button style=\"background-color: cyan; border-radius:12px;\"><span style=\"color:white;\">Login</span></button/></a></center>");
+            res.getWriter().println(responseBody);
         }
+    }
+
+
+    public static String getResponseBody(Boolean loggedin, String redirectUrl, UserService userService){
+        if(loggedin) return userService.getCurrentUser().getEmail();
+
+        String loginUrl = ServletUtil.USER_SERVICE.createLoginURL(redirectUrl);
+        StringBuilder builder = new StringBuilder();
+        builder.append("<center><a href=\"");
+        builder.append(loginUrl);
+        builder.append("\"><button id= \"loginbutton\">Login</button/></a></center>");
+        return builder.toString();
     }
 }

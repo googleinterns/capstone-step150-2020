@@ -1,4 +1,3 @@
-
 //Authenticates the user using the authentication api
 async function authenticate(redirectPath){
     if(!window.localStorage.getItem("userEmail")){
@@ -15,8 +14,9 @@ async function authenticate(redirectPath){
             let loginHtml = await res.text();
             document.getElementsByTagName("body")[0].innerHTML = loginHtml;
         }
-    }else{
-        if(!window.location.href.includes(redirectPath.substring(1))){
+    } else {
+        //Checks if the path after the period in the relative path is in the url
+        if(!window.location.href.includes(redirectPath.substring(1))) {
             window.location.href = redirectPath;
         }
     }
