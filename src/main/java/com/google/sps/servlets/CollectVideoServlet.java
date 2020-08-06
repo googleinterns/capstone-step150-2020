@@ -31,7 +31,7 @@ import com.google.appengine.api.datastore.Key;
 /** Servlet that takes in the user's room Id and prints the json version of the head of the video queue
 */
 @WebServlet("/collect-video")
-public final class CollectVideosServlet extends HttpServlet {
+public final class CollectVideoServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
